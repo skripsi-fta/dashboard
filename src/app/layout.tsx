@@ -1,16 +1,17 @@
 import '@/styles/globals.css';
-import { TailwindIndicator } from '@/components/atoms/TailwindIndicator/TailwindIndicator';
-import { siteConfig } from '@/components/constants/site';
 import { cn } from '@/lib/utils';
 import type { Metadata, Viewport } from 'next';
 import { fontSans } from '@/lib/fonts';
+import { TailwindIndicator } from '@/presentation/components/TailwindIndicator';
+import TanstackProvider from '@/providers/TanstackProvider';
+import { Toaster } from '@/presentation/ui/sonner';
 
 export const metadata: Metadata = {
     title: {
-        default: siteConfig.name,
-        template: `%s - ${siteConfig.name}`
+        default: 'Dashboard Klinik',
+        template: '%s - Dashboard Klinik'
     },
-    description: siteConfig.description,
+    description: 'Dashboard Klinik',
     icons: {
         icon: '/favicon.ico',
         shortcut: '/favicon-16x16.png',
@@ -43,8 +44,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
                     )}
                     suppressHydrationWarning={true}
                 >
-                    <div>{children}</div>
-                    <TailwindIndicator />
+                    <TanstackProvider>
+                        <div>{children}</div>
+                        <TailwindIndicator />
+                        <Toaster closeButton richColors theme='light' />
+                    </TanstackProvider>
                 </body>
             </html>
         </>
