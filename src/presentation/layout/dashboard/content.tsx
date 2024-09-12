@@ -7,7 +7,10 @@ interface DashboardContentType {
 
 const DashboardContent = ({ children, props }: DashboardContentType) => {
     return (
-        <div {...props} className='flex flex-col gap-8 rounded-lg px-4 py-2'>
+        <div
+            {...props}
+            className='flex flex-col gap-8 rounded-lg bg-white p-8 shadow-md md:px-8'
+        >
             {children}
         </div>
     );

@@ -40,7 +40,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                         <Navbar />
                     </header>
 
-                    <main className='min-h-[calc(100vh-100px)] bg-[#EFF0F9] p-4 text-black lg:p-6'>
+                    <main className='flex min-h-[calc(100vh-100px)] flex-col gap-8 bg-[#EFF0F9] p-4 text-black lg:p-6'>
                         {children}
                     </main>
                 </div>
