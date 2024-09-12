@@ -154,7 +154,7 @@ const LoginPage = () => {
                                 </div>
 
                                 <Button
-                                    className='h-[55px] rounded-[16px] bg-[#3B41E3] text-xl font-bold text-white hover:bg-[#3B41E3]/70'
+                                    className='h-[55px] rounded-[16px] bg-primaryblue text-xl font-bold text-white hover:bg-[#3B41E3]/70'
                                     type='submit'
                                 >
                                     Login

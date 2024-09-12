@@ -1,7 +1,6 @@
 /* eslint-disable react/display-name */
 'use client';
 
-import { Icons } from '@/presentation/icons/icons';
 import { Input } from '@/presentation/ui/input';
 import { Label } from '@/presentation/ui/label';
 import { cn } from '@/lib/utils';
@@ -72,7 +71,7 @@ const TextFieldInput = forwardRef<HTMLInputElement, TextFieldInputType>(
                         )}
                     </div>
                     {!!error?.message && (
-                        <p className='text-xs font-bold text-red-500 mt-1'>
+                        <p className='mt-1 text-xs font-bold text-red-500'>
                             {error.message}
                         </p>
                     )}

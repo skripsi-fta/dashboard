@@ -1,8 +1,9 @@
 import useDashboard from '@/contexts/DashboardContext';
 import dayjsUtils from '@/lib/dayjs';
 import { staticMapRole } from './sidebar';
-import { LogOut } from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
 import { Button } from '@/presentation/ui/button';
+
 
 const Navbar = () => {
     const { userData, logout } = useDashboard();
@@ -18,7 +19,9 @@ const Navbar = () => {
                     {currentDate.format('dddd, DD MMMM YYYY')}
                 </p>
                 <div className='flex flex-row items-center gap-4 md:gap-8'>
-                    <div className='size-[60px] rounded-full bg-[#EFF0F9]' />
+                    <div className='flex size-[60px] items-center justify-center rounded-full bg-[#EFF0F9]'>
+                        <User className='size-9' />
+                    </div>
                     <div className='flex flex-col justify-center gap-2'>
                         <p className='font-semibold'>{userData?.name}</p>
                         <p>{staticMapRole[userData.role]?.name ?? ''}</p>

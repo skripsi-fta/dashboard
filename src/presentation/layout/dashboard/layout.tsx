@@ -17,7 +17,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 <div className='bg-dark hidden md:flex'>
                     <Sidebar />
                 </div>
-                <div className='flex flex-col'>
+                <div className='flex flex-col overflow-x-hidden'>
                     <header className='bg-primaryred flex h-[100px] flex-row items-center justify-between gap-4 px-4 md:flex-row-reverse lg:px-6 '>
                         <Sheet>
                             <SheetTrigger asChild>
@@ -40,7 +40,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                         <Navbar />
                     </header>
 
-                    <main className='flex min-h-[calc(100vh-100px)] flex-col gap-8 bg-[#EFF0F9] p-4 text-black lg:p-6'>
+                    <main className='flex min-h-[calc(100vh-100px)] w-full flex-col gap-8 overflow-x-hidden bg-[#EFF0F9] p-4 text-black lg:p-6'>
                         {children}
                     </main>
                 </div>
