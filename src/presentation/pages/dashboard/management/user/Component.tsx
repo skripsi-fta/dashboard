@@ -10,6 +10,7 @@ import DashboardActions from '@/presentation/layout/dashboard/actions';
 import DashboardContent from '@/presentation/layout/dashboard/content';
 import DashboardHeader from '@/presentation/layout/dashboard/header';
 import { Button } from '@/presentation/ui/button';
+import { useModal } from '@/providers/ModalProvider';
 import type { ColumnDef, PaginationState } from '@tanstack/react-table';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
@@ -86,6 +87,15 @@ const ManagementUserPage = () => {
 
     console.log(data);
 
+    const { openModal } = useModal();
+
+    const handleOpenDialog = () => {
+        openModal(<>modal tambah user</>, {
+            title: 'Tambah User',
+            disableClickOutside: true
+        });
+    };
+
     return (
         <>
             <DashboardContent>
@@ -97,7 +107,7 @@ const ManagementUserPage = () => {
                     }}
                     addButtonProps={{
                         label: 'Tambah User',
-                        onClick: () => console.log('add')
+                        onClick: handleOpenDialog
                     }}
                 />
             </DashboardContent>
