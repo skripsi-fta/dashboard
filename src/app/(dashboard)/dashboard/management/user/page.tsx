@@ -1,3 +1,9 @@
+import ManagementUserPage from '@/presentation/pages/dashboard/management/user/Component';
+
 export default function Page() {
-    return <>user management</>;
+    return (
+        <>
+            <ManagementUserPage />
+        </>
+    );
 }

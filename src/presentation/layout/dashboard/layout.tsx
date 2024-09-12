@@ -4,7 +4,7 @@ import Sidebar from './sidebar';
 import { Sheet, SheetContent, SheetTrigger } from '@/presentation/ui/sheet';
 import { Button } from '@/presentation/ui/button';
 import { Menu } from 'lucide-react';
-import Header from './header';
+import Navbar from './navbar';
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -14,11 +14,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     return (
         <>
             <div className='grid min-h-screen w-full md:grid-cols-[250px_1fr] lg:grid-cols-[250px_1fr]'>
-                <div className='hidden bg-dark md:flex'>
+                <div className='bg-dark hidden md:flex'>
                     <Sidebar />
                 </div>
-                <div className='flex flex-col'>
-                    <header className='flex h-[100px] items-center flex-row md:flex-row-reverse justify-between gap-4 bg-primaryred px-4 lg:px-6 '>
+                <div className='flex flex-col overflow-x-hidden'>
+                    <header className='bg-primaryred flex h-[100px] flex-row items-center justify-between gap-4 px-4 md:flex-row-reverse lg:px-6 '>
                         <Sheet>
                             <SheetTrigger asChild>
                                 <Button
@@ -37,10 +37,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                             </SheetContent>
                         </Sheet>
 
-                        <Header />
+                        <Navbar />
                     </header>
 
-                    <main className='min-h-[calc(100vh-100px)] bg-[#EFF0F9] p-4 text-black lg:p-6'>
+                    <main className='flex min-h-[calc(100vh-100px)] w-full flex-col gap-8 overflow-x-hidden bg-[#EFF0F9] p-4 text-black lg:p-6'>
                         {children}
                     </main>
                 </div>

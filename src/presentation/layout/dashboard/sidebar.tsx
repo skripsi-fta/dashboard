@@ -129,7 +129,7 @@ const Sidebar = () => {
                                 className={cn(
                                     'h-full w-[10px] ',
                                     pathname.startsWith(data.href)
-                                        ? 'bg-[#3B41E3]'
+                                        ? 'bg-primaryblue'
                                         : 'bg-transparent'
                                 )}
                                 style={{ borderRadius: '0px 28px 28px 0px' }}
@@ -139,7 +139,7 @@ const Sidebar = () => {
                                 className={cn(
                                     'flex w-full flex-[1] flex-row items-center gap-4 rounded-[8px] p-2 text-base font-semibold',
                                     pathname.startsWith(data.href)
-                                        ? 'bg-[#3B41E3] text-white'
+                                        ? 'bg-primaryblue text-white'
                                         : 'bg-transparent'
                                 )}
                                 href={data.href}
