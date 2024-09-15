@@ -16,6 +16,7 @@ interface CustomSelectComponentProps {
     onChange: (_e: string) => void;
     value: string;
     error?: FieldError | undefined;
+    disabled?: boolean;
 }
 
 const CustomSelectComponent = ({
@@ -24,12 +25,17 @@ const CustomSelectComponent = ({
     loading,
     onChange,
     value,
-    error
+    error,
+    disabled
 }: CustomSelectComponentProps) => {
     return (
         <>
             <div className='flex flex-col gap-2'>
-                <Select onValueChange={onChange} defaultValue={value}>
+                <Select
+                    onValueChange={onChange}
+                    defaultValue={value}
+                    disabled={disabled}
+                >
                     <SelectTrigger
                         className={cn(
                             'w-full h-[50px] rounded-[32px] border-2 border-[#ECEEFF] hover:border-[#DDE0FF] focus:border-[#DDE0FF] ',

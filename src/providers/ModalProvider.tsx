@@ -14,8 +14,9 @@ import React, {
 } from 'react';
 
 interface DialogParams {
-    title: string;
+    title?: string;
     disableClickOutside?: boolean;
+    closeButtonVisible?: boolean;
 }
 
 interface DialogContextType {
@@ -74,12 +75,15 @@ export const DialogProvider: React.FC<{ children: ReactNode }> = ({
                             e.preventDefault();
                         }
                     }}
+                    closeButtonVisible={dialogParams?.closeButtonVisible}
                 >
                     {loaded && (
                         <div className='flex flex-col gap-4 h-full overflow-y-auto'>
-                            <h3 className='text-2xl font-bold'>
-                                {dialogParams?.title}
-                            </h3>
+                            {dialogParams?.title && (
+                                <h3 className='text-2xl font-bold'>
+                                    {dialogParams?.title}
+                                </h3>
+                            )}
                             {content}
                         </div>
                     )}

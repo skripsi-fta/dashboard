@@ -92,7 +92,7 @@ const sidebarContent: Record<
             icons: (props) => <Icons.managementPeople {...props} />
         },
         {
-            name: 'User',
+            name: 'Akun Klinik',
             href: '/dashboard/management/user',
             icons: (props) => <Icons.managementPeople {...props} />
         }

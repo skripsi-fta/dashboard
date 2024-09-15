@@ -77,7 +77,14 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
     const table = useReactTable({
         initialState: { ...initialState, pagination: paginationProps },
-        data,
+        data: data.map((item, index) => ({
+            ...item,
+            no:
+                index +
+                1 +
+                (paginationProps?.pageIndex ?? 0) *
+                    (paginationProps?.pageSize ?? 0)
+        })),
         columns,
         manualPagination: true,
         getCoreRowModel: getCoreRowModel(),

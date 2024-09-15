@@ -1,102 +1,45 @@
 import type { ManagementStaff } from '@/infrastructure/models/management/staff';
+import http from '@/lib/axios';
 
 export class ManagementStaffAPI {
-    // Test mock
     async getList(
         params: ManagementStaff.Request.List
     ): Promise<ManagementStaff.Response.List> {
-        let data: ManagementStaff.Response.Data[] = [];
+        const data = await http.get<ManagementStaff.Response.List>('/staff', {
+            params
+        });
 
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        return data.data;
+    }
 
-        if (params.pageNumber === 1) {
-            data = [
-                {
-                    id: 1,
-                    email: 'fabian@gmail.com',
-                    name: 'Fabian Habil',
-                    role: 'Dokter',
-                    username: 'fabianhabil',
-                    doctorName: 'Fabian'
-                },
-                {
-                    id: 2,
-                    email: 'fabian@gmail.com',
-                    name: 'Fabian Habil',
-                    role: 'Dokter',
-                    username: 'fabianhabil',
-                    doctorName: 'Fabian'
-                },
-                {
-                    id: 3,
-                    email: 'fabian@gmail.com',
-                    name: 'Fabian Habil',
-                    role: 'Dokter',
-                    username: 'fabianhabil',
-                    doctorName: 'Fabian'
-                },
-                {
-                    id: 4,
-                    email: 'fabian@gmail.com',
-                    name: 'Fabian Habil',
-                    role: 'Dokter',
-                    username: 'fabianhabil',
-                    doctorName: 'Fabian'
-                },
-                {
-                    id: 5,
-                    email: 'fabian@gmail.com',
-                    name: 'Fabian Habil',
-                    role: 'Dokter',
-                    username: 'fabianhabil',
-                    doctorName: 'Fabian'
-                }
-            ];
-        } else {
-            data = [
-                {
-                    id: 6,
-                    email: 'fabian@gmail.com',
-                    name: 'Fabian Habil',
-                    role: 'Dokter',
-                    username: 'fabianhabil',
-                    doctorName: 'Fabian'
-                },
-                {
-                    id: 7,
-                    email: 'fabian@gmail.com',
-                    name: 'Fabian Habil',
-                    role: 'Dokter',
-                    username: 'fabianhabil',
-                    doctorName: 'Fabian'
-                },
-                {
-                    id: 8,
-                    email: 'fabian@gmail.com',
-                    name: 'Fabian Habil',
-                    role: 'Dokter',
-                    username: 'fabianhabil',
-                    doctorName: 'Fabian'
-                },
-                {
-                    id: 9,
-                    email: 'fabian@gmail.com',
-                    name: 'Fabian Habil',
-                    role: 'Dokter',
-                    username: 'fabianhabil',
-                    doctorName: 'Fabian'
-                },
-                {
-                    id: 10,
-                    email: 'fabian@gmail.com',
-                    name: 'Fabian Habil',
-                    role: 'Dokter',
-                    username: 'fabianhabil',
-                    doctorName: 'Fabian'
-                }
-            ];
-        }
+    async createStaff(
+        body: ManagementStaff.Request.Create
+    ): Promise<ManagementStaff.Response.Create> {
+        const data = await http.post<ManagementStaff.Response.Create>(
+            '/staff',
+            body
+        );
 
-        return { data, message: 'HALO', statusCode: 200, totalData: 10 };
+        return data.data;
+    }
+
+    async updateStaff(
+        body: ManagementStaff.Request.Update
+    ): Promise<ManagementStaff.Response.Update> {
+        const data = await http.put<ManagementStaff.Response.Update>(
+            '/staff',
+            body
+        );
+
+        return data.data;
+    }
+
+    async deleteStaff(id: number): Promise<ManagementStaff.Response.Delete> {
+        const data = await http.delete<ManagementStaff.Response.Delete>(
+            '/staff',
+            { params: { id } }
+        );
+
+        return data.data;
     }
 }
