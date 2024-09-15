@@ -104,15 +104,15 @@ export function DataTable<TData, TValue>({
 
     return (
         <div className='relative flex w-full flex-col gap-4'>
-            <div className='overflow-x-auto'>
+            <div className='table-custom-scrollbar overflow-x-auto'>
                 <Table
                     {...tableProps}
                     style={{
                         width: '100%',
                         tableLayout: 'fixed',
-                        overflowX: 'scroll',
                         minHeight: '200px'
                     }}
+                    className='table-custom-scrollbar'
                 >
                     <TableHeader
                         {...tableHeaderProps}

@@ -1,4 +1,11 @@
-import { Dialog, DialogContent } from '@/presentation/ui/dialog';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle
+} from '@/presentation/ui/dialog';
+import { DialogDescription } from '@radix-ui/react-dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import React, {
     createContext,
     useContext,
@@ -50,6 +57,17 @@ export const DialogProvider: React.FC<{ children: ReactNode }> = ({
         <DialogContext.Provider value={{ openModal, closeModal }}>
             {children}
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <VisuallyHidden>
+                    <DialogHeader>
+                        <DialogTitle>
+                            {dialogParams?.title ?? 'header'}
+                        </DialogTitle>
+
+                        <DialogDescription>
+                            {dialogParams?.title ?? 'header'}
+                        </DialogDescription>
+                    </DialogHeader>
+                </VisuallyHidden>
                 <DialogContent
                     onInteractOutside={(e) => {
                         if (dialogParams?.disableClickOutside) {
@@ -58,7 +76,7 @@ export const DialogProvider: React.FC<{ children: ReactNode }> = ({
                     }}
                 >
                     {loaded && (
-                        <div className='flex flex-col gap-4'>
+                        <div className='flex flex-col gap-4 h-full overflow-y-auto'>
                             <h3 className='text-2xl font-bold'>
                                 {dialogParams?.title}
                             </h3>
