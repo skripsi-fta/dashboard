@@ -16,13 +16,21 @@ import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import FilterModal from './components/FilterModal';
+import AddModal from './components/AddModal';
+import EditModal from './components/EditModal';
+import DeleteModal from './components/DeleteModal';
 
 const ManagementUserPage = () => {
     const columns: ColumnDef<ManagementStaff.Response.Data>[] = [
         {
-            accessorKey: 'id',
+            accessorKey: 'no',
             size: 75,
             header: 'ID'
+        },
+        {
+            accessorKey: 'username',
+            size: 200,
+            header: 'Username'
         },
         {
             accessorKey: 'name',
@@ -42,14 +50,45 @@ const ManagementUserPage = () => {
         {
             header: 'Action',
             size: 150,
-            cell: () => {
+            cell: ({ row: { original } }) => {
                 return (
                     <div className='flex flex-row items-center'>
-                        <Button variant={'ghost'}>
+                        <Button
+                            variant={'ghost'}
+                            onClick={() =>
+                                openModal(
+                                    <EditModal
+                                        defaultValues={{
+                                            email: original.email,
+                                            id: original.id,
+                                            name: original.name,
+                                            password: 'asdf1234',
+                                            role: original.role as any,
+                                            username: original.username
+                                        }}
+                                        refetch={refetch}
+                                    />,
+                                    {}
+                                )
+                            }
+                        >
                             <Pencil className='text-primaryblue' />
                         </Button>
 
-                        <Button variant={'ghost'}>
+                        <Button
+                            variant={'ghost'}
+                            onClick={() =>
+                                openModal(
+                                    <DeleteModal
+                                        refetch={refetch}
+                                        data={original}
+                                    />,
+                                    {
+                                        closeButtonVisible: false
+                                    }
+                                )
+                            }
+                        >
                             <Trash2 className='text-red-600' />
                         </Button>
                     </div>
@@ -72,7 +111,7 @@ const ManagementUserPage = () => {
 
     const api = new ManagementStaffAPI();
 
-    const { data, isLoading } = useQuery({
+    const { data, isLoading, refetch } = useQuery({
         queryFn: () =>
             api.getList({
                 ...filterValues,
@@ -101,7 +140,7 @@ const ManagementUserPage = () => {
         closeModal();
     };
 
-    const handleOpenDialog = () => {
+    const handleOpenDialogFilter = () => {
         openModal(
             <FilterModal
                 onSubmit={onSubmitFilter}
@@ -109,24 +148,28 @@ const ManagementUserPage = () => {
                 onCancel={onResetFilter}
             />,
             {
-                title: 'Filter User'
+                title: 'Filter Staff'
             }
         );
+    };
+
+    const handleOpenDialogAdd = () => {
+        openModal(<AddModal refetch={refetch} />, { title: 'Add Staff' });
     };
 
     return (
         <>
             <DashboardContent>
-                <DashboardHeader title='Daftar User' />
+                <DashboardHeader title='Daftar Staff' />
                 <DashboardActions
                     filterButtonProps={{
-                        label: 'Filter User',
+                        label: 'Filter Staff',
                         loading: isLoading,
-                        onClick: handleOpenDialog
+                        onClick: handleOpenDialogFilter
                     }}
                     addButtonProps={{
-                        label: 'Tambah User',
-                        onClick: () => console.log('add')
+                        label: 'Tambah Staff',
+                        onClick: handleOpenDialogAdd
                     }}
                 />
             </DashboardContent>
@@ -135,7 +178,7 @@ const ManagementUserPage = () => {
                 <DataTable
                     columns={columns}
                     data={data?.data ?? []}
-                    totalData={data?.totalData ?? 0}
+                    totalData={data?.totalRows ?? 0}
                     tableProps={{
                         className: 'my-2 overflow-auto text-[15px] text-black'
                     }}

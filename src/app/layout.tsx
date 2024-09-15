@@ -47,8 +47,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
                     <TanstackProvider>
                         <div>{children}</div>
                         <TailwindIndicator />
-                        <Toaster closeButton richColors theme='light' />
                     </TanstackProvider>
+                    <Toaster closeButton richColors theme='light' />
                 </body>
             </html>
         </>
