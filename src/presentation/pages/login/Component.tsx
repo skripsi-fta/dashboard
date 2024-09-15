@@ -123,7 +123,7 @@ const LoginPage = () => {
                                         }) => (
                                             <TextFieldInput
                                                 {...field}
-                                                className='h-[60px] rounded-[16px] border-transparent text-base shadow-[0px_2px_16px_rgba(20,20,20,0.1)] placeholder:text-[#66666] focus:border-[rgba(20,20,20,0.1)]'
+                                                variant='login'
                                                 placeholder='Enter your email'
                                                 error={error}
                                             />
@@ -144,7 +144,7 @@ const LoginPage = () => {
                                         }) => (
                                             <TextFieldInput
                                                 {...field}
-                                                className='h-[60px] rounded-[16px] border-transparent text-base shadow-[0px_2px_16px_rgba(20,20,20,0.1)] placeholder:text-[#66666] focus:border-[rgba(20,20,20,0.1)]'
+                                                variant='login'
                                                 placeholder='Enter your password'
                                                 error={error}
                                                 type='password'

@@ -10,10 +10,12 @@ import DashboardActions from '@/presentation/layout/dashboard/actions';
 import DashboardContent from '@/presentation/layout/dashboard/content';
 import DashboardHeader from '@/presentation/layout/dashboard/header';
 import { Button } from '@/presentation/ui/button';
+import { useModal } from '@/providers/ModalProvider';
 import type { ColumnDef, PaginationState } from '@tanstack/react-table';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
+import FilterModal from './components/FilterModal';
 
 const ManagementUserPage = () => {
     const columns: ColumnDef<ManagementStaff.Response.Data>[] = [
@@ -61,11 +63,12 @@ const ManagementUserPage = () => {
         pageSize: 5
     });
 
-    const [filterValues] = useState<ManagementStaffListValidation>({
-        email: '',
-        name: '',
-        role: ''
-    });
+    const [filterValues, setFilterValues] =
+        useState<ManagementStaffListValidation>({
+            email: '',
+            name: '',
+            role: ''
+        });
 
     const api = new ManagementStaffAPI();
 
@@ -84,7 +87,32 @@ const ManagementUserPage = () => {
         ]
     });
 
-    console.log(data);
+    const { openModal, closeModal } = useModal();
+
+    const onSubmitFilter = (e: ManagementStaffListValidation) => {
+        setFilterValues(() => e);
+        setPagination(() => ({ pageIndex: 0, pageSize: 5 }));
+        closeModal();
+    };
+
+    const onResetFilter = () => {
+        setFilterValues(() => ({ email: '', name: '', role: '' }));
+        setPagination(() => ({ pageIndex: 0, pageSize: 5 }));
+        closeModal();
+    };
+
+    const handleOpenDialog = () => {
+        openModal(
+            <FilterModal
+                onSubmit={onSubmitFilter}
+                defaultValues={filterValues}
+                onCancel={onResetFilter}
+            />,
+            {
+                title: 'Filter User'
+            }
+        );
+    };
 
     return (
         <>
@@ -93,7 +121,8 @@ const ManagementUserPage = () => {
                 <DashboardActions
                     filterButtonProps={{
                         label: 'Filter User',
-                        onClick: () => console.log('filter')
+                        loading: isLoading,
+                        onClick: handleOpenDialog
                     }}
                     addButtonProps={{
                         label: 'Tambah User',

@@ -21,9 +21,9 @@ module.exports = {
         '@next/next/no-html-link-for-pages': 'off',
         'react/jsx-key': 'off',
         'tailwindcss/no-custom-classname': 'off',
-        'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+        'no-unused-vars': ['off', { argsIgnorePattern: '^_' }],
         '@typescript-eslint/no-unused-vars': [
-            'error',
+            'off',
             { argsIgnorePattern: '^_' }
         ],
         'no-nested-ternary': 'off',

@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
-import { Button, type ButtonProps } from '@/presentation/ui/button';
+import CustomButtonComponent from '@/presentation/components/CustomButton';
+import { type ButtonProps } from '@/presentation/ui/button';
 import { Plus, Search } from 'lucide-react';
 import type { ReactNode } from 'react';
 
@@ -28,7 +29,7 @@ const DashboardActions = ({
     return (
         <div className='flex w-full flex-row flex-wrap gap-4 md:w-auto'>
             {onClickFilter && (
-                <Button
+                <CustomButtonComponent
                     {...filterButtonProps}
                     variant={'filterButton'}
                     className={cn(
@@ -39,10 +40,10 @@ const DashboardActions = ({
                 >
                     <Search className='mr-2 size-6' />
                     {filterButtonLabel ?? 'Cari'}
-                </Button>
+                </CustomButtonComponent>
             )}
             {onClickAdd && (
-                <Button
+                <CustomButtonComponent
                     {...addButtonProps}
                     variant={'addButton'}
                     className={cn('h-[45px] w-full md:w-auto', classNameAdd)}
@@ -50,7 +51,7 @@ const DashboardActions = ({
                 >
                     <Plus className='mr-2 size-6' />
                     {addButtonLabel ?? 'Tambah'}
-                </Button>
+                </CustomButtonComponent>
             )}
             {children}
         </div>

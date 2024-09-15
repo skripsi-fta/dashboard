@@ -12,11 +12,18 @@ interface TextFieldInputType extends InputHTMLAttributes<HTMLInputElement> {
     type?: 'text' | 'password' | 'file';
     label?: string;
     error?: FieldError | undefined;
+    variant?: 'normal' | 'modal' | 'login';
 }
 
 const TextFieldInput = forwardRef<HTMLInputElement, TextFieldInputType>(
-    ({ error, label, type = 'text', ...props }, ref) => {
+    ({ error, label, type = 'text', variant = 'normal', ...props }, ref) => {
         const [showPassword, setShowPassword] = useState<boolean>(false);
+
+        const variants = {
+            normal: '',
+            modal: 'h-[50px] rounded-[32px] border-2 border-[#ECEEFF] hover:border-[#DDE0FF] focus:border-[#DDE0FF]',
+            login: 'h-[60px] rounded-[16px] border-transparent text-base shadow-[0px_2px_16px_rgba(20,20,20,0.1)] placeholder:text-[#66666] focus:border-[rgba(20,20,20,0.1)]'
+        };
 
         return (
             <>
@@ -39,7 +46,8 @@ const TextFieldInput = forwardRef<HTMLInputElement, TextFieldInputType>(
                             className={cn(
                                 'w-full rounded-[4px] bg-white text-black',
                                 !!error?.message && 'border-red-500',
-                                props.className
+                                props.className,
+                                variants[variant]
                             )}
                         />
                         {type !== 'password' ? (
