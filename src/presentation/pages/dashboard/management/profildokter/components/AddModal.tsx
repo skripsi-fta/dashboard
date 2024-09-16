@@ -1,10 +1,9 @@
 import {
-    managementStaffUpdateValidation,
-    type ManagementStaff,
-    type ManagementStaffUpdate
-} from '@/infrastructure/models/management/staff';
-import { ManagementStaffAPI } from '@/infrastructure/usecase/management/staff/ManagementStaffAPI';
-import CustomSelectComponent from '@/presentation/components/CustomSelect';
+    managementDoctorProfileCreateValidation,
+    type ManagementDoctorProfile,
+    type ManagementDoctorProfileCreateValidation
+} from '@/infrastructure/models/management/doctorprofile';
+import { ManagementDoctorProfileAPI } from '@/infrastructure/usecase/management/doctorprofile/ManagementDoctorProfileAPI';
 import TextFieldInput from '@/presentation/components/TextfieldInput';
 import {
     ModalFormContainer,
@@ -19,39 +18,47 @@ import { Controller, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { toast } from 'sonner';
 
-interface EditModalProps {
+interface AddModalProps {
     refetch: () => void;
-    defaultValues: ManagementStaffUpdate;
 }
 
-const EditModal = ({ refetch, defaultValues }: EditModalProps) => {
-    const { control, handleSubmit } = useForm<ManagementStaffUpdate>({
-        defaultValues,
-        mode: 'onChange',
-        resolver: zodResolver(managementStaffUpdateValidation)
-    });
-
-    const api = new ManagementStaffAPI();
+const AddModal = ({ refetch }: AddModalProps) => {
+    const { control, handleSubmit } =
+        useForm<ManagementDoctorProfileCreateValidation>({
+            defaultValues: {
+                consulePrice: 0,
+                email: '',
+                name: '',
+                password: '',
+                profile: '',
+                username: '',
+                role: 'DOCTOR'
+            },
+            mode: 'onChange',
+            resolver: zodResolver(managementDoctorProfileCreateValidation)
+        });
 
     const { closeModal } = useModal();
 
-    const { mutate: update, isLoading } = useMutation({
-        mutationFn: (data: ManagementStaff.Request.Update) =>
-            api.updateStaff(data),
+    const api = new ManagementDoctorProfileAPI();
+
+    const { mutate: create, isLoading } = useMutation({
+        mutationFn: (data: ManagementDoctorProfile.Request.Create) =>
+            api.createDoctor(data),
         onSuccess: () => {
-            toast.success('Edit staff sukses');
+            toast.success('Sukses membuat dokter');
             closeModal();
             refetch();
         },
         onError: (res: AxiosError<{ message: string }>) => {
-            toast.error(res.response?.data?.message ?? 'Edit staff error');
+            toast.error(res.response?.data?.message ?? 'Membuat dokter error');
         }
     });
 
     return (
         <>
             <ModalFormContainer
-                formProps={{ onSubmit: handleSubmit((e) => update(e)) }}
+                formProps={{ onSubmit: handleSubmit((e) => create(e)) }}
             >
                 <ModalFormContent>
                     <ModalFormFields>
@@ -65,6 +72,42 @@ const EditModal = ({ refetch, defaultValues }: EditModalProps) => {
                                         {...field}
                                         placeholder='Masukkan Nama'
                                         error={error}
+                                        variant='modal'
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div className='flex flex-col gap-2'>
+                            <p className='font-semibold text-[#666666]'>
+                                Deskripsi Dokter
+                            </p>
+                            <Controller
+                                control={control}
+                                name='profile'
+                                render={({ field, fieldState: { error } }) => (
+                                    <TextFieldInput
+                                        {...field}
+                                        placeholder='Masukkan Deskripsi Dokter'
+                                        error={error}
+                                        variant='modal'
+                                    />
+                                )}
+                            />
+                        </div>
+                        <div className='flex flex-col gap-2'>
+                            <p className='font-semibold text-[#666666]'>
+                                Harga Konsultasi
+                            </p>
+                            <Controller
+                                control={control}
+                                name='consulePrice'
+                                render={({ field, fieldState: { error } }) => (
+                                    <TextFieldInput
+                                        {...field}
+                                        placeholder='Masukkan Deskripsi Dokter'
+                                        error={error}
+                                        type='number'
+                                        min={1}
                                         variant='modal'
                                     />
                                 )}
@@ -105,44 +148,29 @@ const EditModal = ({ refetch, defaultValues }: EditModalProps) => {
                             />
                         </div>
                         <div className='flex flex-col gap-2'>
-                            <p className='font-semibold text-[#666666]'>Role</p>
+                            <p className='font-semibold text-[#666666]'>
+                                Password
+                            </p>
                             <Controller
                                 control={control}
-                                name='role'
-                                render={({
-                                    field: { ref, ...field },
-                                    fieldState: { error }
-                                }) => (
-                                    <CustomSelectComponent
+                                name='password'
+                                render={({ field, fieldState: { error } }) => (
+                                    <TextFieldInput
                                         {...field}
-                                        placeholder='Pilih Role'
-                                        data={[
-                                            {
-                                                label: 'Farmasi',
-                                                value: 'PHARMACIST'
-                                            },
-                                            {
-                                                label: 'Kasir',
-                                                value: 'CASHIER'
-                                            },
-                                            {
-                                                label: 'Manajemen',
-                                                value: 'MANAGEMENT'
-                                            },
-                                            { label: 'Dokter', value: 'DOCTOR' }
-                                        ]}
-                                        disabled={true}
+                                        placeholder='Masukkan Password'
                                         error={error}
+                                        variant='modal'
+                                        type='password'
                                     />
                                 )}
                             />
                         </div>
                     </ModalFormFields>
-                    <ModalFormFooter type='edit' loading={isLoading} />
+                    <ModalFormFooter type='add' loading={isLoading} />
                 </ModalFormContent>
             </ModalFormContainer>
         </>
     );
 };
 
-export default EditModal;
+export default AddModal;

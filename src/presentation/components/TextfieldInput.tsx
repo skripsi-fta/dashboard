@@ -9,7 +9,7 @@ import type { FieldError } from 'react-hook-form';
 import { AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 interface TextFieldInputType extends InputHTMLAttributes<HTMLInputElement> {
-    type?: 'text' | 'password' | 'file';
+    type?: 'text' | 'password' | 'file' | 'number';
     label?: string;
     error?: FieldError | undefined;
     variant?: 'normal' | 'modal' | 'login';
