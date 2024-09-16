@@ -1,7 +1,7 @@
 import {
-    managementStaffListValidation,
-    type ManagementStaffListValidation
-} from '@/infrastructure/models/management/staff';
+    managementDoctorProfileListValidation,
+    type ManagementDoctorProfileList
+} from '@/infrastructure/models/management/doctorprofile';
 import CustomSelectComponent from '@/presentation/components/CustomSelect';
 import TextFieldInput from '@/presentation/components/TextfieldInput';
 import {
@@ -18,11 +18,11 @@ const FilterModal = ({
     onSubmit,
     defaultValues,
     onCancel
-}: FormProps<ManagementStaffListValidation>) => {
-    const { control, handleSubmit } = useForm<ManagementStaffListValidation>({
+}: FormProps<ManagementDoctorProfileList>) => {
+    const { control, handleSubmit } = useForm<ManagementDoctorProfileList>({
         defaultValues,
         mode: 'onChange',
-        resolver: zodResolver(managementStaffListValidation)
+        resolver: zodResolver(managementDoctorProfileListValidation)
     });
 
     return (
@@ -40,58 +40,40 @@ const FilterModal = ({
                                 render={({ field, fieldState: { error } }) => (
                                     <TextFieldInput
                                         {...field}
-                                        placeholder='Masukkan Nama'
+                                        placeholder='Masukkan Nama Dokter'
                                         error={error}
                                         variant='modal'
                                     />
                                 )}
                             />
                         </div>
+
                         <div className='flex flex-col gap-2'>
                             <p className='font-semibold text-[#666666]'>
-                                Email
+                                Urutkan berdasarkan
                             </p>
                             <Controller
                                 control={control}
-                                name='email'
-                                render={({ field, fieldState: { error } }) => (
-                                    <TextFieldInput
-                                        {...field}
-                                        placeholder='Masukkan email'
-                                        error={error}
-                                        variant='modal'
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className='flex flex-col gap-2'>
-                            <p className='font-semibold text-[#666666]'>Role</p>
-                            <Controller
-                                control={control}
-                                name='role'
+                                name='sortBy'
                                 render={({
                                     field: { ref, ...field },
                                     fieldState: { error }
                                 }) => (
                                     <CustomSelectComponent
                                         {...field}
-                                        placeholder='Pilih Role'
+                                        placeholder='Urutkan berdasarkan'
                                         data={[
                                             {
-                                                label: 'Dokter',
-                                                value: 'DOCTOR'
+                                                label: 'Rating',
+                                                value: 'rating'
                                             },
                                             {
-                                                label: 'Farmasi',
-                                                value: 'PHARMACIST'
+                                                label: 'Total Rating',
+                                                value: 'totalRating'
                                             },
                                             {
-                                                label: 'Kasir',
-                                                value: 'CASHIER'
-                                            },
-                                            {
-                                                label: 'Manajemen',
-                                                value: 'MANAGEMENT'
+                                                label: 'Harga Konsultasi',
+                                                value: 'consulePrice'
                                             }
                                         ]}
                                         error={error}

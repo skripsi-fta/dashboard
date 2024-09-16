@@ -56,12 +56,13 @@ export type ManagementStaffCreate = z.infer<
     typeof managementStaffCreateValidation
 >;
 
-export const managementStaffUpdateValidation =
-    managementStaffCreateValidation.merge(
+export const managementStaffUpdateValidation = managementStaffCreateValidation
+    .merge(
         z.object({
             id: z.number({ required_error: 'required' })
         })
-    );
+    )
+    .omit({ password: true });
 
 export type ManagementStaffUpdate = z.infer<
     typeof managementStaffUpdateValidation
@@ -97,7 +98,7 @@ export namespace ManagementStaff {
         }
 
         export interface Create {
-            data: Data;
+            data: { id: number };
             message: string;
         }
 

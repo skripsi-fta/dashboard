@@ -1,34 +1,56 @@
 import {
-    managementStaffListValidation,
-    type ManagementStaffListValidation
-} from '@/infrastructure/models/management/staff';
-import CustomSelectComponent from '@/presentation/components/CustomSelect';
+    managementDoctorProfileEditValidation,
+    type ManagementDoctorProfile
+} from '@/infrastructure/models/management/doctorprofile';
+import { ManagementDoctorProfileAPI } from '@/infrastructure/usecase/management/doctorprofile/ManagementDoctorProfileAPI';
 import TextFieldInput from '@/presentation/components/TextfieldInput';
 import {
     ModalFormContainer,
     ModalFormContent,
     ModalFormFields,
-    ModalFormFooter,
-    type FormProps
+    ModalFormFooter
 } from '@/presentation/layout/modal-form';
+import { useModal } from '@/providers/ModalProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { AxiosError } from 'axios';
 import { Controller, useForm } from 'react-hook-form';
+import { useMutation } from 'react-query';
+import { toast } from 'sonner';
 
-const FilterModal = ({
-    onSubmit,
-    defaultValues,
-    onCancel
-}: FormProps<ManagementStaffListValidation>) => {
-    const { control, handleSubmit } = useForm<ManagementStaffListValidation>({
-        defaultValues,
-        mode: 'onChange',
-        resolver: zodResolver(managementStaffListValidation)
+interface EditModalProps {
+    refetch: () => void;
+    defaultValues: ManagementDoctorProfile.Request.Update;
+}
+
+const EditModal = ({ refetch, defaultValues }: EditModalProps) => {
+    const { control, handleSubmit } =
+        useForm<ManagementDoctorProfile.Request.Update>({
+            defaultValues,
+            mode: 'onChange',
+            resolver: zodResolver(managementDoctorProfileEditValidation)
+        });
+
+    const { closeModal } = useModal();
+
+    const api = new ManagementDoctorProfileAPI();
+
+    const { mutate: update, isLoading } = useMutation({
+        mutationFn: (data: ManagementDoctorProfile.Request.Update) =>
+            api.updateDoctor(data),
+        onSuccess: () => {
+            toast.success('Edit dokter sukses');
+            closeModal();
+            refetch();
+        },
+        onError: (res: AxiosError<{ message: string }>) => {
+            toast.error(res.response?.data?.message ?? 'Edit dokter error');
+        }
     });
 
     return (
         <>
             <ModalFormContainer
-                formProps={{ onSubmit: handleSubmit(onSubmit) }}
+                formProps={{ onSubmit: handleSubmit((e) => update(e)) }}
             >
                 <ModalFormContent>
                     <ModalFormFields>
@@ -49,15 +71,15 @@ const FilterModal = ({
                         </div>
                         <div className='flex flex-col gap-2'>
                             <p className='font-semibold text-[#666666]'>
-                                Email
+                                Deskripsi Dokter
                             </p>
                             <Controller
                                 control={control}
-                                name='email'
+                                name='profile'
                                 render={({ field, fieldState: { error } }) => (
                                     <TextFieldInput
                                         {...field}
-                                        placeholder='Masukkan email'
+                                        placeholder='Masukkan Deskripsi Dokter'
                                         error={error}
                                         variant='modal'
                                     />
@@ -65,46 +87,30 @@ const FilterModal = ({
                             />
                         </div>
                         <div className='flex flex-col gap-2'>
-                            <p className='font-semibold text-[#666666]'>Role</p>
+                            <p className='font-semibold text-[#666666]'>
+                                Harga Konsultasi
+                            </p>
                             <Controller
                                 control={control}
-                                name='role'
-                                render={({
-                                    field: { ref, ...field },
-                                    fieldState: { error }
-                                }) => (
-                                    <CustomSelectComponent
+                                name='consulePrice'
+                                render={({ field, fieldState: { error } }) => (
+                                    <TextFieldInput
                                         {...field}
-                                        placeholder='Pilih Role'
-                                        data={[
-                                            {
-                                                label: 'Dokter',
-                                                value: 'DOCTOR'
-                                            },
-                                            {
-                                                label: 'Farmasi',
-                                                value: 'PHARMACIST'
-                                            },
-                                            {
-                                                label: 'Kasir',
-                                                value: 'CASHIER'
-                                            },
-                                            {
-                                                label: 'Manajemen',
-                                                value: 'MANAGEMENT'
-                                            }
-                                        ]}
+                                        placeholder='Masukkan Deskripsi Dokter'
                                         error={error}
+                                        type='number'
+                                        min={1}
+                                        variant='modal'
                                     />
                                 )}
                             />
                         </div>
                     </ModalFormFields>
-                    <ModalFormFooter type='filter' onCancel={onCancel} />
+                    <ModalFormFooter type='edit' loading={isLoading} />
                 </ModalFormContent>
             </ModalFormContainer>
         </>
     );
 };
 
-export default FilterModal;
+export default EditModal;

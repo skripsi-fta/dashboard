@@ -1,51 +1,69 @@
 'use client';
 
 import type {
-    ManagementStaff,
-    ManagementStaffListValidation
-} from '@/infrastructure/models/management/staff';
-import { ManagementStaffAPI } from '@/infrastructure/usecase/management/staff/ManagementStaffAPI';
+    ManagementDoctorProfile,
+    ManagementDoctorProfileList
+} from '@/infrastructure/models/management/doctorprofile';
+import { ManagementDoctorProfileAPI } from '@/infrastructure/usecase/management/doctorprofile/ManagementDoctorProfileAPI';
 import { DataTable } from '@/presentation/components/DataTable';
 import DashboardActions from '@/presentation/layout/dashboard/actions';
 import DashboardContent from '@/presentation/layout/dashboard/content';
 import DashboardHeader from '@/presentation/layout/dashboard/header';
-import { Button } from '@/presentation/ui/button';
 import { useModal } from '@/providers/ModalProvider';
 import type { ColumnDef, PaginationState } from '@tanstack/react-table';
-import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import FilterModal from './components/FilterModal';
 import AddModal from './components/AddModal';
+import { Button } from '@/presentation/ui/button';
+import { Pencil, Trash2 } from 'lucide-react';
 import EditModal from './components/EditModal';
 import DeleteModal from './components/DeleteModal';
 
-const ManagementUserPage = () => {
-    const columns: ColumnDef<ManagementStaff.Response.Data>[] = [
+const ManagementProfilDokterPage = () => {
+    const columns: ColumnDef<ManagementDoctorProfile.Response.Data>[] = [
         {
             accessorKey: 'no',
             size: 75,
             header: 'ID'
         },
         {
-            accessorKey: 'username',
-            size: 200,
-            header: 'Username'
-        },
-        {
             accessorKey: 'name',
-            size: 300,
-            header: 'Name'
+            minSize: 200,
+            header: 'Nama'
         },
         {
-            accessorKey: 'email',
-            size: 300,
-            header: 'Email'
+            accessorKey: 'profile',
+            minSize: 200,
+            header: 'Profil Dokter'
         },
         {
-            accessorKey: 'role',
-            size: 200,
-            header: 'Role'
+            accessorKey: 'specializationName',
+            minSize: 200,
+            header: 'Spesialisasi'
+        },
+        {
+            accessorKey: 'specializationDescription',
+            minSize: 250,
+            header: 'Deskripsi Spesialisasi'
+        },
+        {
+            accessorKey: 'consulePrice',
+            minSize: 175,
+            header: 'Harga Konsultasi',
+            cell: ({ row: { original } }) => {
+                return <>Rp{original.consulePrice}</>;
+            }
+        },
+        {
+            accessorKey: 'totalRating',
+            minSize: 150,
+            header: 'Total Rating'
+        },
+        {
+            accessorKey: 'rating',
+            minSize: 125,
+            header: 'Rating'
         },
         {
             header: 'Action',
@@ -59,11 +77,10 @@ const ManagementUserPage = () => {
                                 openModal(
                                     <EditModal
                                         defaultValues={{
-                                            email: original.email,
+                                            consulePrice: original.consulePrice,
                                             id: original.id,
                                             name: original.name,
-                                            role: original.role as any,
-                                            username: original.username
+                                            profile: original.profile
                                         }}
                                         refetch={refetch}
                                     />,
@@ -74,7 +91,7 @@ const ManagementUserPage = () => {
                             <Pencil className='text-primaryblue' />
                         </Button>
 
-                        <Button
+                        {/* <Button
                             variant={'ghost'}
                             onClick={() =>
                                 openModal(
@@ -89,7 +106,7 @@ const ManagementUserPage = () => {
                             }
                         >
                             <Trash2 className='text-red-600' />
-                        </Button>
+                        </Button> */}
                     </div>
                 );
             }
@@ -101,14 +118,13 @@ const ManagementUserPage = () => {
         pageSize: 5
     });
 
-    const [filterValues, setFilterValues] =
-        useState<ManagementStaffListValidation>({
-            email: '',
-            name: '',
-            role: ''
-        });
+    const api = new ManagementDoctorProfileAPI();
 
-    const api = new ManagementStaffAPI();
+    const [filterValues, setFilterValues] =
+        useState<ManagementDoctorProfileList>({
+            name: '',
+            sortBy: ''
+        });
 
     const { data, isLoading, refetch } = useQuery({
         queryFn: () =>
@@ -118,7 +134,7 @@ const ManagementUserPage = () => {
                 pageNumber: pagination.pageIndex + 1
             }),
         queryKey: [
-            'staff-list-management',
+            'doctor-profile-list-management',
             filterValues,
             pagination.pageIndex,
             pagination.pageSize
@@ -127,14 +143,14 @@ const ManagementUserPage = () => {
 
     const { openModal, closeModal } = useModal();
 
-    const onSubmitFilter = (e: ManagementStaffListValidation) => {
+    const onSubmitFilter = (e: ManagementDoctorProfileList) => {
         setFilterValues(() => e);
         setPagination(() => ({ pageIndex: 0, pageSize: 5 }));
         closeModal();
     };
 
     const onResetFilter = () => {
-        setFilterValues(() => ({ email: '', name: '', role: '' }));
+        setFilterValues(() => ({ name: '', sortBy: '' }));
         setPagination(() => ({ pageIndex: 0, pageSize: 5 }));
         closeModal();
     };
@@ -147,27 +163,27 @@ const ManagementUserPage = () => {
                 onCancel={onResetFilter}
             />,
             {
-                title: 'Filter Staff'
+                title: 'Filter Dokter'
             }
         );
     };
 
     const handleOpenDialogAdd = () => {
-        openModal(<AddModal refetch={refetch} />, { title: 'Add Staff' });
+        openModal(<AddModal refetch={refetch} />, { title: 'Tambah Dokter' });
     };
 
     return (
         <>
             <DashboardContent>
-                <DashboardHeader title='Daftar Staff' />
+                <DashboardHeader title='Daftar Dokter' />
                 <DashboardActions
                     filterButtonProps={{
-                        label: 'Filter Staff',
+                        label: 'Filter Dokter',
                         loading: isLoading,
                         onClick: handleOpenDialogFilter
                     }}
                     addButtonProps={{
-                        label: 'Tambah Staff',
+                        label: 'Tambah Dokter',
                         onClick: handleOpenDialogAdd
                     }}
                 />
@@ -196,4 +212,4 @@ const ManagementUserPage = () => {
     );
 };
 
-export default ManagementUserPage;
+export default ManagementProfilDokterPage;
