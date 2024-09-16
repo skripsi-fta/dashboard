@@ -62,7 +62,6 @@ const ManagementUserPage = () => {
                                             email: original.email,
                                             id: original.id,
                                             name: original.name,
-                                            password: 'asdf1234',
                                             role: original.role as any,
                                             username: original.username
                                         }}
