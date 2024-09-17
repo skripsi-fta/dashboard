@@ -46,7 +46,8 @@ export class ManagementDoctorProfileAPI {
                 {
                     name: body.name,
                     profile: body.profile,
-                    consulePrice: body.consulePrice.toString()
+                    consulePrice: body.consulePrice.toString(),
+                    specializationId: Number(body.specializationId)
                 }
             );
 
@@ -66,7 +67,11 @@ export class ManagementDoctorProfileAPI {
     ): Promise<ManagementDoctorProfile.Response.Update> {
         const data = await http.put<ManagementDoctorProfile.Response.Update>(
             '/doctor',
-            { ...body, consulePrice: body.consulePrice.toString() }
+            {
+                ...body,
+                consulePrice: body.consulePrice.toString(),
+                specializationId: Number(body.specializationId)
+            }
         );
 
         return data.data;

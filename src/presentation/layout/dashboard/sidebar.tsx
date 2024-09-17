@@ -1,7 +1,7 @@
 import useDashboard from '@/contexts/DashboardContext';
 import { cn } from '@/lib/utils';
 import { Icons } from '@/presentation/icons/icons';
-import type { LucideProps } from 'lucide-react';
+import { ClipboardPlus, type LucideProps } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
@@ -95,6 +95,11 @@ const sidebarContent: Record<
             name: 'Profil Dokter',
             href: '/dashboard/management/profildokter',
             icons: (props) => <Icons.doctor {...props} />
+        },
+        {
+            name: 'Spesialisasi Dokter',
+            href: '/dashboard/management/spesialisasidokter',
+            icons: (props) => <ClipboardPlus {...props} />
         },
         {
             name: 'Akun Klinik',

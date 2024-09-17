@@ -55,7 +55,10 @@ export const managementDoctorProfileCreateValidation = z.object({
         ),
     role: z
         .string({ required_error: 'required' })
-        .min(1, { message: 'Role tidak boleh kosong' })
+        .min(1, { message: 'Role tidak boleh kosong' }),
+    specializationId: z
+        .string({ required_error: 'required' })
+        .min(1, { message: 'Spesialisasi ID tidak boleh kosong' })
 });
 
 export type ManagementDoctorProfileCreateValidation = z.infer<
@@ -76,7 +79,10 @@ export const managementDoctorProfileEditValidation = z.object({
         .max(255, { message: 'Deskripsi tidak boleh lebih dari 255 karakter' }),
     consulePrice: z.coerce
         .number({ required_error: 'required' })
-        .min(1, { message: 'Harga tidak boleh kosong' })
+        .min(1, { message: 'Harga tidak boleh kosong' }),
+    specializationId: z
+        .string({ required_error: 'required' })
+        .min(1, { message: 'Spesialisasi ID tidak boleh kosong' })
 });
 
 export type ManagementDoctorProfileEditValidation = z.infer<
@@ -107,6 +113,7 @@ export namespace ManagementDoctorProfile {
             rating: number;
             specializationName: string;
             specializationDescription: string;
+            specializationId: string;
         }
 
         export interface List {
