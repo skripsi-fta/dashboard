@@ -4,7 +4,10 @@ import { z } from 'zod';
 export const managementRuanganListValidation = z.object({
     name: z
         .string({ required_error: 'required' })
-        .max(64, { message: 'Nama tidak boleh lebih dari 64 karakter' })
+        .max(64, { message: 'Nama tidak boleh lebih dari 64 karakter' }),
+    detail: z
+        .string({ required_error: 'required' })
+        .max(255, { message: 'Detail tidak boleh lebih dari 255 karakter' })
 });
 
 export const managementRuanganListQuery =
@@ -22,7 +25,11 @@ export const managementRuanganCreateValidation = z.object({
     name: z
         .string({ required_error: 'required' })
         .min(1, { message: 'Nama tidak boleh kosong' })
-        .max(64, { message: 'Nama tidak boleh lebih dari 64 karakter' })
+        .max(64, { message: 'Nama tidak boleh lebih dari 64 karakter' }),
+    detail: z
+        .string({ required_error: 'required' })
+        .min(1, { message: 'Detail tidak boleh kosong' })
+        .max(255, { message: 'Detail tidak boleh lebih dari 255 karakter' })
 });
 
 export type ManagementRuanganCreate = z.infer<
@@ -54,6 +61,7 @@ export namespace ManagementRuangan {
         export interface Data {
             id: number;
             name: string;
+            detail: string;
         }
 
         export interface List {

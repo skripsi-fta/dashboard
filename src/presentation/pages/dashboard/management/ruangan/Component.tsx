@@ -18,6 +18,7 @@ import { Button } from '@/presentation/ui/button';
 import EditModal from './components/EditModal';
 import { Pencil } from 'lucide-react';
 import { ManagementRuanganAPI } from '@/infrastructure/usecase/management/ruangan/ManagementRuanganAPI';
+import { toast } from 'sonner';
 
 const RuanganPage = () => {
     const api = new ManagementRuanganAPI();
@@ -32,6 +33,11 @@ const RuanganPage = () => {
             accessorKey: 'name',
             size: 200,
             header: 'Nama Ruangan'
+        },
+        {
+            accessorKey: 'detail',
+            size: 200,
+            header: 'Deskripsi Ruangan'
         },
         {
             header: 'Action',
@@ -49,7 +55,9 @@ const RuanganPage = () => {
                                         }}
                                         refetch={refetch}
                                     />,
-                                    {}
+                                    {
+                                        title: 'Edit Ruangan'
+                                    }
                                 )
                             }
                         >
@@ -66,10 +74,10 @@ const RuanganPage = () => {
         pageSize: 5
     });
 
-    const [filterValues, setFilterValues] =
-        useState<ManagementRuanganList>({
-            name: ''
-        });
+    const [filterValues, setFilterValues] = useState<ManagementRuanganList>({
+        name: '',
+        detail: ''
+    });
 
     const { openModal, closeModal } = useModal();
 
@@ -80,7 +88,7 @@ const RuanganPage = () => {
     };
 
     const onResetFilter = () => {
-        setFilterValues(() => ({ name: ''}));
+        setFilterValues(() => ({ name: '', detail: '' }));
         setPagination(() => ({ pageIndex: 0, pageSize: 5 }));
         closeModal();
     };
@@ -110,7 +118,10 @@ const RuanganPage = () => {
             filterValues,
             pagination.pageIndex,
             pagination.pageSize
-        ]
+        ],
+        onError: () => {
+            toast.error('Get ruangan error');
+        }
     });
 
     const handleOpenDialogAdd = () => {

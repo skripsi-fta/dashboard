@@ -1,5 +1,5 @@
 import {
-    ManagementRuanganCreate,
+    type ManagementRuanganCreate,
     managementRuanganCreateValidation,
     type ManagementRuangan
 } from '@/infrastructure/models/management/ruangan';
@@ -23,9 +23,8 @@ interface AddModalProps {
 }
 
 const AddModal = ({ refetch }: AddModalProps) => {
-    const { control, handleSubmit } =
-    useForm<ManagementRuanganCreate>({
-        defaultValues: {name: '' },
+    const { control, handleSubmit } = useForm<ManagementRuanganCreate>({
+        defaultValues: { name: '', detail: '' },
         mode: 'onChange',
         resolver: zodResolver(managementRuanganCreateValidation)
     });
@@ -55,7 +54,9 @@ const AddModal = ({ refetch }: AddModalProps) => {
                 <ModalFormContent>
                     <ModalFormFields>
                         <div className='flex flex-col gap-2'>
-                            <p className='font-semibold text-[#666666]'>Nama Ruangan</p>
+                            <p className='font-semibold text-[#666666]'>
+                                Nama Ruangan
+                            </p>
                             <Controller
                                 control={control}
                                 name='name'
@@ -63,6 +64,24 @@ const AddModal = ({ refetch }: AddModalProps) => {
                                     <TextFieldInput
                                         {...field}
                                         placeholder='Masukkan Nama Ruangan'
+                                        error={error}
+                                        variant='modal'
+                                    />
+                                )}
+                            />
+                        </div>
+
+                        <div className='flex flex-col gap-2'>
+                            <p className='font-semibold text-[#666666]'>
+                                Deskripsi Ruangan
+                            </p>
+                            <Controller
+                                control={control}
+                                name='detail'
+                                render={({ field, fieldState: { error } }) => (
+                                    <TextFieldInput
+                                        {...field}
+                                        placeholder='Masukkan Deskripsi Ruangan'
                                         error={error}
                                         variant='modal'
                                     />

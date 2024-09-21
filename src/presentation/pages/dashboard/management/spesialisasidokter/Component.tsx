@@ -162,7 +162,10 @@ const SpesialisasiDokterPage = () => {
             filterValues,
             pagination.pageIndex,
             pagination.pageSize
-        ]
+        ],
+        onError: () => {
+            toast.error('Get spesialisasi dokter error');
+        }
     });
 
     const handleOpenDialogAdd = () => {

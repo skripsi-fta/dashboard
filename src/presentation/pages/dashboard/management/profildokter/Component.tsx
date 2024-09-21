@@ -19,6 +19,7 @@ import { Button } from '@/presentation/ui/button';
 import { Pencil, Trash2 } from 'lucide-react';
 import EditModal from './components/EditModal';
 import DeleteModal from './components/DeleteModal';
+import { toast } from 'sonner';
 
 const ManagementProfilDokterPage = () => {
     const columns: ColumnDef<ManagementDoctorProfile.Response.Data>[] = [
@@ -144,7 +145,10 @@ const ManagementProfilDokterPage = () => {
             filterValues,
             pagination.pageIndex,
             pagination.pageSize
-        ]
+        ],
+        onError: () => {
+            toast.error('Get profil dokter error');
+        }
     });
 
     const { openModal, closeModal } = useModal();

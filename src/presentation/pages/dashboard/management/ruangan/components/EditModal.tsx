@@ -23,12 +23,13 @@ interface EditModal {
 }
 
 const EditModal = ({ refetch, defaultValues }: EditModal) => {
-    const { control, handleSubmit } =
-        useForm<ManagementRuangan.Request.Update>({
+    const { control, handleSubmit } = useForm<ManagementRuangan.Request.Update>(
+        {
             defaultValues,
             mode: 'onChange',
             resolver: zodResolver(managementRuanganUpdateValidation)
-        });
+        }
+    );
 
     const { closeModal } = useModal();
 
@@ -63,6 +64,24 @@ const EditModal = ({ refetch, defaultValues }: EditModal) => {
                                     <TextFieldInput
                                         {...field}
                                         placeholder='Masukkan Nama Ruangan'
+                                        error={error}
+                                        variant='modal'
+                                    />
+                                )}
+                            />
+                        </div>
+
+                        <div className='flex flex-col gap-2'>
+                            <p className='font-semibold text-[#666666]'>
+                                Deskripsi Ruangan
+                            </p>
+                            <Controller
+                                control={control}
+                                name='detail'
+                                render={({ field, fieldState: { error } }) => (
+                                    <TextFieldInput
+                                        {...field}
+                                        placeholder='Masukkan Deskripsi Ruangan'
                                         error={error}
                                         variant='modal'
                                     />

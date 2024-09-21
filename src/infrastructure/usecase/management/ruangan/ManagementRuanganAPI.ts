@@ -1,4 +1,4 @@
-import { ManagementRuangan } from '@/infrastructure/models/management/ruangan';
+import type { ManagementRuangan } from '@/infrastructure/models/management/ruangan';
 import http from '@/lib/axios';
 
 export class ManagementRuanganAPI {
@@ -6,7 +6,7 @@ export class ManagementRuanganAPI {
         params: ManagementRuangan.Request.List
     ): Promise<ManagementRuangan.Response.List> {
         const data = await http.get<ManagementRuangan.Response.List>(
-            '/ruangan',
+            '/room',
             { params }
         );
 
@@ -18,7 +18,7 @@ export class ManagementRuanganAPI {
     ): Promise<ManagementRuangan.Response.Create> {
         const data =
             await http.post<ManagementRuangan.Response.Create>(
-                '/ruangan',
+                '/room',
                 body
             );
 
@@ -30,7 +30,7 @@ export class ManagementRuanganAPI {
     ): Promise<ManagementRuangan.Response.Update> {
         const data =
             await http.put<ManagementRuangan.Response.Update>(
-                '/ruangan',
+                '/room',
                 body
             );
 
@@ -41,7 +41,7 @@ export class ManagementRuanganAPI {
         params: ManagementRuangan.Request.Delete
     ): Promise<ManagementRuangan.Response.Delete> {
         const data = await http.delete<ManagementRuangan.Response.Delete>(
-            '/ruangan',
+            '/room',
             { params }
         );
 
