@@ -19,6 +19,7 @@ import FilterModal from './components/FilterModal';
 import AddModal from './components/AddModal';
 import EditModal from './components/EditModal';
 import DeleteModal from './components/DeleteModal';
+import { toast } from 'sonner';
 
 const ManagementUserPage = () => {
     const columns: ColumnDef<ManagementStaff.Response.Data>[] = [
@@ -122,7 +123,10 @@ const ManagementUserPage = () => {
             filterValues,
             pagination.pageIndex,
             pagination.pageSize
-        ]
+        ],
+        onError: () => {
+            toast.error('Get staff error');
+        }
     });
 
     const { openModal, closeModal } = useModal();

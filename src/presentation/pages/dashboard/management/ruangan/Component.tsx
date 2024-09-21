@@ -1,10 +1,9 @@
 'use client';
 
 import type {
-    ManagementDoctorProfile,
-    ManagementDoctorProfileList
-} from '@/infrastructure/models/management/doctorprofile';
-import { ManagementDoctorProfileAPI } from '@/infrastructure/usecase/management/doctorprofile/ManagementDoctorProfileAPI';
+    ManagementRuangan,
+    ManagementRuanganList
+} from '@/infrastructure/models/management/ruangan';
 import { DataTable } from '@/presentation/components/DataTable';
 import DashboardActions from '@/presentation/layout/dashboard/actions';
 import DashboardContent from '@/presentation/layout/dashboard/content';
@@ -16,13 +15,15 @@ import { useQuery } from 'react-query';
 import FilterModal from './components/FilterModal';
 import AddModal from './components/AddModal';
 import { Button } from '@/presentation/ui/button';
-import { Pencil, Trash2 } from 'lucide-react';
 import EditModal from './components/EditModal';
-import DeleteModal from './components/DeleteModal';
+import { Pencil } from 'lucide-react';
+import { ManagementRuanganAPI } from '@/infrastructure/usecase/management/ruangan/ManagementRuanganAPI';
 import { toast } from 'sonner';
 
-const ManagementProfilDokterPage = () => {
-    const columns: ColumnDef<ManagementDoctorProfile.Response.Data>[] = [
+const RuanganPage = () => {
+    const api = new ManagementRuanganAPI();
+
+    const columns: ColumnDef<ManagementRuangan.Response.Data>[] = [
         {
             accessorKey: 'no',
             size: 75,
@@ -30,47 +31,18 @@ const ManagementProfilDokterPage = () => {
         },
         {
             accessorKey: 'name',
-            minSize: 200,
-            header: 'Nama'
+            size: 200,
+            header: 'Nama Ruangan'
         },
         {
-            accessorKey: 'profile',
-            minSize: 200,
-            header: 'Profil Dokter'
-        },
-        {
-            accessorKey: 'specializationName',
-            minSize: 200,
-            header: 'Spesialisasi'
-        },
-        {
-            accessorKey: 'specializationDescription',
-            minSize: 250,
-            header: 'Deskripsi Spesialisasi'
-        },
-        {
-            accessorKey: 'consulePrice',
-            minSize: 175,
-            header: 'Harga Konsultasi',
-            cell: ({ row: { original } }) => {
-                return <>Rp{original.consulePrice}</>;
-            }
-        },
-        {
-            accessorKey: 'totalRating',
-            minSize: 150,
-            header: 'Total Rating'
-        },
-        {
-            accessorKey: 'rating',
-            minSize: 125,
-            header: 'Rating'
+            accessorKey: 'detail',
+            size: 200,
+            header: 'Deskripsi Ruangan'
         },
         {
             header: 'Action',
-            size: 150,
+            size: 100,
             cell: ({ row: { original } }) => {
-                console.log(original);
                 return (
                     <div className='flex flex-row items-center'>
                         <Button
@@ -79,41 +51,18 @@ const ManagementProfilDokterPage = () => {
                                 openModal(
                                     <EditModal
                                         defaultValues={{
-                                            consulePrice: original.consulePrice,
-                                            id: original.id,
-                                            name: original.name,
-                                            profile: original.profile,
-                                            specializationId:
-                                                `${original.specializationId}` ??
-                                                ''
+                                            ...original
                                         }}
                                         refetch={refetch}
                                     />,
                                     {
-                                        title: 'Update Dokter'
+                                        title: 'Edit Ruangan'
                                     }
                                 )
                             }
                         >
                             <Pencil className='text-primaryblue' />
                         </Button>
-
-                        {/* <Button
-                            variant={'ghost'}
-                            onClick={() =>
-                                openModal(
-                                    <DeleteModal
-                                        refetch={refetch}
-                                        data={original}
-                                    />,
-                                    {
-                                        closeButtonVisible: false
-                                    }
-                                )
-                            }
-                        >
-                            <Trash2 className='text-red-600' />
-                        </Button> */}
                     </div>
                 );
             }
@@ -125,42 +74,21 @@ const ManagementProfilDokterPage = () => {
         pageSize: 5
     });
 
-    const api = new ManagementDoctorProfileAPI();
-
-    const [filterValues, setFilterValues] =
-        useState<ManagementDoctorProfileList>({
-            name: '',
-            sortBy: ''
-        });
-
-    const { data, isLoading, refetch } = useQuery({
-        queryFn: () =>
-            api.getList({
-                ...filterValues,
-                pageSize: pagination.pageSize,
-                pageNumber: pagination.pageIndex + 1
-            }),
-        queryKey: [
-            'doctor-profile-list-management',
-            filterValues,
-            pagination.pageIndex,
-            pagination.pageSize
-        ],
-        onError: () => {
-            toast.error('Get profil dokter error');
-        }
+    const [filterValues, setFilterValues] = useState<ManagementRuanganList>({
+        name: '',
+        detail: ''
     });
 
     const { openModal, closeModal } = useModal();
 
-    const onSubmitFilter = (e: ManagementDoctorProfileList) => {
+    const onSubmitFilter = (e: ManagementRuanganList) => {
         setFilterValues(() => e);
         setPagination(() => ({ pageIndex: 0, pageSize: 5 }));
         closeModal();
     };
 
     const onResetFilter = () => {
-        setFilterValues(() => ({ name: '', sortBy: '' }));
+        setFilterValues(() => ({ name: '', detail: '' }));
         setPagination(() => ({ pageIndex: 0, pageSize: 5 }));
         closeModal();
     };
@@ -173,27 +101,47 @@ const ManagementProfilDokterPage = () => {
                 onCancel={onResetFilter}
             />,
             {
-                title: 'Filter Dokter'
+                title: 'Filter Ruangan'
             }
         );
     };
 
+    const { data, isLoading, refetch } = useQuery({
+        queryFn: () =>
+            api.getList({
+                ...filterValues,
+                pageSize: pagination.pageSize,
+                pageNumber: pagination.pageIndex + 1
+            }),
+        queryKey: [
+            'ruangan-list-management',
+            filterValues,
+            pagination.pageIndex,
+            pagination.pageSize
+        ],
+        onError: () => {
+            toast.error('Get ruangan error');
+        }
+    });
+
     const handleOpenDialogAdd = () => {
-        openModal(<AddModal refetch={refetch} />, { title: 'Tambah Dokter' });
+        openModal(<AddModal refetch={refetch} />, {
+            title: 'Tambah Ruangan'
+        });
     };
 
     return (
         <>
             <DashboardContent>
-                <DashboardHeader title='Daftar Dokter' />
+                <DashboardHeader title='Daftar Ruangan' />
                 <DashboardActions
                     filterButtonProps={{
-                        label: 'Filter Dokter',
+                        label: 'Filter Ruangan',
                         loading: isLoading,
                         onClick: handleOpenDialogFilter
                     }}
                     addButtonProps={{
-                        label: 'Tambah Dokter',
+                        label: 'Tambah Ruangan',
                         onClick: handleOpenDialogAdd
                     }}
                 />
@@ -222,4 +170,4 @@ const ManagementProfilDokterPage = () => {
     );
 };
 
-export default ManagementProfilDokterPage;
+export default RuanganPage;
