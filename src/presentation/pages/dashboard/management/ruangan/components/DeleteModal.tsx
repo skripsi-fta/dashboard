@@ -1,4 +1,4 @@
-import { ManagementRuangan } from '@/infrastructure/models/management/ruangan';
+import { type ManagementRuangan } from '@/infrastructure/models/management/ruangan';
 import { ManagementRuanganAPI } from '@/infrastructure/usecase/management/ruangan/ManagementRuanganAPI';
 import CustomButtonComponent from '@/presentation/components/CustomButton';
 import { useModal } from '@/providers/ModalProvider';

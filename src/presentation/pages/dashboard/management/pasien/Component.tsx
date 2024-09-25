@@ -1,52 +1,66 @@
 'use client';
 
 import type {
-    ManagementStaff,
-    ManagementStaffListValidation
-} from '@/infrastructure/models/management/staff';
-import { ManagementStaffAPI } from '@/infrastructure/usecase/management/staff/ManagementStaffAPI';
+    ManagementPatient,
+    ManagementPatientListValidation
+} from '@/infrastructure/models/management/pasien';
+import { ManagementPasienAPI } from '@/infrastructure/usecase/management/pasien/ManagementPasienAPI';
+import dayjsUtils from '@/lib/dayjs';
 import { DataTable } from '@/presentation/components/DataTable';
 import DashboardActions from '@/presentation/layout/dashboard/actions';
 import DashboardContent from '@/presentation/layout/dashboard/content';
 import DashboardHeader from '@/presentation/layout/dashboard/header';
-import { Button } from '@/presentation/ui/button';
 import { useModal } from '@/providers/ModalProvider';
 import type { ColumnDef, PaginationState } from '@tanstack/react-table';
-import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
+import { toast } from 'sonner';
 import FilterModal from './components/FilterModal';
 import AddModal from './components/AddModal';
+import { identityType } from '@/shared/constant';
+import { Button } from '@/presentation/ui/button';
+import { Pencil } from 'lucide-react';
 import EditModal from './components/EditModal';
-import DeleteModal from './components/DeleteModal';
-import { toast } from 'sonner';
 
-const ManagementUserPage = () => {
-    const columns: ColumnDef<ManagementStaff.Response.Data>[] = [
+const PasienManagementComponent = () => {
+    const columns: ColumnDef<ManagementPatient.Response.Data>[] = [
         {
             accessorKey: 'no',
             size: 75,
             header: 'ID'
         },
         {
-            accessorKey: 'username',
-            size: 200,
-            header: 'Username'
-        },
-        {
             accessorKey: 'name',
             size: 300,
-            header: 'Name'
+            header: 'Nama'
         },
         {
-            accessorKey: 'email',
+            accessorKey: 'address',
             size: 300,
-            header: 'Email'
+            header: 'Alamat'
         },
         {
-            accessorKey: 'role',
+            accessorKey: 'dateOfBirth',
+            size: 250,
+            header: 'Tanggal Lahir',
+            cell: ({ row: { original } }) => {
+                return (
+                    <>{dayjsUtils(original.dateOfBirth).format('DD-MM-YYYY')}</>
+                );
+            }
+        },
+        {
+            accessorKey: 'gender',
             size: 200,
-            header: 'Role'
+            header: 'Jenis Kelamin'
+        },
+        {
+            accessorKey: 'idType',
+            size: 200,
+            header: 'Tipe Identitas',
+            cell: ({ row: { original } }) => (
+                <>{identityType[original.idType]}</>
+            )
         },
         {
             header: 'Action',
@@ -60,36 +74,23 @@ const ManagementUserPage = () => {
                                 openModal(
                                     <EditModal
                                         defaultValues={{
-                                            email: original.email,
                                             id: original.id,
-                                            name: original.name,
-                                            role: original.role as any,
-                                            username: original.username
+                                            address: original.address,
+                                            dateOfBirth: original.dateOfBirth,
+                                            gender: original.gender,
+                                            idNumber: original.idNumber,
+                                            idType: original.idType,
+                                            name: original.name
                                         }}
                                         refetch={refetch}
                                     />,
-                                    { title: 'Edit Staff' }
-                                )
-                            }
-                        >
-                            <Pencil className='text-primaryblue' />
-                        </Button>
-
-                        <Button
-                            variant={'ghost'}
-                            onClick={() =>
-                                openModal(
-                                    <DeleteModal
-                                        refetch={refetch}
-                                        data={original}
-                                    />,
                                     {
-                                        closeButtonVisible: false
+                                        title: 'Edit Pasien'
                                     }
                                 )
                             }
                         >
-                            <Trash2 className='text-red-600' />
+                            <Pencil className='text-primaryblue' />
                         </Button>
                     </div>
                 );
@@ -103,13 +104,14 @@ const ManagementUserPage = () => {
     });
 
     const [filterValues, setFilterValues] =
-        useState<ManagementStaffListValidation>({
-            email: '',
-            name: '',
-            role: ''
+        useState<ManagementPatientListValidation>({
+            gender: '',
+            idNumber: '',
+            idType: '',
+            name: ''
         });
 
-    const api = new ManagementStaffAPI();
+    const api = new ManagementPasienAPI();
 
     const { data, isLoading, refetch } = useQuery({
         queryFn: () =>
@@ -119,26 +121,31 @@ const ManagementUserPage = () => {
                 pageNumber: pagination.pageIndex + 1
             }),
         queryKey: [
-            'staff-list-management',
+            'pasien-list-management',
             filterValues,
             pagination.pageIndex,
             pagination.pageSize
         ],
         onError: () => {
-            toast.error('Get staff error');
+            toast.error('Get pasien error');
         }
     });
 
     const { openModal, closeModal } = useModal();
 
-    const onSubmitFilter = (e: ManagementStaffListValidation) => {
+    const onSubmitFilter = (e: ManagementPatientListValidation) => {
         setFilterValues(() => e);
         setPagination(() => ({ pageIndex: 0, pageSize: 5 }));
         closeModal();
     };
 
     const onResetFilter = () => {
-        setFilterValues(() => ({ email: '', name: '', role: '' }));
+        setFilterValues(() => ({
+            gender: '',
+            idNumber: '',
+            idType: '',
+            name: ''
+        }));
         setPagination(() => ({ pageIndex: 0, pageSize: 5 }));
         closeModal();
     };
@@ -151,27 +158,27 @@ const ManagementUserPage = () => {
                 onCancel={onResetFilter}
             />,
             {
-                title: 'Filter Staff'
+                title: 'Filter Pasien'
             }
         );
     };
 
     const handleOpenDialogAdd = () => {
-        openModal(<AddModal refetch={refetch} />, { title: 'Add Staff' });
+        openModal(<AddModal refetch={refetch} />, { title: 'Add Pasien' });
     };
 
     return (
         <>
             <DashboardContent>
-                <DashboardHeader title='Daftar Staff' />
+                <DashboardHeader title='Daftar Pasien' />
                 <DashboardActions
                     filterButtonProps={{
-                        label: 'Filter Staff',
+                        label: 'Filter Pasien',
                         loading: isLoading,
                         onClick: handleOpenDialogFilter
                     }}
                     addButtonProps={{
-                        label: 'Tambah Staff',
+                        label: 'Tambah Pasien',
                         onClick: handleOpenDialogAdd
                     }}
                 />
@@ -200,4 +207,4 @@ const ManagementUserPage = () => {
     );
 };
 
-export default ManagementUserPage;
+export default PasienManagementComponent;

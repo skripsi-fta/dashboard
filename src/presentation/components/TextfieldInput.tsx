@@ -29,7 +29,9 @@ const TextFieldInput = forwardRef<HTMLInputElement, TextFieldInputType>(
             <>
                 <div className='flex flex-col gap-2'>
                     {label && (
-                        <Label className='text-lg font-semibold'>{label}</Label>
+                        <Label className='text-lg font-semibold'>
+                            {label} {label}
+                        </Label>
                     )}
                     <div className='relative'>
                         <Input
