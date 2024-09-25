@@ -15,12 +15,13 @@ import { useRouter } from 'next/navigation';
 import { useMutation } from 'react-query';
 import { toast } from 'sonner';
 import TextFieldInput from '@/presentation/components/TextfieldInput';
+import type { AxiosError } from 'axios';
 
 const LoginPage = () => {
     const [mounted, setMounted] = useState<boolean>(false);
 
     const { control, handleSubmit } = useForm<UserLoginForm>({
-        defaultValues: { email: '', password: '' },
+        defaultValues: { username: '', password: '' },
         resolver: zodResolver(userLoginValidation)
     });
 
@@ -45,10 +46,14 @@ const LoginPage = () => {
         setMounted(() => true);
     }, []);
 
-    const authenticate = (data: LoginType.Request) => {
+    const authenticate = ({
+        refreshToken,
+        token,
+        user
+    }: LoginType.Response) => {
         localStorage.setItem(
             'user-data',
-            JSON.stringify({ ...data, password: undefined })
+            JSON.stringify({ ...user, refreshToken, token })
         );
 
         router.push('/dashboard');
@@ -59,10 +64,11 @@ const LoginPage = () => {
         mutationFn: (data: LoginType.Request) => useCase.login(data),
         onSuccess: (data) => {
             toast.success('Login Success');
+            console.log(data);
             authenticate(data);
         },
-        onError: (err: Error) => {
-            toast.error(err.message);
+        onError: (res: AxiosError<{ message: string }>) => {
+            toast.error(res.response?.data.message ?? 'Login Error');
         }
     });
 
@@ -113,10 +119,12 @@ const LoginPage = () => {
                         <form onSubmit={handleSubmit((data) => login(data))}>
                             <div className='flex flex-col gap-8'>
                                 <div className='flex flex-col gap-4'>
-                                    <p className='text-xl font-bold'>Email</p>
+                                    <p className='text-xl font-bold'>
+                                        Username / Email
+                                    </p>
                                     <Controller
                                         control={control}
-                                        name='email'
+                                        name='username'
                                         render={({
                                             field,
                                             fieldState: { error }
@@ -124,7 +132,7 @@ const LoginPage = () => {
                                             <TextFieldInput
                                                 {...field}
                                                 variant='login'
-                                                placeholder='Enter your email'
+                                                placeholder='Enter your username or email'
                                                 error={error}
                                             />
                                         )}

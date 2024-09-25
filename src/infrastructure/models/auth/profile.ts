@@ -1,9 +1,13 @@
 export namespace Profile {
-    export interface Response {
+    export interface Data {
         id: number;
         name: string;
         email: string;
-        password: string;
         role: string;
+    }
+    export interface Response {
+        user: Data;
+        token: string;
+        refreshToken: string;
     }
 }
