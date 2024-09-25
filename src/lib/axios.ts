@@ -104,18 +104,8 @@ http.interceptors.response.use(
         return response;
     },
     async (error) => {
-        const originalRequest = error.config;
-
-        if (
-            error.response &&
-            error.response.status === 401 &&
-            !originalRequest._retry
-        ) {
-            window.location.href = '/500';
-
-            originalRequest._retry = true;
-
-            return Promise.reject(error);
+        if (error.response && error.response.status === 403) {
+            window.location.replace('/dashboard/500');
         }
     }
 );

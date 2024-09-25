@@ -55,14 +55,10 @@ export const DashboardContextProvider = ({
     const logout = async () => {
         try {
             localStorage.removeItem('user-data');
-            setTimeout(() => {
-                router.replace('/login');
-            }, 500);
+            router.replace('/login');
         } catch (e) {
             localStorage.removeItem('user-data');
-            setTimeout(() => {
-                router.replace('/login');
-            }, 500);
+            router.replace('/login');
         }
     };
 
