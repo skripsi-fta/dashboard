@@ -1,7 +1,6 @@
 'use client';
 
-import type { LoginType } from '@/infrastructure/models/auth/login';
-// import axios, { type AxiosInstance } from 'axios';
+import type { Profile } from '@/infrastructure/models/auth/profile';
 import { useRouter } from 'next/navigation';
 import { createContext, useContext, useState } from 'react';
 
@@ -12,11 +11,10 @@ interface DashboardContextProps {
 interface DashboardContextType {
     isAuthenticated: boolean;
     loading: boolean;
-    userData: LoginType.Response | null;
+    userData: Profile.Data | null;
     getUserData: () => void;
     isLoggedIn: () => boolean;
     logout: () => void;
-    // apiPrivate: AxiosInstance;
 }
 
 export const DashboardContext = createContext<DashboardContextType | null>(
@@ -30,7 +28,7 @@ export const DashboardContextProvider = ({
 
     const [loading, setLoading] = useState<boolean>(true);
 
-    const [userData, setUserData] = useState<LoginType.Response | null>(null);
+    const [userData, setUserData] = useState<Profile.Data | null>(null);
 
     const router = useRouter();
 
@@ -57,14 +55,10 @@ export const DashboardContextProvider = ({
     const logout = async () => {
         try {
             localStorage.removeItem('user-data');
-            setTimeout(() => {
-                router.replace('/login');
-            }, 500);
+            router.replace('/login');
         } catch (e) {
             localStorage.removeItem('user-data');
-            setTimeout(() => {
-                router.replace('/login');
-            }, 500);
+            router.replace('/login');
         }
     };
 

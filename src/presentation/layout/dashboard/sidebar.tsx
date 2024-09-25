@@ -8,19 +8,19 @@ import type { ReactNode } from 'react';
 
 export const staticMapRole: Record<string, { icons: ReactNode; name: string }> =
     {
-        doctor: {
+        DOCTOR: {
             icons: Icons.doctor({ className: 'size-[30px]' }),
             name: 'Dokter'
         },
-        pharmacy: {
+        PHARMACIST: {
             icons: Icons.pharmacy({ className: 'size-[30px]' }),
             name: 'Farmasi'
         },
-        cashier: {
+        CASHIER: {
             icons: Icons.cashier({ className: 'size-[35px]' }),
             name: 'Kasir'
         },
-        management: {
+        MANAGEMENT: {
             icons: Icons.management({ className: 'size-[35px]' }),
             name: 'Manajemen'
         }
@@ -34,7 +34,7 @@ const sidebarContent: Record<
         icons: (_props: LucideProps) => ReactNode;
     }[]
 > = {
-    doctor: [
+    DOCTOR: [
         {
             name: 'Janji Temu',
             href: '/dashboard/doctor/janjitemu',
@@ -46,14 +46,14 @@ const sidebarContent: Record<
             icons: (props) => <Icons.dokterJadwal {...props} />
         }
     ],
-    pharmacy: [
+    PHARMACIST: [
         {
             name: 'Antrian Farmasi',
             href: '/dashboard/pharmacy/antrian',
             icons: (props) => <Icons.farmasiAntrian {...props} />
         }
     ],
-    cashier: [
+    CASHIER: [
         {
             name: 'Pembayaran Pasien',
             href: '/dashboard/cashier/pembayaran',
@@ -65,7 +65,7 @@ const sidebarContent: Record<
             icons: (props) => <Icons.kasirAntrian {...props} />
         }
     ],
-    management: [
+    MANAGEMENT: [
         {
             name: 'Janji Temu',
             href: '/dashboard/management/janjitemu',
