@@ -19,7 +19,7 @@ export const ModalFormFooter = ({
             <CustomButtonComponent
                 className='w-full flex-1 text-black'
                 variant={'ghost'}
-                onClick={onCancel || closeModal}
+                onClick={onCancel ?? closeModal}
             >
                 {type === 'filter' ? 'Hapus Filter' : 'Cancel'}
             </CustomButtonComponent>
