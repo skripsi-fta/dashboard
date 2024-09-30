@@ -47,7 +47,7 @@ export class ManagementDoctorProfileAPI {
                     name: body.name,
                     profile: body.profile,
                     consulePrice: body.consulePrice.toString(),
-                    specializationId: Number(body.specializationId)
+                    specializationId: body.specializationId.toString()
                 }
             );
 
