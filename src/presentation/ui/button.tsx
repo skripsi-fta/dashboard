@@ -22,7 +22,8 @@ const buttonVariants = cva(
                 addButton:
                     'bg-primaryblue hover:bg-primaryblue/90 text-white rounded-[8px]',
                 filterButton:
-                    'border-primaryblue border-[1px] rounded-[8px] text-primaryblue'
+                    'border-primaryblue border-[1px] rounded-[8px] text-primaryblue',
+                blank: 'cursor-pointer m-0 p-0'
             },
             size: {
                 default: 'h-10 px-4 py-2',
