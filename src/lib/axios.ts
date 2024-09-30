@@ -60,7 +60,7 @@ http.interceptors.request.use(
         return config;
     },
     (error) => {
-        return Promise.reject(error);
+        throw error;
     }
 );
 
@@ -74,7 +74,8 @@ http.interceptors.response.use(
         if (
             error.response &&
             error.response.status === 401 &&
-            !originalRequest._retry
+            !originalRequest._retry &&
+            originalRequest?.headers?.Authorization
         ) {
             originalRequest._retry = true;
 
@@ -95,7 +96,7 @@ http.interceptors.response.use(
             }
         }
 
-        return Promise.reject(error);
+        throw error;
     }
 );
 
@@ -104,9 +105,16 @@ http.interceptors.response.use(
         return response;
     },
     async (error) => {
-        if (error.response && error.response.status === 403) {
+        if (
+            error.response &&
+            error.response.status === 403 &&
+            error?.config?.headers?.Authorization
+        ) {
             window.location.replace('/dashboard/500');
+            return;
         }
+
+        throw error;
     }
 );
 

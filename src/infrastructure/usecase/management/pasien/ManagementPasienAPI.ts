@@ -2,7 +2,7 @@ import type { ManagementPatient } from '@/infrastructure/models/management/pasie
 import http from '@/lib/axios';
 
 export class ManagementPasienAPI {
-    private readonly url: string = '/patient';
+    private readonly url: string = '/management/patient';
 
     async getList(
         params: ManagementPatient.Request.List

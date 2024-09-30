@@ -7,7 +7,7 @@ export class ManagementDoctorProfileAPI {
         params: ManagementDoctorProfile.Request.List
     ): Promise<ManagementDoctorProfile.Response.List> {
         const data = await http.get<ManagementDoctorProfile.Response.List>(
-            '/doctor',
+            '/management/doctor',
             {
                 params: {
                     ...params,
@@ -28,7 +28,7 @@ export class ManagementDoctorProfileAPI {
         body: ManagementDoctorProfile.Request.Create
     ): Promise<ManagementStaff.Response.Create> {
         const data = await http.post<ManagementStaff.Response.Create>(
-            '/staff',
+            '/management/staff',
             {
                 username: body.username,
                 name: body.name,
@@ -42,7 +42,7 @@ export class ManagementDoctorProfileAPI {
 
         const createProfileDoctor =
             await http.post<ManagementDoctorProfile.Response.Create>(
-                '/doctor',
+                '/management/doctor',
                 {
                     name: body.name,
                     profile: body.profile,
@@ -53,7 +53,7 @@ export class ManagementDoctorProfileAPI {
 
         const doctorId = createProfileDoctor.data.data.id;
 
-        await http.put<ManagementStaff.Response.Update>('/staff', {
+        await http.put<ManagementStaff.Response.Update>('/management/staff', {
             id: staffId,
             role: 'DOCTOR',
             doctorId
@@ -66,7 +66,7 @@ export class ManagementDoctorProfileAPI {
         body: ManagementDoctorProfile.Request.Update
     ): Promise<ManagementDoctorProfile.Response.Update> {
         const data = await http.put<ManagementDoctorProfile.Response.Update>(
-            '/doctor',
+            '/management/doctor',
             {
                 ...body,
                 consulePrice: body.consulePrice.toString(),
@@ -81,7 +81,7 @@ export class ManagementDoctorProfileAPI {
         params: ManagementDoctorProfile.Request.Delete
     ): Promise<ManagementDoctorProfile.Response.Delete> {
         const data = await http.delete<ManagementDoctorProfile.Response.Delete>(
-            '/doctor',
+            '/management/doctor',
             { params }
         );
 

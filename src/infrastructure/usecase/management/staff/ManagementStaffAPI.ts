@@ -5,9 +5,12 @@ export class ManagementStaffAPI {
     async getList(
         params: ManagementStaff.Request.List
     ): Promise<ManagementStaff.Response.List> {
-        const data = await http.get<ManagementStaff.Response.List>('/staff', {
-            params
-        });
+        const data = await http.get<ManagementStaff.Response.List>(
+            '/management/staff',
+            {
+                params
+            }
+        );
 
         return data.data;
     }
@@ -16,7 +19,7 @@ export class ManagementStaffAPI {
         body: ManagementStaff.Request.Create
     ): Promise<ManagementStaff.Response.Create> {
         const data = await http.post<ManagementStaff.Response.Create>(
-            '/staff',
+            '/management/staff',
             body
         );
 
@@ -27,7 +30,7 @@ export class ManagementStaffAPI {
         body: ManagementStaff.Request.Update
     ): Promise<ManagementStaff.Response.Update> {
         const data = await http.put<ManagementStaff.Response.Update>(
-            '/staff',
+            '/management/staff',
             body
         );
 
@@ -36,7 +39,7 @@ export class ManagementStaffAPI {
 
     async deleteStaff(id: number): Promise<ManagementStaff.Response.Delete> {
         const data = await http.delete<ManagementStaff.Response.Delete>(
-            '/staff',
+            '/management/staff',
             { params: { id } }
         );
 

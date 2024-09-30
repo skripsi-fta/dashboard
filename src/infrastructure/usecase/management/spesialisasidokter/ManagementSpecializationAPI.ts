@@ -7,7 +7,7 @@ export class ManagementSpecializationAPI {
         params: ManagementSpesialisasiDokter.Request.List
     ): Promise<ManagementSpesialisasiDokter.Response.List> {
         const data = await http.get<ManagementSpesialisasiDokter.Response.List>(
-            '/specialization',
+            '/management/specialization',
             {
                 params
             }
@@ -21,7 +21,7 @@ export class ManagementSpecializationAPI {
     ): Promise<ManagementSpesialisasiDokter.Response.Create> {
         const data =
             await http.post<ManagementSpesialisasiDokter.Response.Create>(
-                '/specialization',
+                '/management/specialization',
                 body
             );
 
@@ -33,7 +33,7 @@ export class ManagementSpecializationAPI {
     ): Promise<ManagementSpesialisasiDokter.Response.Switch> {
         const data =
             await http.put<ManagementSpesialisasiDokter.Response.Switch>(
-                '/specialization/switch',
+                '/management/specialization/switch',
                 body
             );
 
@@ -45,7 +45,7 @@ export class ManagementSpecializationAPI {
     ): Promise<ManagementSpesialisasiDokter.Response.Update> {
         const data =
             await http.put<ManagementSpesialisasiDokter.Response.Update>(
-                '/specialization',
+                '/management/specialization',
                 body
             );
 
@@ -53,10 +53,9 @@ export class ManagementSpecializationAPI {
     }
 
     async getDropdown(): Promise<GlobalModels.DropdownData> {
-        const data =
-            await http.get<ManagementSpesialisasiDokter.Response.List>(
-                '/specialization'
-            );
+        const data = await http.get<ManagementSpesialisasiDokter.Response.List>(
+            '/management/specialization'
+        );
 
         return {
             data: data.data.data.map((d) => ({

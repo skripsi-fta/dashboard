@@ -68,6 +68,7 @@ const LoginPage = () => {
             authenticate(data);
         },
         onError: (res: AxiosError<{ message: string }>) => {
+            console.log(res);
             toast.error(res.response?.data.message ?? 'Login Error');
         }
     });
