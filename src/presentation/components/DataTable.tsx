@@ -110,8 +110,8 @@ export function DataTable<TData, TValue>({
     const hasRows = table.getRowModel().rows.length > 0 && !isLoading;
 
     return (
-        <div className='relative flex w-full flex-col gap-4'>
-            <div className='table-custom-scrollbar overflow-x-auto'>
+        <div className='relative flex w-full min-w-0 flex-col gap-4'>
+            <div className='table-custom-scrollbar min-w-0 overflow-x-auto'>
                 <Table
                     {...tableProps}
                     style={{

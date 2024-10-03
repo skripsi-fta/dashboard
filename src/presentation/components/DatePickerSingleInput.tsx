@@ -42,7 +42,16 @@ const DatePickerSingleInput = <
     const dateErrorMsg = dateControl.fieldState.error?.message;
 
     return (
-        <Popover modal={true}>
+        <Popover
+            modal={true}
+            onOpenChange={(open) => {
+                setTimeout(() => {
+                    if (!open) {
+                        document.body.style.pointerEvents = '';
+                    }
+                }, 1000);
+            }}
+        >
             <PopoverTrigger asChild>
                 <div className='flex flex-col gap-2'>
                     {label && (

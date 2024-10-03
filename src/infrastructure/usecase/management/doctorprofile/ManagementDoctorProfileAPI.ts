@@ -1,8 +1,24 @@
+import type { GlobalModels } from '@/infrastructure/models/global';
 import type { ManagementDoctorProfile } from '@/infrastructure/models/management/doctorprofile';
 import type { ManagementStaff } from '@/infrastructure/models/management/staff';
 import http from '@/lib/axios';
 
 export class ManagementDoctorProfileAPI {
+    async getDropdown(): Promise<GlobalModels.DropdownData> {
+        const data =
+            await http.get<ManagementDoctorProfile.Response.List>(
+                '/management/doctor'
+            );
+
+        return {
+            data:
+                data?.data?.data?.map((d) => ({
+                    label: d.name,
+                    value: d.id.toString()
+                })) || []
+        };
+    }
+
     async getList(
         params: ManagementDoctorProfile.Request.List
     ): Promise<ManagementDoctorProfile.Response.List> {

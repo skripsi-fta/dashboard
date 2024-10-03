@@ -7,16 +7,19 @@ import { Button } from '@/presentation/ui/button';
 import { useState } from 'react';
 import ScheduleRegulerManagementComponent from './reguler/Component';
 import CalendarSchedule from './components/CalendarSchedule';
+import ScheduleFixedManagementComponent from './fixed/Component';
 
 const ScheduleManagementComponent = () => {
-    const [stepper, setStepper] = useState<'reguler' | 'fixed'>('reguler');
+    const [stepper, setStepper] = useState<'reguler' | 'fixed'>('fixed');
+
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
     return (
         <>
             <DashboardContent>
                 <DashboardHeader title='Jadwal Dokter' />
 
-                <div className='flex flex-row gap-8 items-center'>
+                <div className='flex flex-row items-center gap-8'>
                     <Button
                         variant={'ghost'}
                         onClick={() => setStepper(() => 'reguler')}
@@ -40,14 +43,20 @@ const ScheduleManagementComponent = () => {
                 </div>
             </DashboardContent>
 
-            <div className='flex min-w-full flex-col gap-8 lg:flex-row'>
-                <div className='lg:flex-[7] xl:flex-[8]'>
+            <div className='flex w-full flex-1 flex-col-reverse gap-8 lg:flex-row'>
+                <div className='min-w-0 lg:flex-[7] xl:flex-[8]'>
                     {stepper === 'reguler' && (
                         <ScheduleRegulerManagementComponent />
                     )}
+                    {stepper === 'fixed' && (
+                        <ScheduleFixedManagementComponent />
+                    )}
                 </div>
-                <div className='lg:flex-[5] xl:flex-[4]'>
-                    <CalendarSchedule />
+                <div className='min-w-0 lg:flex-[5] xl:flex-[4]'>
+                    <CalendarSchedule
+                        selectedDate={selectedDate}
+                        setSelectedDate={setSelectedDate}
+                    />
                 </div>
             </div>
         </>

@@ -30,21 +30,16 @@ export const DialogProvider: React.FC<{ children: ReactNode }> = ({
     children
 }) => {
     const [isOpen, setIsOpen] = useState(false);
-
     const [content, setContent] = useState<ReactNode | null>(null);
-
     const [dialogParams, setDialogParams] = useState<
         DialogParams | undefined
     >();
-
     const [loaded, setLoaded] = useState<boolean>(false);
 
     const openModal = (dialogContent: ReactNode, params: DialogParams) => {
         setContent(() => dialogContent);
         setIsOpen(() => true);
-
         setDialogParams(() => params);
-
         setLoaded(() => true);
     };
 
@@ -63,7 +58,6 @@ export const DialogProvider: React.FC<{ children: ReactNode }> = ({
                         <DialogTitle>
                             {dialogParams?.title ?? 'header'}
                         </DialogTitle>
-
                         <DialogDescription>
                             {dialogParams?.title ?? 'header'}
                         </DialogDescription>
@@ -76,16 +70,19 @@ export const DialogProvider: React.FC<{ children: ReactNode }> = ({
                         }
                     }}
                     closeButtonVisible={dialogParams?.closeButtonVisible}
+                    className='max-h-[94vh] w-full md:h-auto flex flex-col'
                 >
                     {loaded && (
-                        <div className='flex flex-col gap-4 h-full overflow-y-auto'>
+                        <>
                             {dialogParams?.title && (
                                 <h3 className='text-2xl font-bold'>
                                     {dialogParams?.title}
                                 </h3>
                             )}
-                            {content}
-                        </div>
+                            <div className='flex-1 overflow-y-auto'>
+                                {content}
+                            </div>
+                        </>
                     )}
                 </DialogContent>
             </Dialog>
@@ -95,7 +92,6 @@ export const DialogProvider: React.FC<{ children: ReactNode }> = ({
 
 export const useModal = () => {
     const context = useContext(DialogContext);
-
     if (context === undefined) {
         throw new Error('useModal must be used within a DialogProvider');
     }
