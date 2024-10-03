@@ -22,55 +22,89 @@ export type ManagementFixedScheduleListQuery = z.infer<
     typeof managementFixedScheduleListQuery
 >;
 
-export const managementFixedScheduleCreateValidation = z.object({
-    day: z
-        .string({ required_error: 'required' })
-        .min(1, { message: 'Hari tidak boleh kosong' }),
-    doctorId: z
-        .string({ required_error: 'required' })
-        .min(1, { message: 'Dokter harus dipilih' }),
-    roomId: z
-        .string({ required_error: 'required' })
-        .min(1, { message: 'Ruangan harus dipilih' }),
-    startTime: z
-        .string({ required_error: 'required' })
-        .min(1, { message: 'Jam mulai harus diisi' }),
-    endTime: z
-        .string({ required_error: 'required' })
-        .min(1, { message: 'Jam selesai harus diisi' }),
-    capacity: z.coerce
-        .number({ required_error: 'required' })
-        .min(1, { message: 'Kapasitas tidak boleh kosong' })
-});
+export const managementFixedScheduleCreateValidation = z
+    .object({
+        day: z
+            .string({ required_error: 'required' })
+            .min(1, { message: 'Hari tidak boleh kosong' }),
+        doctorId: z
+            .string({ required_error: 'required' })
+            .min(1, { message: 'Dokter harus dipilih' }),
+        roomId: z
+            .string({ required_error: 'required' })
+            .min(1, { message: 'Ruangan harus dipilih' }),
+        startTime: z
+            .string({ required_error: 'required' })
+            .min(1, { message: 'Jam mulai harus diisi' }),
+        endTime: z
+            .string({ required_error: 'required' })
+            .min(1, { message: 'Jam selesai harus diisi' }),
+        capacity: z.coerce
+            .number({ required_error: 'required' })
+            .min(1, { message: 'Kapasitas tidak boleh kosong' })
+    })
+    .refine(
+        ({ startTime, endTime }) => {
+            const [startHours, startMinutes] = startTime.split(':').map(Number);
+            const [endHours, endMinutes] = endTime.split(':').map(Number);
+
+            const startTotalMinutes = startHours * 60 + startMinutes;
+            const endTotalMinutes = endHours * 60 + endMinutes;
+
+            console.log(startTotalMinutes, endTotalMinutes);
+
+            return startTotalMinutes < endTotalMinutes;
+        },
+        {
+            message: 'Start Time tidak boleh lebih dari End Time',
+            path: ['endTime']
+        }
+    );
 
 export type ManagementFixedScheduleCreate = z.infer<
     typeof managementFixedScheduleCreateValidation
 >;
 
-export const managementFixedScheduleUpdateValidation = z.object({
-    day: z
-        .string({ required_error: 'required' })
-        .min(1, { message: 'Hari tidak boleh kosong' }),
-    id: z
-        .string({ required_error: 'required' })
-        .min(1, { message: 'ID tidak boleh kosong' }),
-    doctorId: z
-        .string({ required_error: 'required' })
-        .min(1, { message: 'Dokter harus dipilih' }),
-    roomId: z
-        .string({ required_error: 'required' })
-        .min(1, { message: 'Ruangan harus dipilih' }),
-    startTime: z
-        .string({ required_error: 'required' })
-        .min(1, { message: 'Jam mulai harus diisi' }),
-    endTime: z
-        .string({ required_error: 'required' })
-        .min(1, { message: 'Jam selesai harus diisi' }),
-    capacity: z.coerce
-        .number({ required_error: 'required' })
-        .min(1, { message: 'Kapasitas tidak boleh kosong' }),
-    isOverrideSchedule: z.boolean({ required_error: 'required' })
-});
+export const managementFixedScheduleUpdateValidation = z
+    .object({
+        day: z
+            .string({ required_error: 'required' })
+            .min(1, { message: 'Hari tidak boleh kosong' }),
+        id: z
+            .string({ required_error: 'required' })
+            .min(1, { message: 'ID tidak boleh kosong' }),
+        doctorId: z
+            .string({ required_error: 'required' })
+            .min(1, { message: 'Dokter harus dipilih' }),
+        roomId: z
+            .string({ required_error: 'required' })
+            .min(1, { message: 'Ruangan harus dipilih' }),
+        startTime: z
+            .string({ required_error: 'required' })
+            .min(1, { message: 'Jam mulai harus diisi' }),
+        endTime: z
+            .string({ required_error: 'required' })
+            .min(1, { message: 'Jam selesai harus diisi' }),
+        capacity: z.coerce
+            .number({ required_error: 'required' })
+            .min(1, { message: 'Kapasitas tidak boleh kosong' }),
+        isOverrideSchedule: z.boolean({ required_error: 'required' })
+    })
+    .refine(
+        ({ startTime, endTime }) => {
+            const [startHours, startMinutes] = startTime.split(':').map(Number);
+            const [endHours, endMinutes] = endTime.split(':').map(Number);
+
+            const startTotalMinutes = startHours * 60 + startMinutes;
+            const endTotalMinutes = endHours * 60 + endMinutes;
+
+            return startTotalMinutes < endTotalMinutes;
+        },
+        {
+            message: 'Start Time tidak boleh lebih dari End Time',
+            path: ['endTime']
+        }
+    );
 
 export type ManagementFixedScheduleUpdate = z.infer<
     typeof managementFixedScheduleUpdateValidation
@@ -93,7 +127,7 @@ export namespace ManagementFixedScheduleDoctor {
             startTime: string;
             doctor: ManagementDoctorProfile.Response.Data;
             room: ManagementRuangan.Response.Data;
-            updatedAt: string;
+            syncDate: string;
             capacity: number;
         }
 

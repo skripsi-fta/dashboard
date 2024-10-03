@@ -16,7 +16,7 @@ import AddModal from './components/AddModal';
 import FilterModal from './components/FilterModal';
 import dayjsUtils from '@/lib/dayjs';
 import { Button } from '@/presentation/ui/button';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import EditModal from './components/EditModal';
 
 const ScheduleFixedManagementComponent = () => {
@@ -63,7 +63,7 @@ const ScheduleFixedManagementComponent = () => {
             size: 200,
             header: 'Terakhir Sinkron',
             cell: ({ row: { original } }) =>
-                dayjsUtils(original.updatedAt).format('DD-MM-YYYY HH:mm:ss')
+                dayjsUtils(original.syncDate).format('DD-MM-YYYY HH:mm:ss')
         },
         {
             header: 'Action',
@@ -96,7 +96,8 @@ const ScheduleFixedManagementComponent = () => {
                             <Pencil className='text-primaryblue' />
                         </Button>
 
-                        <Button
+                        {/* TODO: Implement delete fixed schedule in the backend too */}
+                        {/* <Button
                             variant={'ghost'}
                             onClick={() =>
                                 openModal(
@@ -111,7 +112,7 @@ const ScheduleFixedManagementComponent = () => {
                             }
                         >
                             <Trash2 className='text-red-600' />
-                        </Button>
+                        </Button> */}
                     </div>
                 );
             }
@@ -148,7 +149,7 @@ const ScheduleFixedManagementComponent = () => {
             pagination.pageSize
         ],
         onError: () => {
-            toast.error('Get pasien error');
+            toast.error('Get fixed schedule error');
         }
     });
 

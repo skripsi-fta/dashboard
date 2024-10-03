@@ -10,9 +10,11 @@ import {
     SelectTrigger,
     SelectValue
 } from '@/presentation/ui/select';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2, MapPin } from 'lucide-react';
 import type { Dispatch, SetStateAction } from 'react';
 import { DayPicker } from 'react-day-picker';
+import { useQuery } from 'react-query';
+import { ManagementScheduleAPI } from '@/infrastructure/usecase/management/schedule/ManagementScheduleAPI';
 
 interface CalendarSchedule {
     selectedDate: Date;
@@ -50,6 +52,28 @@ export default function CalendarSchedule({
         },
         [setSelectedDate]
     );
+
+    const api = new ManagementScheduleAPI();
+
+    const { data, isLoading } = useQuery({
+        queryKey: [
+            'schedule-calendar-list-doctor',
+            dayjsUtils(selectedDate).format('DD-MM-YYYY')
+        ],
+        queryFn: () =>
+            api.getScheduleList({
+                date: dayjsUtils(selectedDate).format('YYYY-MM-DD'),
+                doctorId: '',
+                endTime: '',
+                roomId: '',
+                startTime: '',
+                pageNumber: 1,
+                pageSize: 20,
+                status: 'ready',
+                startDate: '',
+                endDate: ''
+            })
+    });
 
     return (
         <DashboardContent props={{ className: 'min-h-full h-full' }}>
@@ -184,6 +208,56 @@ export default function CalendarSchedule({
                 mode='single'
                 autoFocus
             />
+
+            <div className='flex flex-col gap-4'>
+                <div className='flex flex-row items-center justify-between'>
+                    <p className='text-xl font-bold'>Jadwal</p>
+                    <p className='text-foreground/70'>
+                        {dayjsUtils(selectedDate).format('DD MMM YYYY')}
+                    </p>
+                </div>
+                <div className='flex flex-col gap-2'>
+                    {isLoading ? (
+                        <Loader2 className='mx-auto size-6 animate-spin' />
+                    ) : (
+                        <>
+                            {data?.data.length === 0 ? (
+                                <>
+                                    <p className='text-center font-bold'>
+                                        Tidak Ada Jadwal
+                                    </p>
+                                </>
+                            ) : (
+                                <>
+                                    {data?.data.map((d) => (
+                                        <div
+                                            className='flex flex-row items-center justify-between p-4 shadow-xl'
+                                            key={d.id}
+                                        >
+                                            <div className='flex flex-col gap-3'>
+                                                <div className='flex flex-row items-center gap-2'>
+                                                    <MapPin color='#3B41E3' />
+                                                    <p className='font-bold text-[#3B41E3]'>
+                                                        {d.room.name}
+                                                    </p>
+                                                </div>
+
+                                                <p className='font-bold'>
+                                                    {d.doctor.name}
+                                                </p>
+                                            </div>
+
+                                            <p>
+                                                {d.startTime} - {d.endTime}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </>
+                            )}
+                        </>
+                    )}
+                </div>
+            </div>
         </DashboardContent>
     );
 }

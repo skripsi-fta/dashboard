@@ -28,18 +28,19 @@ interface AddModalProps {
 }
 
 const AddModal = ({ refetch }: AddModalProps) => {
-    const { control, handleSubmit } = useForm<ManagementFixedScheduleCreate>({
-        defaultValues: {
-            day: '',
-            doctorId: '',
-            endTime: '',
-            roomId: '',
-            startTime: '',
-            capacity: 0
-        },
-        mode: 'onChange',
-        resolver: zodResolver(managementFixedScheduleCreateValidation)
-    });
+    const { control, handleSubmit, trigger } =
+        useForm<ManagementFixedScheduleCreate>({
+            defaultValues: {
+                day: '',
+                doctorId: '',
+                endTime: '',
+                roomId: '',
+                startTime: '',
+                capacity: 0
+            },
+            mode: 'onChange',
+            resolver: zodResolver(managementFixedScheduleCreateValidation)
+        });
 
     const api = new ManagementScheduleAPI();
 
