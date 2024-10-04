@@ -8,8 +8,6 @@ export class ManagementScheduleAPI {
     async getScheduleList(
         params: ManagementRegulerScheduleDoctor.Request.List
     ): Promise<ManagementRegulerScheduleDoctor.Response.List> {
-        console.log(params);
-
         const data =
             await http.get<ManagementRegulerScheduleDoctor.Response.List>(
                 `${this.url}`,

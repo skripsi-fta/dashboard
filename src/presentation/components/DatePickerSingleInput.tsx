@@ -53,7 +53,7 @@ const DatePickerSingleInput = <
             }}
         >
             <PopoverTrigger asChild>
-                <div className='flex flex-col gap-2'>
+                <div className='flex flex-1 flex-col gap-2'>
                     {label && (
                         <p className='font-semibold text-[#666666]'>{label}</p>
                     )}

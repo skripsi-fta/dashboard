@@ -13,6 +13,8 @@ import type { ColumnDef, PaginationState } from '@tanstack/react-table';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { toast } from 'sonner';
+import FilterModal from './components/FilterModal';
+import { cn } from '@/lib/utils';
 
 const ScheduleRegulerManagementComponent = () => {
     const columns: ColumnDef<ManagementRegulerScheduleDoctor.Response.Data>[] =
@@ -28,6 +30,16 @@ const ScheduleRegulerManagementComponent = () => {
                 header: 'Tanggal'
             },
             {
+                accessorKey: 'startTime',
+                size: 125,
+                header: 'Jam Mulai'
+            },
+            {
+                accessorKey: 'endTime',
+                size: 125,
+                header: 'Jam Akhir'
+            },
+            {
                 accessorKey: 'doctorName',
                 size: 200,
                 header: 'Nama Dokter',
@@ -41,6 +53,12 @@ const ScheduleRegulerManagementComponent = () => {
                     original.doctor.specialization.name
             },
             {
+                accessorKey: 'ruangan',
+                size: 200,
+                header: 'Ruangan',
+                cell: ({ row: { original } }) => original?.room?.name
+            },
+            {
                 accessorKey: 'tipe',
                 size: 150,
                 header: 'Tipe',
@@ -48,6 +66,25 @@ const ScheduleRegulerManagementComponent = () => {
                     original.type === 'regular'
                         ? 'Jadwal Tetap'
                         : 'Jadwal Reguler'
+            },
+            {
+                accessorKey: 'status',
+                size: 200,
+                header: 'Status',
+                cell: ({ row: { original } }) => (
+                    <p
+                        className={cn(
+                            'capitalize font-medium',
+                            original.status === 'ready' && 'text-green-500',
+                            original.status === 'in review' &&
+                                'text-yellow-500',
+                            original.status === 'cancelled' && 'text-red-500',
+                            original.status === 'changed' && 'text-orange-400'
+                        )}
+                    >
+                        {original.status}
+                    </p>
+                )
             }
         ];
 
@@ -112,6 +149,17 @@ const ScheduleRegulerManagementComponent = () => {
         closeModal();
     };
 
+    const handleOpenDialogFilter = () => {
+        openModal(
+            <FilterModal
+                defaultValues={filterValues}
+                onSubmit={onSubmitFilter}
+                onCancel={onResetFilter}
+            />,
+            { title: 'Filter Jadwal' }
+        );
+    };
+
     return (
         <>
             <DashboardContent>
@@ -120,8 +168,8 @@ const ScheduleRegulerManagementComponent = () => {
                 <DashboardActions
                     filterButtonProps={{
                         label: 'Filter Jadwal',
-                        loading: isLoading
-                        // onClick: handleOpenDialogFilter
+                        loading: isLoading,
+                        onClick: handleOpenDialogFilter
                     }}
                     addButtonProps={{
                         label: 'Tambah Jadwal'

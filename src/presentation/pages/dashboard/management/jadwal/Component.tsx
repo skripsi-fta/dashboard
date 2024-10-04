@@ -10,7 +10,7 @@ import CalendarSchedule from './components/CalendarSchedule';
 import ScheduleFixedManagementComponent from './fixed/Component';
 
 const ScheduleManagementComponent = () => {
-    const [stepper, setStepper] = useState<'reguler' | 'fixed'>('fixed');
+    const [stepper, setStepper] = useState<'reguler' | 'fixed'>('reguler');
 
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 

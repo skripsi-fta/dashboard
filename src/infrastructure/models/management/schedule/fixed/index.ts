@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { ManagementDoctorProfile } from '../../doctorprofile';
 import type { ManagementRuangan } from '../../ruangan';
 import { paginationValidation } from '@/lib/validator';
+import type { ManagementRegulerScheduleDoctor } from '../reguler';
 
 export const managementFixedScheduleListValidation = z.object({
     day: z.string({ required_error: 'required' }),
@@ -139,12 +140,20 @@ export namespace ManagementFixedScheduleDoctor {
 
         export interface Create {
             message: string;
-            data: Data;
+            data: {
+                schedules: ManagementRegulerScheduleDoctor.Response.Data[];
+                fixedSchedule: Data;
+                skippedSchedule: string[];
+            };
         }
 
         export interface Update {
             message: string;
-            data: Data;
+            data: {
+                fixedSchedule: Data;
+                skippedSchedule?: string[];
+                changedSchedule?: string[];
+            };
         }
     }
 }

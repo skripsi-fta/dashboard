@@ -18,6 +18,7 @@ import dayjsUtils from '@/lib/dayjs';
 import { Button } from '@/presentation/ui/button';
 import { Pencil } from 'lucide-react';
 import EditModal from './components/EditModal';
+import NoticeModal from './components/NoticeModal';
 
 const ScheduleFixedManagementComponent = () => {
     const columns: ColumnDef<ManagementFixedScheduleDoctor.Response.Data>[] = [

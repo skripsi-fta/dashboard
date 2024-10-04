@@ -4,7 +4,6 @@ import {
 } from '@/infrastructure/models/management/schedule/fixed';
 import { ManagementDoctorProfileAPI } from '@/infrastructure/usecase/management/doctorprofile/ManagementDoctorProfileAPI';
 import { ManagementRuanganAPI } from '@/infrastructure/usecase/management/ruangan/ManagementRuanganAPI';
-import { ManagementScheduleAPI } from '@/infrastructure/usecase/management/schedule/ManagementScheduleAPI';
 import CustomSelectComponent from '@/presentation/components/CustomSelect';
 import CustomSelectInput from '@/presentation/components/CustomSelectInput';
 import TextFieldInput from '@/presentation/components/TextfieldInput';
@@ -15,11 +14,10 @@ import {
     ModalFormFields,
     ModalFormFooter
 } from '@/presentation/layout/modal-form';
-import { useModal } from '@/providers/ModalProvider';
 import { dayDropdownData } from '@/shared/constant';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
-import { useMutation, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 
 const FilterModal = ({
     onSubmit,
@@ -33,20 +31,24 @@ const FilterModal = ({
             resolver: zodResolver(managementFixedScheduleListValidation)
         });
 
-    const api = new ManagementScheduleAPI();
-
     const doctorAPI = new ManagementDoctorProfileAPI();
 
     const roomAPI = new ManagementRuanganAPI();
 
-    const { closeModal } = useModal();
-
-    const { data: doctorData, isLoading: doctorLoading } = useQuery({
+    const {
+        data: doctorData,
+        isLoading: doctorLoading,
+        isError: doctorError
+    } = useQuery({
         queryKey: ['doctor-dropdown-data'],
         queryFn: () => doctorAPI.getDropdown()
     });
 
-    const { data: roomData, isLoading: roomLoading } = useQuery({
+    const {
+        data: roomData,
+        isLoading: roomLoading,
+        isError: roomError
+    } = useQuery({
         queryKey: ['room-dropdown-data'],
         queryFn: () => roomAPI.getDropdown()
     });
@@ -73,7 +75,7 @@ const FilterModal = ({
                                         {...field}
                                         placeholder='Pilih Dokter'
                                         data={doctorData?.data ?? []}
-                                        loading={doctorLoading}
+                                        loading={doctorLoading || doctorError}
                                         noDataNotice='Dokter tidak ditemukan'
                                         error={error}
                                     />
@@ -95,7 +97,7 @@ const FilterModal = ({
                                         {...field}
                                         placeholder='Pilih Ruangan'
                                         data={roomData?.data ?? []}
-                                        loading={roomLoading}
+                                        loading={roomLoading || roomError}
                                         noDataNotice='Ruangan tidak ditemukan'
                                         error={error}
                                     />

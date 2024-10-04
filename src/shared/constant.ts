@@ -33,3 +33,22 @@ export const dayDropdownData = listDay.map((d) => ({
     label: d,
     value: d.toUpperCase()
 }));
+
+export const scheduleStatusData = [
+    {
+        label: 'Ready',
+        value: 'ready'
+    },
+    {
+        label: 'In Review',
+        value: 'in review'
+    },
+    {
+        label: 'Cancelled',
+        value: 'cancelled'
+    },
+    {
+        label: 'Changed',
+        value: 'changed'
+    }
+];

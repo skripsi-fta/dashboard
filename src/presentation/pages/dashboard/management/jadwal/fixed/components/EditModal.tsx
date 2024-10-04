@@ -24,6 +24,7 @@ import type { AxiosError } from 'axios';
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation, useQuery } from 'react-query';
 import { toast } from 'sonner';
+import NoticeModal from './NoticeModal';
 
 interface EditModalProps {
     refetch: () => void;
@@ -44,14 +45,34 @@ const EditModal = ({ refetch, defaultValues }: EditModalProps) => {
 
     const roomAPI = new ManagementRuanganAPI();
 
-    const { closeModal } = useModal();
+    const { closeModal, openModal } = useModal();
 
     const { mutate: edit, isLoading } = useMutation({
         mutationFn: (data: ManagementFixedScheduleDoctor.Request.Update) =>
             api.updateFixedSchedule(data),
-        onSuccess: () => {
-            toast.success('Sukses mengubah jadwal tetap');
+        onSuccess: (data) => {
             closeModal();
+
+            console.log(data);
+
+            if (
+                data.data.skippedSchedule &&
+                data.data.skippedSchedule.length !== 0
+            ) {
+                console.log(data.data);
+                openModal(
+                    <NoticeModal
+                        title='Sukses Mengubah Jadwal'
+                        body={`${data.data.skippedSchedule.length} Jadwal tidak terbuat karena saat hari tersebut ada jadwal dengan ruangan dan jam yang sama`}
+                        list={data.data?.skippedSchedule ?? []}
+                        listChange={data.data?.changedSchedule ?? []}
+                    />,
+                    {}
+                );
+            } else {
+                toast.success('Sukses mengubah jadwal');
+            }
+
             refetch();
         },
         onError: (res: AxiosError<{ message: string }>) => {
