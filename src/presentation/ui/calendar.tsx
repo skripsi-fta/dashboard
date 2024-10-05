@@ -46,7 +46,7 @@ function Calendar({
                 day: 'h-9 w-9 text-center text-sm p-0 relative rounded-md [&:has([aria-selected].range_end)]:rounded-r-md [&:has([aria-selected].outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
                 day_button: cn(
                     buttonVariants({ variant: 'ghost' }),
-                    'size-9 p-0 font-normal aria-selected:opacity-100 hover:bg-primary hover:text-white'
+                    'size-9 p-0 font-normal hover:bg-primary hover:text-white aria-selected:opacity-100'
                 ),
                 range_end: 'range_end',
                 selected:
@@ -70,7 +70,7 @@ function Calendar({
                 },
                 DropdownNav: ({ children, ...props }) => {
                     return (
-                        <div {...props} className='flex flex-row gap-4 w-full'>
+                        <div {...props} className='flex w-full flex-row gap-4'>
                             {children}
                         </div>
                     );
@@ -111,8 +111,6 @@ function Calendar({
                 }
             }}
             captionLayout='dropdown'
-            // fromYear={currentYear - 100}
-            // toYear={currentYear + 100}
             {...props}
         />
     );

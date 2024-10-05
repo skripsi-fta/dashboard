@@ -42,16 +42,25 @@ const DatePickerSingleInput = <
     const dateErrorMsg = dateControl.fieldState.error?.message;
 
     return (
-        <Popover modal={true}>
+        <Popover
+            modal={true}
+            onOpenChange={(open) => {
+                setTimeout(() => {
+                    if (!open) {
+                        document.body.style.pointerEvents = '';
+                    }
+                }, 1000);
+            }}
+        >
             <PopoverTrigger asChild>
-                <div className='flex flex-col gap-2'>
+                <div className='flex flex-1 flex-col gap-2'>
                     {label && (
                         <p className='font-semibold text-[#666666]'>{label}</p>
                     )}
                     <Button
                         variant={'outline'}
                         type='button'
-                        className='hover:text-muted-foreground focus:text-muted-foreground flex flex-row justify-start items-center text-start h-[50px] rounded-[32px] border-2 border-[#ECEEFF] hover:border-[#DDE0FF] focus:border-[#DDE0FF] text-muted-foreground'
+                        className='flex h-[50px] flex-row items-center justify-start rounded-[32px] border-2 border-[#ECEEFF] text-start text-muted-foreground hover:border-[#DDE0FF] hover:text-muted-foreground focus:border-[#DDE0FF] focus:text-muted-foreground'
                     >
                         {dateControl.field.value ? (
                             <p>
@@ -73,7 +82,7 @@ const DatePickerSingleInput = <
                     )}
                 </div>
             </PopoverTrigger>
-            <PopoverContent className='w-auto p-0 flex flex-row gap-2'>
+            <PopoverContent className='flex w-auto flex-row gap-2 p-0'>
                 <Calendar
                     {...dateComponentProps}
                     mode='single'

@@ -157,7 +157,7 @@ const ManagementUserPage = () => {
     };
 
     const handleOpenDialogAdd = () => {
-        openModal(<AddModal refetch={refetch} />, { title: 'Add Staff' });
+        openModal(<AddModal refetch={refetch} />, { title: 'Tambah Staff' });
     };
 
     return (

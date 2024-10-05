@@ -4,7 +4,7 @@ import { Icons } from '@/presentation/icons/icons';
 import { ClipboardPlus, type LucideProps } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 
 export const staticMapRole: Record<string, { icons: ReactNode; name: string }> =
     {
@@ -109,6 +109,53 @@ const sidebarContent: Record<
     ]
 };
 
+const ButtonSidebar = (data: {
+    name: string;
+    href: string;
+    icons: (_props: LucideProps) => ReactNode;
+    pathname: string;
+}) => {
+    const [hover, setHover] = useState<boolean>(false);
+
+    return (
+        <div
+            className='flex w-full flex-row gap-4 pr-4'
+            key={data.href}
+            onMouseEnter={() => setHover(() => true)}
+            onMouseLeave={() => setHover(() => false)}
+        >
+            <div
+                className={cn(
+                    'h-full w-[10px]',
+                    data.pathname.startsWith(data.href) || hover
+                        ? 'bg-primaryblue'
+                        : 'bg-transparent'
+                )}
+                style={{ borderRadius: '0px 28px 28px 0px' }}
+            />
+
+            <Link
+                className={cn(
+                    'flex w-full flex-[1] flex-row items-center gap-4 rounded-[8px] p-2 text-base font-semibold',
+                    data.pathname.startsWith(data.href) || hover
+                        ? 'bg-primaryblue text-white'
+                        : 'bg-transparent'
+                )}
+                href={data.href}
+            >
+                {data.icons({
+                    className: 'size-[25px]',
+                    stroke:
+                        data.pathname.startsWith(data.href) || hover
+                            ? 'white'
+                            : 'black'
+                })}
+                <p className='text-sm'>{data.name}</p>
+            </Link>
+        </div>
+    );
+};
+
 const Sidebar = () => {
     const { userData } = useDashboard();
 
@@ -131,38 +178,13 @@ const Sidebar = () => {
                 </div>
                 <nav className='flex w-full flex-col items-start gap-6 text-base font-medium'>
                     {(sidebarContent[userData.role] ?? []).map((data) => (
-                        <div
-                            className='flex w-full flex-row gap-4 pr-4'
+                        <ButtonSidebar
+                            href={data.href}
+                            icons={data.icons}
+                            name={data.name}
+                            pathname={pathname}
                             key={data.href}
-                        >
-                            <div
-                                className={cn(
-                                    'h-full w-[10px] ',
-                                    pathname.startsWith(data.href)
-                                        ? 'bg-primaryblue'
-                                        : 'bg-transparent'
-                                )}
-                                style={{ borderRadius: '0px 28px 28px 0px' }}
-                            />
-
-                            <Link
-                                className={cn(
-                                    'flex w-full flex-[1] flex-row items-center gap-4 rounded-[8px] p-2 text-base font-semibold',
-                                    pathname.startsWith(data.href)
-                                        ? 'bg-primaryblue text-white'
-                                        : 'bg-transparent'
-                                )}
-                                href={data.href}
-                            >
-                                {data.icons({
-                                    className: 'size-[25px]',
-                                    stroke: pathname.startsWith(data.href)
-                                        ? 'white'
-                                        : 'black'
-                                })}
-                                <p className='text-sm'>{data.name}</p>
-                            </Link>
-                        </div>
+                        />
                     ))}
                 </nav>
             </div>

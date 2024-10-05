@@ -9,14 +9,25 @@ import type { FieldError } from 'react-hook-form';
 import { AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 interface TextFieldInputType extends InputHTMLAttributes<HTMLInputElement> {
-    type?: 'text' | 'password' | 'file' | 'number';
+    type?: 'text' | 'password' | 'file' | 'number' | 'time';
     label?: string;
     error?: FieldError | undefined;
     variant?: 'normal' | 'modal' | 'login';
+    fullWidth?: boolean;
 }
 
 const TextFieldInput = forwardRef<HTMLInputElement, TextFieldInputType>(
-    ({ error, label, type = 'text', variant = 'normal', ...props }, ref) => {
+    (
+        {
+            error,
+            label,
+            type = 'text',
+            variant = 'normal',
+            fullWidth = false,
+            ...props
+        },
+        ref
+    ) => {
         const [showPassword, setShowPassword] = useState<boolean>(false);
 
         const variants = {
@@ -27,7 +38,9 @@ const TextFieldInput = forwardRef<HTMLInputElement, TextFieldInputType>(
 
         return (
             <>
-                <div className='flex flex-col gap-2'>
+                <div
+                    className={cn('flex flex-col gap-2', fullWidth && 'flex-1')}
+                >
                     {label && (
                         <Label className='text-lg font-semibold'>
                             {label} {label}

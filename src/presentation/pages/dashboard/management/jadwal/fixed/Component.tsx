@@ -1,11 +1,8 @@
-'use client';
-
 import type {
-    ManagementPatient,
-    ManagementPatientListValidation
-} from '@/infrastructure/models/management/pasien';
-import { ManagementPasienAPI } from '@/infrastructure/usecase/management/pasien/ManagementPasienAPI';
-import dayjsUtils from '@/lib/dayjs';
+    ManagementFixedScheduleDoctor,
+    ManagementFixedScheduleListValidation
+} from '@/infrastructure/models/management/schedule/fixed';
+import { ManagementScheduleAPI } from '@/infrastructure/usecase/management/schedule/ManagementScheduleAPI';
 import { DataTable } from '@/presentation/components/DataTable';
 import DashboardActions from '@/presentation/layout/dashboard/actions';
 import DashboardContent from '@/presentation/layout/dashboard/content';
@@ -15,52 +12,59 @@ import type { ColumnDef, PaginationState } from '@tanstack/react-table';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { toast } from 'sonner';
-import FilterModal from './components/FilterModal';
 import AddModal from './components/AddModal';
-import { identityType } from '@/shared/constant';
+import FilterModal from './components/FilterModal';
+import dayjsUtils from '@/lib/dayjs';
 import { Button } from '@/presentation/ui/button';
 import { Pencil } from 'lucide-react';
 import EditModal from './components/EditModal';
+import NoticeModal from './components/NoticeModal';
 
-const PasienManagementComponent = () => {
-    const columns: ColumnDef<ManagementPatient.Response.Data>[] = [
+const ScheduleFixedManagementComponent = () => {
+    const columns: ColumnDef<ManagementFixedScheduleDoctor.Response.Data>[] = [
         {
             accessorKey: 'no',
             size: 75,
             header: 'ID'
         },
         {
-            accessorKey: 'name',
-            size: 300,
-            header: 'Nama'
+            accessorKey: 'day',
+            size: 200,
+            header: 'Hari'
         },
         {
-            accessorKey: 'address',
-            size: 300,
-            header: 'Alamat'
-        },
-        {
-            accessorKey: 'dateOfBirth',
+            accessorKey: 'doctor',
             size: 250,
-            header: 'Tanggal Lahir',
-            cell: ({ row: { original } }) => {
-                return (
-                    <>{dayjsUtils(original.dateOfBirth).format('DD-MM-YYYY')}</>
-                );
-            }
+            header: 'Dokter',
+            cell: ({ row: { original } }) => original?.doctor.name || ''
         },
         {
-            accessorKey: 'gender',
-            size: 200,
-            header: 'Jenis Kelamin'
+            accessorKey: 'room',
+            size: 250,
+            header: 'Ruangan',
+            cell: ({ row: { original } }) => original?.room.name || ''
         },
         {
-            accessorKey: 'idType',
+            accessorKey: 'startTime',
             size: 200,
-            header: 'Tipe Identitas',
-            cell: ({ row: { original } }) => (
-                <>{identityType[original.idType]}</>
-            )
+            header: 'Jam Mulai'
+        },
+        {
+            accessorKey: 'endTime',
+            size: 200,
+            header: 'Jam Selesai'
+        },
+        {
+            accessorKey: 'capacity',
+            size: 150,
+            header: 'Kuota'
+        },
+        {
+            accessorKey: 'updatedAt',
+            size: 200,
+            header: 'Terakhir Sinkron',
+            cell: ({ row: { original } }) =>
+                dayjsUtils(original.syncDate).format('DD-MM-YYYY HH:mm:ss')
         },
         {
             header: 'Action',
@@ -74,24 +78,42 @@ const PasienManagementComponent = () => {
                                 openModal(
                                     <EditModal
                                         defaultValues={{
-                                            id: original.id,
-                                            address: original.address,
-                                            dateOfBirth: original.dateOfBirth,
-                                            gender: original.gender,
-                                            idNumber: original.idNumber,
-                                            idType: original.idType,
-                                            name: original.name
+                                            capacity: original.capacity,
+                                            day: original.day,
+                                            doctorId:
+                                                original.doctor.id.toString(),
+                                            endTime: original.endTime,
+                                            id: original.id.toString(),
+                                            isOverrideSchedule: false,
+                                            roomId: original.room.id.toString(),
+                                            startTime: original.startTime
                                         }}
                                         refetch={refetch}
                                     />,
-                                    {
-                                        title: 'Edit Pasien'
-                                    }
+                                    { title: 'Edit Jadwal Tetap' }
                                 )
                             }
                         >
                             <Pencil className='text-primaryblue' />
                         </Button>
+
+                        {/* TODO: Implement delete fixed schedule in the backend too */}
+                        {/* <Button
+                            variant={'ghost'}
+                            onClick={() =>
+                                openModal(
+                                    <DeleteModal
+                                        refetch={refetch}
+                                        data={original}
+                                    />,
+                                    {
+                                        closeButtonVisible: false
+                                    }
+                                )
+                            }
+                        >
+                            <Trash2 className='text-red-600' />
+                        </Button> */}
                     </div>
                 );
             }
@@ -104,36 +126,37 @@ const PasienManagementComponent = () => {
     });
 
     const [filterValues, setFilterValues] =
-        useState<ManagementPatientListValidation>({
-            gender: '',
-            idNumber: '',
-            idType: '',
-            name: ''
+        useState<ManagementFixedScheduleListValidation>({
+            day: '',
+            doctorId: '',
+            endTime: '',
+            roomId: '',
+            startTime: ''
         });
 
-    const api = new ManagementPasienAPI();
+    const api = new ManagementScheduleAPI();
 
     const { data, isLoading, refetch } = useQuery({
         queryFn: () =>
-            api.getList({
+            api.getFixedScheduleList({
                 ...filterValues,
                 pageSize: pagination.pageSize,
                 pageNumber: pagination.pageIndex + 1
             }),
         queryKey: [
-            'pasien-list-management',
+            'fixedschedule-list-management',
             filterValues,
             pagination.pageIndex,
             pagination.pageSize
         ],
         onError: () => {
-            toast.error('Get pasien error');
+            toast.error('Get fixed schedule error');
         }
     });
 
     const { openModal, closeModal } = useModal();
 
-    const onSubmitFilter = (e: ManagementPatientListValidation) => {
+    const onSubmitFilter = (e: ManagementFixedScheduleListValidation) => {
         setFilterValues(() => e);
         setPagination(() => ({ pageIndex: 0, pageSize: 5 }));
         closeModal();
@@ -141,56 +164,59 @@ const PasienManagementComponent = () => {
 
     const onResetFilter = () => {
         setFilterValues(() => ({
-            gender: '',
-            idNumber: '',
-            idType: '',
-            name: ''
+            day: '',
+            doctorId: '',
+            endTime: '',
+            roomId: '',
+            startTime: ''
         }));
+
         setPagination(() => ({ pageIndex: 0, pageSize: 5 }));
         closeModal();
+    };
+
+    const handleOpenDialogAdd = () => {
+        openModal(<AddModal refetch={refetch} />, {
+            title: 'Tambah Jadwal Tetap'
+        });
     };
 
     const handleOpenDialogFilter = () => {
         openModal(
             <FilterModal
                 onSubmit={onSubmitFilter}
-                defaultValues={filterValues}
                 onCancel={onResetFilter}
+                defaultValues={filterValues}
             />,
             {
-                title: 'Filter Pasien'
+                title: 'Filter Jadwal Tetap'
             }
         );
-    };
-
-    const handleOpenDialogAdd = () => {
-        openModal(<AddModal refetch={refetch} />, { title: 'Tambah Pasien' });
     };
 
     return (
         <>
             <DashboardContent>
-                <DashboardHeader title='Daftar Pasien' />
+                <DashboardHeader title='Jadwal Tetap' />
                 <DashboardActions
                     filterButtonProps={{
-                        label: 'Filter Pasien',
+                        label: 'Filter Jadwal',
                         loading: isLoading,
                         onClick: handleOpenDialogFilter
                     }}
                     addButtonProps={{
-                        label: 'Tambah Pasien',
+                        label: 'Tambah Jadwal',
                         onClick: handleOpenDialogAdd
                     }}
                 />
-            </DashboardContent>
 
-            <DashboardContent>
                 <DataTable
                     columns={columns}
                     data={data?.data ?? []}
                     totalData={data?.totalRows ?? 0}
                     tableProps={{
-                        className: 'my-2 overflow-auto text-[15px] text-black'
+                        className:
+                            'my-2 overflow-auto text-[15px] text-black w-full'
                     }}
                     tableHeaderProps={{ className: 'text-black' }}
                     tableRowHeaderProps={{
@@ -207,4 +233,4 @@ const PasienManagementComponent = () => {
     );
 };
 
-export default PasienManagementComponent;
+export default ScheduleFixedManagementComponent;

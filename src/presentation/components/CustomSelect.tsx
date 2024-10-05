@@ -38,7 +38,7 @@ const CustomSelectComponent = ({
                 >
                     <SelectTrigger
                         className={cn(
-                            'w-full h-[50px] rounded-[32px] border-2 border-[#ECEEFF] hover:border-[#DDE0FF] focus:border-[#DDE0FF] ',
+                            'h-[50px] w-full rounded-[32px] border-2 border-[#ECEEFF] hover:border-[#DDE0FF] focus:border-[#DDE0FF] ',
                             !!error?.message && 'border-red-500',
                             !value && 'text-muted-foreground'
                         )}

@@ -18,7 +18,10 @@ export default function Page() {
                         Please click the button to go back to homepage
                     </p>
                 </div>
-                <Button onClick={() => router.push('/dashboard')}>
+                <Button
+                    onClick={() => router.push('/dashboard')}
+                    variant={'addButton'}
+                >
                     GO TO HOMEPAGE
                 </Button>
             </div>

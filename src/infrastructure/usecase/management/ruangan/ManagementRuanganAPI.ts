@@ -1,7 +1,21 @@
+import type { GlobalModels } from '@/infrastructure/models/global';
 import type { ManagementRuangan } from '@/infrastructure/models/management/ruangan';
 import http from '@/lib/axios';
 
 export class ManagementRuanganAPI {
+    async getDropdown(): Promise<GlobalModels.DropdownData> {
+        const data =
+            await http.get<ManagementRuangan.Response.List>('/management/room');
+
+        return {
+            data:
+                data?.data?.data?.map((d) => ({
+                    label: d.name,
+                    value: d.id.toString()
+                })) || []
+        };
+    }
+
     async getList(
         params: ManagementRuangan.Request.List
     ): Promise<ManagementRuangan.Response.List> {

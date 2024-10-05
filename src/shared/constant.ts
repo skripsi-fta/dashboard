@@ -18,3 +18,37 @@ export const identityTypeModal = [
         value: 'DRIVER_LICENSE'
     }
 ];
+
+const listDay = [
+    'Senin',
+    'Selasa',
+    'Rabu',
+    'Kamis',
+    'Jumat',
+    'Sabtu',
+    'Minggu'
+];
+
+export const dayDropdownData = listDay.map((d) => ({
+    label: d,
+    value: d.toUpperCase()
+}));
+
+export const scheduleStatusData = [
+    {
+        label: 'Ready',
+        value: 'ready'
+    },
+    {
+        label: 'In Review',
+        value: 'in review'
+    },
+    {
+        label: 'Cancelled',
+        value: 'cancelled'
+    },
+    {
+        label: 'Changed',
+        value: 'changed'
+    }
+];
