@@ -17,6 +17,18 @@ export class ManagementScheduleAPI {
         return data.data;
     }
 
+    async createRegulerSchedule(
+        body: ManagementRegulerScheduleDoctor.Request.Create
+    ): Promise<ManagementRegulerScheduleDoctor.Response.Create> {
+        const data =
+            await http.post<ManagementRegulerScheduleDoctor.Response.Create>(
+                this.url,
+                body
+            );
+
+        return data.data;
+    }
+
     async getFixedScheduleList(
         params: ManagementFixedScheduleDoctor.Request.List
     ): Promise<ManagementFixedScheduleDoctor.Response.List> {

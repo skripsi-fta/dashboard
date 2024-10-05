@@ -15,6 +15,7 @@ import { useQuery } from 'react-query';
 import { toast } from 'sonner';
 import FilterModal from './components/FilterModal';
 import { cn } from '@/lib/utils';
+import AddModal from './components/AddModal';
 
 const ScheduleRegulerManagementComponent = () => {
     const columns: ColumnDef<ManagementRegulerScheduleDoctor.Response.Data>[] =
@@ -74,7 +75,7 @@ const ScheduleRegulerManagementComponent = () => {
                 cell: ({ row: { original } }) => (
                     <p
                         className={cn(
-                            'capitalize font-medium',
+                            'font-medium capitalize',
                             original.status === 'ready' && 'text-green-500',
                             original.status === 'in review' &&
                                 'text-yellow-500',
@@ -160,6 +161,10 @@ const ScheduleRegulerManagementComponent = () => {
         );
     };
 
+    const handleOpenDialogAdd = () => {
+        openModal(<AddModal refetch={refetch} />, { title: 'Tambah Jadwal' });
+    };
+
     return (
         <>
             <DashboardContent>
@@ -172,8 +177,8 @@ const ScheduleRegulerManagementComponent = () => {
                         onClick: handleOpenDialogFilter
                     }}
                     addButtonProps={{
-                        label: 'Tambah Jadwal'
-                        // onClick: handleOpenDialogAdd
+                        label: 'Tambah Jadwal',
+                        onClick: handleOpenDialogAdd
                     }}
                 />
 

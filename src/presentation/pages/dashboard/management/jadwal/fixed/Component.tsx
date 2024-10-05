@@ -210,11 +210,6 @@ const ScheduleFixedManagementComponent = () => {
                     }}
                 />
 
-                {/* <TextFieldInput
-                variant='modal'
-                type='time'
-                onChange={(e) => console.log(e.target.value)}
-                /> */}
                 <DataTable
                     columns={columns}
                     data={data?.data ?? []}
