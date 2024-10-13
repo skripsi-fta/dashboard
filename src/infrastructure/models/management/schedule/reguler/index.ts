@@ -131,7 +131,12 @@ export namespace ManagementRegulerScheduleDoctor {
             id: number;
             date: string;
             capacity: number;
-            status: string;
+            status:
+                | 'ready'
+                | 'in review'
+                | 'cancelled'
+                | 'changed'
+                | 'completed';
             startTime: string;
             endTime: string;
             type: string;

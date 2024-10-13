@@ -1,28 +1,33 @@
+'use client';
+
+import DashboardContent from '@/presentation/layout/dashboard/content';
+import DashboardHeader from '@/presentation/layout/dashboard/header';
+import CalendarSchedule from './components/CalendarSchedule';
+import DashboardActions from '@/presentation/layout/dashboard/actions';
 import type {
     ManagementRegulerScheduleDoctor,
     ManagementRegulerScheduleListValidation
 } from '@/infrastructure/models/management/schedule/reguler';
-import { ManagementScheduleAPI } from '@/infrastructure/usecase/management/schedule/ManagementScheduleAPI';
-import dayjsUtils from '@/lib/dayjs';
-import { DataTable } from '@/presentation/components/DataTable';
-import DashboardActions from '@/presentation/layout/dashboard/actions';
-import DashboardContent from '@/presentation/layout/dashboard/content';
-import DashboardHeader from '@/presentation/layout/dashboard/header';
-import { useModal } from '@/providers/ModalProvider';
 import type { ColumnDef, PaginationState } from '@tanstack/react-table';
 import { useState } from 'react';
+import { ManagementScheduleAPI } from '@/infrastructure/usecase/management/schedule/ManagementScheduleAPI';
+import dayjsUtils from '@/lib/dayjs';
+import useDashboard from '@/contexts/DashboardContext';
 import { useQuery } from 'react-query';
 import { toast } from 'sonner';
-import FilterModal from './components/FilterModal';
+import type { Profile } from '@/infrastructure/models/auth/profile';
+import { DataTable } from '@/presentation/components/DataTable';
+import { Eye, MapPin, Pencil } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import AddModal from './components/AddModal';
+import { useModal } from '@/providers/ModalProvider';
+import FilterModal from './components/FilterModal';
 
-const ScheduleRegulerManagementComponent = () => {
+const ScheduleDoctorPage = () => {
     const columns: ColumnDef<ManagementRegulerScheduleDoctor.Response.Data>[] =
         [
             {
                 accessorKey: 'no',
-                size: 75,
+                size: 50,
                 header: 'ID'
             },
             {
@@ -41,32 +46,17 @@ const ScheduleRegulerManagementComponent = () => {
                 header: 'Jam Akhir'
             },
             {
-                accessorKey: 'doctorName',
-                size: 200,
-                header: 'Nama Dokter',
-                cell: ({ row: { original } }) => original.doctor.name
-            },
-            {
-                accessorKey: 'spesialis',
-                size: 200,
-                header: 'Spesialis',
-                cell: ({ row: { original } }) =>
-                    original.doctor.specialization.name
-            },
-            {
                 accessorKey: 'ruangan',
-                size: 200,
-                header: 'Ruangan',
-                cell: ({ row: { original } }) => original?.room?.name
-            },
-            {
-                accessorKey: 'tipe',
                 size: 150,
-                header: 'Tipe',
-                cell: ({ row: { original } }) =>
-                    original.type === 'regular'
-                        ? 'Jadwal Tetap'
-                        : 'Jadwal Reguler'
+                header: 'Ruangan',
+                cell: ({ row: { original } }) => (
+                    <div className='flex flex-row items-center gap-2'>
+                        <MapPin className='text-primaryblue' size={22} />
+                        <p className='font-semibold text-primaryblue'>
+                            {original?.room?.name}
+                        </p>
+                    </div>
+                )
             },
             {
                 accessorKey: 'status',
@@ -111,11 +101,20 @@ const ScheduleRegulerManagementComponent = () => {
                                         original.status === 'changed' &&
                                             'text-green-400',
                                         original.status === 'completed' &&
-                                            'text-primaryblue'
+                                            'text-primary'
                                     )}
                                 >
                                     {original.status}
                                 </p>
+
+                                {original.status === 'ready' ? (
+                                    <Pencil
+                                        size={22}
+                                        className='cursor-pointer'
+                                    />
+                                ) : (
+                                    <Eye size={22} className='cursor-pointer' />
+                                )}
                             </div>
                         );
                     }
@@ -130,10 +129,14 @@ const ScheduleRegulerManagementComponent = () => {
 
     const api = new ManagementScheduleAPI();
 
+    const { userData } = useDashboard();
+
+    const doctorData = userData as Profile.DoctorRole;
+
     const [filterValues, setFilterValues] =
         useState<ManagementRegulerScheduleListValidation>({
             date: '',
-            doctorId: '',
+            doctorId: doctorData!.doctor.id.toString(),
             endDate: dayjsUtils().endOf('month').format('YYYY-MM-DD'),
             endTime: '',
             roomId: '',
@@ -153,11 +156,13 @@ const ScheduleRegulerManagementComponent = () => {
             'schedule-list-management',
             filterValues,
             pagination.pageIndex,
-            pagination.pageSize
+            pagination.pageSize,
+            doctorData?.doctor.id
         ],
         onError: () => {
             toast.error('Get schedule error');
-        }
+        },
+        enabled: !!doctorData.doctor
     });
 
     const { openModal, closeModal } = useModal();
@@ -171,7 +176,7 @@ const ScheduleRegulerManagementComponent = () => {
     const onResetFilter = () => {
         setFilterValues(() => ({
             date: '',
-            doctorId: '',
+            doctorId: doctorData!.doctor.id.toString(),
             endDate: dayjsUtils().endOf('month').format('YYYY-MM-DD'),
             endTime: '',
             roomId: '',
@@ -195,48 +200,48 @@ const ScheduleRegulerManagementComponent = () => {
         );
     };
 
-    const handleOpenDialogAdd = () => {
-        openModal(<AddModal refetch={refetch} />, { title: 'Tambah Jadwal' });
-    };
-
     return (
         <>
-            <DashboardContent>
-                <DashboardHeader title='Jadwal Reguler' />
+            <div className='flex w-full flex-1 flex-col-reverse gap-8 lg:flex-row'>
+                <div className='min-w-0 lg:flex-[7] xl:flex-[8]'>
+                    <DashboardContent>
+                        <DashboardHeader title='Jadwal Dokter'>
+                            <DashboardActions
+                                filterButtonProps={{
+                                    label: 'Filter Jadwal',
+                                    loading: false,
+                                    onClick: handleOpenDialogFilter
+                                }}
+                            />
+                        </DashboardHeader>
 
-                <DashboardActions
-                    filterButtonProps={{
-                        label: 'Filter Jadwal',
-                        loading: isLoading,
-                        onClick: handleOpenDialogFilter
-                    }}
-                    addButtonProps={{
-                        label: 'Tambah Jadwal',
-                        onClick: handleOpenDialogAdd
-                    }}
-                />
+                        <DataTable
+                            columns={columns}
+                            data={data?.data ?? []}
+                            totalData={data?.totalRows ?? 0}
+                            tableProps={{
+                                className:
+                                    'my-2 overflow-auto text-[15px] text-black w-full'
+                            }}
+                            tableHeaderProps={{ className: 'text-black' }}
+                            tableRowHeaderProps={{
+                                className: 'border-none text-black '
+                            }}
+                            tableRowProps={{ className: 'border-b-0' }}
+                            initialState={{ columnVisibility: { diff: true } }}
+                            paginationProps={pagination}
+                            setPagination={setPagination}
+                            isLoading={isLoading}
+                        />
+                    </DashboardContent>
+                </div>
 
-                <DataTable
-                    columns={columns}
-                    data={data?.data ?? []}
-                    totalData={data?.totalRows ?? 0}
-                    tableProps={{
-                        className:
-                            'my-2 overflow-auto text-[15px] text-black w-full'
-                    }}
-                    tableHeaderProps={{ className: 'text-black' }}
-                    tableRowHeaderProps={{
-                        className: 'border-none text-black '
-                    }}
-                    tableRowProps={{ className: 'border-b-0' }}
-                    initialState={{ columnVisibility: { diff: true } }}
-                    paginationProps={pagination}
-                    setPagination={setPagination}
-                    isLoading={isLoading}
-                />
-            </DashboardContent>
+                <div className='min-w-0 lg:flex-[5] xl:flex-[4]'>
+                    <CalendarSchedule />
+                </div>
+            </div>
         </>
     );
 };
 
-export default ScheduleRegulerManagementComponent;
+export default ScheduleDoctorPage;

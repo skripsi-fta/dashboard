@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import dayjsUtils from '@/lib/dayjs';
 import { cn } from '@/lib/utils';
 import DashboardContent from '@/presentation/layout/dashboard/content';
@@ -15,16 +15,12 @@ import type { Dispatch, SetStateAction } from 'react';
 import { DayPicker } from 'react-day-picker';
 import { useQuery } from 'react-query';
 import { ManagementScheduleAPI } from '@/infrastructure/usecase/management/schedule/ManagementScheduleAPI';
+import useDashboard from '@/contexts/DashboardContext';
+import type { Profile } from '@/infrastructure/models/auth/profile';
 
-interface CalendarSchedule {
-    selectedDate: Date;
-    setSelectedDate: Dispatch<SetStateAction<Date>>;
-}
+export default function CalendarSchedule() {
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-export default function CalendarSchedule({
-    selectedDate,
-    setSelectedDate
-}: CalendarSchedule) {
     const today = new Date();
 
     const modifiers = {
@@ -55,15 +51,20 @@ export default function CalendarSchedule({
 
     const api = new ManagementScheduleAPI();
 
+    const { userData } = useDashboard();
+
+    const doctorData = userData as Profile.DoctorRole;
+
     const { data, isLoading } = useQuery({
         queryKey: [
             'schedule-calendar-list-doctor',
-            dayjsUtils(selectedDate).format('DD-MM-YYYY')
+            dayjsUtils(selectedDate).format('DD-MM-YYYY'),
+            doctorData?.doctor.id
         ],
         queryFn: () =>
             api.getScheduleList({
                 date: dayjsUtils(selectedDate).format('YYYY-MM-DD'),
-                doctorId: '',
+                doctorId: doctorData!.doctor.id.toString(),
                 endTime: '',
                 roomId: '',
                 startTime: '',
@@ -72,7 +73,8 @@ export default function CalendarSchedule({
                 status: 'ready',
                 startDate: '',
                 endDate: ''
-            })
+            }),
+        enabled: !!doctorData.doctor
     });
 
     return (
