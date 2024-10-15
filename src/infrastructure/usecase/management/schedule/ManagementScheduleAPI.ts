@@ -29,6 +29,18 @@ export class ManagementScheduleAPI {
         return data.data;
     }
 
+    async changeSchedule(
+        body: ManagementRegulerScheduleDoctor.Request.Change
+    ): Promise<ManagementRegulerScheduleDoctor.Response.Change> {
+        const data =
+            await http.put<ManagementRegulerScheduleDoctor.Response.Change>(
+                this.url,
+                body
+            );
+
+        return data.data;
+    }
+
     async getFixedScheduleList(
         params: ManagementFixedScheduleDoctor.Request.List
     ): Promise<ManagementFixedScheduleDoctor.Response.List> {
@@ -59,6 +71,29 @@ export class ManagementScheduleAPI {
         const data =
             await http.put<ManagementFixedScheduleDoctor.Response.Update>(
                 `${this.url}/fixed`,
+                body
+            );
+
+        return data.data;
+    }
+
+    async getScheduleById(
+        params: ManagementRegulerScheduleDoctor.Request.GetById
+    ): Promise<ManagementRegulerScheduleDoctor.Response.GetById> {
+        const data =
+            await http.get<ManagementRegulerScheduleDoctor.Response.GetById>(
+                `${this.url}/${params.id}`
+            );
+
+        return data.data;
+    }
+
+    async approvalSchedule(
+        body: ManagementRegulerScheduleDoctor.Request.Approval
+    ): Promise<ManagementRegulerScheduleDoctor.Response.Approval> {
+        const data =
+            await http.put<ManagementRegulerScheduleDoctor.Response.Approval>(
+                `${this.url}/approval`,
                 body
             );
 

@@ -5,7 +5,7 @@ export const ModalFormContainer = ({
     formProps
 }: PropsWithChildren & { formProps?: ComponentProps<'form'> }) => {
     return (
-        <div className='flex size-full flex-col my-2 overflow-y-auto h-full max-h-full'>
+        <div className='my-2 flex size-full h-full max-h-full flex-col overflow-y-auto'>
             <form {...formProps}>{children}</form>
         </div>
     );

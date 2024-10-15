@@ -14,10 +14,10 @@ import { Check } from 'lucide-react';
 
 interface CustomSelectComponentProps {
     placeholder: string;
-    data: { label: string; value: string }[];
+    data: { label: string; value: any }[];
     loading?: boolean;
     onChange: (_e: string) => void;
-    value: string;
+    value: string | number;
     error?: FieldError | undefined;
     disabled?: boolean;
     noDataNotice: string;

@@ -22,11 +22,10 @@ export default function Page() {
             <div className='flex h-full flex-col items-center justify-center'>
                 <div className='flex max-w-[400px] flex-col items-center gap-4 rounded-lg bg-white p-4 px-8 shadow-lg'>
                     <p className='text-xl font-bold'>Hi, {userData?.name}</p>
-                    <p className='text-lg font-semibold'>
-                        Today is {dayjsUtils(time).format('dddd')}
-                    </p>
                     <p className='text-base font-semibold'>
-                        {dayjsUtils(time).format('DD MMMM YYYY, h:mm:ss A')}
+                        {dayjsUtils(time).format(
+                            'dddd, DD MMMM YYYY, h:mm:ss A'
+                        )}
                     </p>
                 </div>
             </div>

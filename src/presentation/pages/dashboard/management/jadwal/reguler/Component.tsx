@@ -1,4 +1,5 @@
 import type {
+    ManagementRegulerScheduleChangeValidation,
     ManagementRegulerScheduleDoctor,
     ManagementRegulerScheduleListValidation
 } from '@/infrastructure/models/management/schedule/reguler';
@@ -16,6 +17,11 @@ import { toast } from 'sonner';
 import FilterModal from './components/FilterModal';
 import { cn } from '@/lib/utils';
 import AddModal from './components/AddModal';
+import { Check, Eye, Pencil, Trash2, X } from 'lucide-react';
+import ChangeScheduleModal from './components/ChangeScheduleModal';
+import DetailModal from '../../../dokter/jadwal/components/DetailModal';
+import ApprovalModal from './components/ApprovalModal';
+import CancelModal from './components/CancelModal';
 
 const ScheduleRegulerManagementComponent = () => {
     const columns: ColumnDef<ManagementRegulerScheduleDoctor.Response.Data>[] =
@@ -70,24 +76,151 @@ const ScheduleRegulerManagementComponent = () => {
             },
             {
                 accessorKey: 'status',
-                size: 200,
+                size: 120,
                 header: 'Status',
                 cell: ({ row: { original } }) => (
-                    <p
-                        className={cn(
-                            'font-medium capitalize',
-                            original.status === 'ready' && 'text-green-500',
-                            original.status === 'in review' &&
-                                'text-yellow-500',
-                            original.status === 'cancelled' && 'text-red-500',
-                            original.status === 'changed' && 'text-orange-400'
-                        )}
-                    >
-                        {original.status}
-                    </p>
+                    <div className='flex w-full flex-row items-center justify-between'>
+                        <p
+                            className={cn(
+                                'font-semibold capitalize',
+                                original.status === 'in review' &&
+                                    'text-[#EC7525]',
+                                original.status === 'cancelled' &&
+                                    'text-red-500',
+                                original.status === 'changed' &&
+                                    'text-green-400',
+                                original.status === 'completed' &&
+                                    'text-primaryblue',
+                                original.status === 'berjalan' &&
+                                    'text-primaryblue'
+                            )}
+                        >
+                            {original.status}
+                        </p>
+                    </div>
                 )
+            },
+            {
+                accessorKey: 'action',
+                minSize: 100,
+                header: 'Aksi',
+                cell: ({ row: { original } }) => {
+                    return (
+                        <div className='flex flex-row items-center gap-4'>
+                            <Eye
+                                size={24}
+                                className='cursor-pointer'
+                                onClick={() => {
+                                    handleDetailModal(original.id);
+                                }}
+                            />
+                            {original.status === 'in review' && (
+                                <>
+                                    <Check
+                                        size={22}
+                                        onClick={() =>
+                                            handleApprovalModal(
+                                                original.id,
+                                                'approve'
+                                            )
+                                        }
+                                        className='cursor-pointer text-green-500'
+                                    />
+
+                                    <X
+                                        size={22}
+                                        onClick={() =>
+                                            handleApprovalModal(
+                                                original.id,
+                                                'reject'
+                                            )
+                                        }
+                                        className='cursor-pointer text-red-500'
+                                    />
+                                </>
+                            )}
+                            {original.status === 'ready' && (
+                                <>
+                                    <Pencil
+                                        size={22}
+                                        className='cursor-pointer'
+                                        onClick={() =>
+                                            handleChangeScheduleModal({
+                                                capacity: original.capacity,
+                                                date: original.date,
+                                                doctorId:
+                                                    original.doctor.id.toString(),
+                                                endTime: original.endTime,
+                                                id: original.id,
+                                                roomId: original.room.id.toString(),
+                                                startTime: original.startTime
+                                            })
+                                        }
+                                    />
+                                    <Trash2
+                                        size={22}
+                                        className='cursor-pointer text-red-500'
+                                        onClick={() =>
+                                            handleCancelModal(
+                                                original.id,
+                                                'cancel'
+                                            )
+                                        }
+                                    />
+                                </>
+                            )}
+                        </div>
+                    );
+                }
             }
         ];
+
+    const handleCancelModal = (
+        scheduleId: number,
+        action: 'reject' | 'approve' | 'cancel'
+    ) => {
+        openModal(
+            <CancelModal
+                refetch={refetch}
+                action={action}
+                scheduleId={scheduleId}
+            />,
+            {}
+        );
+    };
+
+    const handleApprovalModal = (
+        scheduleId: number,
+        action: 'reject' | 'approve'
+    ) => {
+        openModal(
+            <ApprovalModal
+                action={action}
+                scheduleId={scheduleId}
+                refetch={refetch}
+            />,
+            {
+                title: 'Approval Jadwal'
+            }
+        );
+    };
+
+    const handleDetailModal = (scheduleId: number) => {
+        openModal(<DetailModal scheduleId={scheduleId} />, {
+            title: 'Detail Jadwal'
+        });
+    };
+
+    const handleChangeScheduleModal = (
+        data: ManagementRegulerScheduleChangeValidation
+    ) => {
+        openModal(
+            <ChangeScheduleModal refetch={refetch} defaultValue={data} />,
+            {
+                title: 'Ubah jadwal'
+            }
+        );
+    };
 
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
@@ -100,7 +233,10 @@ const ScheduleRegulerManagementComponent = () => {
         useState<ManagementRegulerScheduleListValidation>({
             date: '',
             doctorId: '',
-            endDate: dayjsUtils().endOf('month').format('YYYY-MM-DD'),
+            endDate: dayjsUtils()
+                .endOf('month')
+                .add(30, 'days')
+                .format('YYYY-MM-DD'),
             endTime: '',
             roomId: '',
             startDate: dayjsUtils().startOf('month').format('YYYY-MM-DD'),
@@ -122,7 +258,7 @@ const ScheduleRegulerManagementComponent = () => {
             pagination.pageSize
         ],
         onError: () => {
-            toast.error('Get pasien error');
+            toast.error('Get schedule error');
         }
     });
 
