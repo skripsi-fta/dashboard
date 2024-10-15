@@ -16,6 +16,7 @@ interface DatePickerSingle {
     name?: string;
     label?: string;
     placeholder?: string;
+    disablePast?: boolean;
 }
 
 interface Props<T extends FieldValues = FieldValues> extends DatePickerSingle {
@@ -32,7 +33,8 @@ const DatePickerSingleInput = <
     dateComponentProps,
     name,
     label,
-    placeholder
+    placeholder,
+    disablePast = false
 }: Props<T>) => {
     const dateControl = useController<T, TName>({
         control,
@@ -40,6 +42,8 @@ const DatePickerSingleInput = <
     });
 
     const dateErrorMsg = dateControl.fieldState.error?.message;
+
+    const disableOptions = disablePast ? { before: new Date() } : undefined;
 
     return (
         <Popover
@@ -96,6 +100,7 @@ const DatePickerSingleInput = <
                         );
                         trigger?.(name as TName);
                     }}
+                    disabled={disableOptions}
                     autoFocus
                 />
             </PopoverContent>

@@ -109,6 +109,21 @@ export function DataTable<TData, TValue>({
 
     const hasRows = table.getRowModel().rows.length > 0 && !isLoading;
 
+    const getPaginationText = (): string => {
+        if (!paginationProps || totalData === 0) {
+            return '0 - 0 dari 0 data';
+        }
+
+        const startRow =
+            paginationProps.pageIndex * paginationProps.pageSize + 1;
+        const endRow = Math.min(
+            (paginationProps.pageIndex + 1) * paginationProps.pageSize,
+            totalData
+        );
+
+        return `${startRow} - ${endRow} dari ${totalData} data`;
+    };
+
     return (
         <div className='relative flex w-full min-w-0 flex-col gap-4'>
             <div className='table-custom-scrollbar min-w-0 overflow-x-auto'>
@@ -201,7 +216,10 @@ export function DataTable<TData, TValue>({
                 </Table>
             </div>
             {paginationProps && setPagination && (
-                <div className='ml-auto'>
+                <div className='ml-auto flex flex-row items-center gap-4'>
+                    <p className='w-full text-sm font-medium text-gray-400'>
+                        {getPaginationText()}
+                    </p>
                     <PaginationCustom
                         totalData={rowCount}
                         currentPage={paginationProps.pageIndex + 1}

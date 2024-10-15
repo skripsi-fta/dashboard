@@ -21,6 +21,8 @@ import { Eye, MapPin, Pencil } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useModal } from '@/providers/ModalProvider';
 import FilterModal from './components/FilterModal';
+import DetailModal from './components/DetailModal';
+import RequestChangeModal from './components/RequestChangeModal';
 
 const ScheduleDoctorPage = () => {
     const columns: ColumnDef<ManagementRegulerScheduleDoctor.Response.Data>[] =
@@ -60,67 +62,61 @@ const ScheduleDoctorPage = () => {
             },
             {
                 accessorKey: 'status',
-                size: 120,
+                size: 150,
                 header: 'Status',
-                cell: ({ row: { original } }) => {
-                    const startDate = dayjsUtils(
-                        `${original.date} ${original.startTime}`
-                    );
+                cell: ({ row: { original } }) => (
+                    <div className='flex w-full flex-row items-center justify-between'>
+                        <p
+                            className={cn(
+                                'font-semibold capitalize',
+                                original.status === 'in review' &&
+                                    'text-[#EC7525]',
+                                original.status === 'cancelled' &&
+                                    'text-red-500',
+                                original.status === 'changed' &&
+                                    'text-green-400',
+                                original.status === 'completed' &&
+                                    'text-primaryblue',
+                                original.status === 'berjalan' &&
+                                    'text-primaryblue'
+                            )}
+                        >
+                            {original.status}
+                        </p>
 
-                    const endDate = dayjsUtils(
-                        `${original.date} ${original.endTime}`
-                    );
-
-                    const dateNow = dayjsUtils();
-
-                    let isActive = false;
-
-                    if (
-                        dateNow.isBefore(endDate) &&
-                        dateNow.isAfter(startDate)
-                    ) {
-                        isActive = true;
-                    }
-
-                    if (original.status === 'ready' && isActive) {
-                        return (
-                            <p className='font-semibold text-primaryblue'>
-                                Berjalan
-                            </p>
-                        );
-                    } else {
-                        return (
-                            <div className='flex w-full flex-row items-center justify-between'>
-                                <p
-                                    className={cn(
-                                        'font-semibold capitalize',
-                                        original.status === 'in review' &&
-                                            'text-[#EC7525]',
-                                        original.status === 'cancelled' &&
-                                            'text-red-500',
-                                        original.status === 'changed' &&
-                                            'text-green-400',
-                                        original.status === 'completed' &&
-                                            'text-primary'
-                                    )}
-                                >
-                                    {original.status}
-                                </p>
-
-                                {original.status === 'ready' ? (
-                                    <Pencil
-                                        size={22}
-                                        className='cursor-pointer'
-                                    />
-                                ) : (
-                                    <Eye size={22} className='cursor-pointer' />
-                                )}
-                            </div>
-                        );
-                    }
-                }
+                        {original.status === 'ready' ? (
+                            <Pencil
+                                size={22}
+                                className='cursor-pointer'
+                                onClick={() =>
+                                    handleRequestChangeModal(original)
+                                }
+                            />
+                        ) : (
+                            <Eye
+                                size={22}
+                                className='cursor-pointer'
+                                onClick={() => handleDetailModal(original.id)}
+                            />
+                        )}
+                    </div>
+                )
             }
         ];
+
+    const handleRequestChangeModal = (
+        data: ManagementRegulerScheduleDoctor.Response.Data
+    ) => {
+        openModal(<RequestChangeModal refetch={refetch} data={data} />, {
+            title: 'Permintaan Perubahan Jadwal'
+        });
+    };
+
+    const handleDetailModal = (scheduleId: number) => {
+        openModal(<DetailModal scheduleId={scheduleId} />, {
+            title: 'Detail Jadwal'
+        });
+    };
 
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
@@ -137,7 +133,10 @@ const ScheduleDoctorPage = () => {
         useState<ManagementRegulerScheduleListValidation>({
             date: '',
             doctorId: doctorData!.doctor.id.toString(),
-            endDate: dayjsUtils().endOf('month').format('YYYY-MM-DD'),
+            endDate: dayjsUtils()
+                .endOf('month')
+                .add(30, 'days')
+                .format('YYYY-MM-DD'),
             endTime: '',
             roomId: '',
             startDate: dayjsUtils().startOf('month').format('YYYY-MM-DD'),
