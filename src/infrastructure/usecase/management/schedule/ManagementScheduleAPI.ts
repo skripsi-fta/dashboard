@@ -1,8 +1,26 @@
+import { GlobalModels } from '@/infrastructure/models/global';
 import type { ManagementFixedScheduleDoctor } from '@/infrastructure/models/management/schedule/fixed';
 import type { ManagementRegulerScheduleDoctor } from '@/infrastructure/models/management/schedule/reguler';
 import http from '@/lib/axios';
 
 export class ManagementScheduleAPI {
+    async getDropdown(
+        params: ManagementRegulerScheduleDoctor.Request.List
+    ): Promise<GlobalModels.DropdownData> {
+        const data =
+            await http.get<ManagementRegulerScheduleDoctor.Response.List>(
+                '/management/schedule',
+                {params}
+            );
+        return {
+            data:
+                data?.data?.data?.map((d) => ({
+                    label: d.doctor.name + ' - ' + d.startTime + '-' + d.endTime + ' - ' + d.doctor.specialization.name,
+                    value: d.id.toString()
+                })) || []
+        };
+    }
+
     private readonly url: string = '/management/schedule';
 
     async getScheduleList(

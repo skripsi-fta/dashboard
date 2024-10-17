@@ -1,7 +1,21 @@
+import { GlobalModels } from '@/infrastructure/models/global';
 import type { ManagementPatient } from '@/infrastructure/models/management/pasien';
 import http from '@/lib/axios';
 
 export class ManagementPasienAPI {
+    async getDropdown(): Promise<GlobalModels.DropdownData> {
+        const data =
+            await http.get<ManagementPatient.Response.List>('/management/patient');
+
+        return {
+            data:
+                data?.data?.data?.map((d) => ({
+                    label: `${d.idNumber + " - " + d.name}`,
+                    value: d.id.toString()
+                })) || []
+        };
+    }
+
     private readonly url: string = '/management/patient';
 
     async getList(

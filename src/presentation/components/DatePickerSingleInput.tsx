@@ -16,6 +16,7 @@ interface DatePickerSingle {
     name?: string;
     label?: string;
     placeholder?: string;
+    onDateChange?: (date: string) => void;
 }
 
 interface Props<T extends FieldValues = FieldValues> extends DatePickerSingle {
@@ -32,7 +33,8 @@ const DatePickerSingleInput = <
     dateComponentProps,
     name,
     label,
-    placeholder
+    placeholder,
+    onDateChange
 }: Props<T>) => {
     const dateControl = useController<T, TName>({
         control,
@@ -95,6 +97,9 @@ const DatePickerSingleInput = <
                             dayjsUtils(e).format('YYYY-MM-DD')
                         );
                         trigger?.(name as TName);
+                        if (onDateChange) {
+                            onDateChange(dayjsUtils(e).format('YYYY-MM-DD')); // Call onDateChange here
+                        }
                     }}
                     autoFocus
                 />
