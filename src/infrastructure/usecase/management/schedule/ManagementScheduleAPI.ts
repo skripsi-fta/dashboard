@@ -1,4 +1,4 @@
-import { GlobalModels } from '@/infrastructure/models/global';
+import type { GlobalModels } from '@/infrastructure/models/global';
 import type { ManagementFixedScheduleDoctor } from '@/infrastructure/models/management/schedule/fixed';
 import type { ManagementRegulerScheduleDoctor } from '@/infrastructure/models/management/schedule/reguler';
 import http from '@/lib/axios';
@@ -10,12 +10,12 @@ export class ManagementScheduleAPI {
         const data =
             await http.get<ManagementRegulerScheduleDoctor.Response.List>(
                 '/management/schedule',
-                {params}
+                { params }
             );
         return {
             data:
                 data?.data?.data?.map((d) => ({
-                    label: d.doctor.name + ' - ' + d.startTime + '-' + d.endTime + ' - ' + d.doctor.specialization.name,
+                    label: `${d.doctor.name} (${d.doctor.specialization.name}) - ${d.startTime}-${d.endTime} - ${d.room.name}`,
                     value: d.id.toString()
                 })) || []
         };

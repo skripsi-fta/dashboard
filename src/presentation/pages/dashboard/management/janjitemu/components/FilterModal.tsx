@@ -3,6 +3,7 @@ import {
     type ManagementAppointmentList
 } from '@/infrastructure/models/management/janjitemu';
 import CustomSelectComponent from '@/presentation/components/CustomSelect';
+import DatePickerSingleInput from '@/presentation/components/DatePickerSingleInput';
 import TextFieldInput from '@/presentation/components/TextfieldInput';
 import {
     ModalFormContainer,
@@ -32,8 +33,67 @@ const FilterModal = ({
             >
                 <ModalFormContent>
                     <ModalFormFields>
+                        <div className='flex w-full flex-row items-center justify-center gap-4'>
+                            <DatePickerSingleInput
+                                control={control}
+                                name='startDate'
+                                label='Tanggal Mulai'
+                            />
+
+                            <DatePickerSingleInput
+                                control={control}
+                                name='endDate'
+                                label='Tanggal Akhir'
+                            />
+                        </div>
+
                         <div className='flex flex-col gap-2'>
-                            <p className='font-semibold text-[#666666]'>Kode Booking</p>
+                            <p className='font-semibold text-[#666666]'>
+                                Waktu
+                            </p>
+                            <div className='flex w-full flex-row items-center justify-center gap-4'>
+                                <Controller
+                                    control={control}
+                                    name='startTime'
+                                    render={({
+                                        field: { ref, ...field },
+                                        fieldState: { error }
+                                    }) => (
+                                        <TextFieldInput
+                                            {...field}
+                                            placeholder='Waktu Mulai'
+                                            error={error}
+                                            variant='modal'
+                                            type='time'
+                                            fullWidth
+                                        />
+                                    )}
+                                />
+                                <p>-</p>
+                                <Controller
+                                    control={control}
+                                    name='endTime'
+                                    render={({
+                                        field: { ref, ...field },
+                                        fieldState: { error }
+                                    }) => (
+                                        <TextFieldInput
+                                            {...field}
+                                            placeholder='Waktu Selsai'
+                                            error={error}
+                                            variant='modal'
+                                            type='time'
+                                            fullWidth
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </div>
+
+                        <div className='flex flex-col gap-2'>
+                            <p className='font-semibold text-[#666666]'>
+                                Kode Booking
+                            </p>
                             <Controller
                                 control={control}
                                 name='bookingCode'
@@ -48,7 +108,9 @@ const FilterModal = ({
                             />
                         </div>
                         <div className='flex flex-col gap-2'>
-                            <p className='font-semibold text-[#666666]'>Status Janji Temu</p>
+                            <p className='font-semibold text-[#666666]'>
+                                Status Janji Temu
+                            </p>
                             <Controller
                                 control={control}
                                 name='appointmentStatus'
@@ -84,7 +146,7 @@ const FilterModal = ({
                                             {
                                                 label: 'Dibatalkan',
                                                 value: 'cancel'
-                                            },
+                                            }
                                         ]}
                                         error={error}
                                     />

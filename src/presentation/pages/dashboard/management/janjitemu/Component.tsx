@@ -24,6 +24,7 @@ import AddMedicalRecordModal from './components/medicalrecord/AddMedicalRecordMo
 import EditMedicalRecordModal from './components/medicalrecord/EditMedicalRecordModal';
 import { cn } from '@/lib/utils';
 import EditModal from './components/EditModal';
+import dayjsUtils from '@/lib/dayjs';
 
 const ManagementAppointmentPage = () => {
     const api = new ManagementAppointmentAPI();
@@ -36,8 +37,13 @@ const ManagementAppointmentPage = () => {
         },
         {
             accessorKey: 'bookingCode',
-            size: 200,
+            size: 150,
             header: 'Kode Booking'
+        },
+        {
+            accessorKey: 'date',
+            size: 250,
+            header: 'Jadwal'
         },
         {
             accessorKey: 'patientName',
@@ -58,16 +64,22 @@ const ManagementAppointmentPage = () => {
             accessorKey: 'appointmentStatus',
             size: 200,
             header: 'Status Janji Temu',
-            cell: ({ row: {original} }) => (
+            cell: ({ row: { original } }) => (
                 <p
                     className={cn(
                         'font-medium capitalize',
-                        original.appointmentStatus === 'checkin' && 'text-yellow-500',
-                        original.appointmentStatus === 'doctor queue' && 'text-yellow-500',
-                        original.appointmentStatus === 'pharmacy queue' && 'text-yellow-500',
-                        original.appointmentStatus === 'cashier queue' && 'text-red-500',
-                        original.appointmentStatus === 'done' && 'text-green-500',
-                        original.appointmentStatus === 'cancel' && 'text-red-500',
+                        original.appointmentStatus === 'checkin' &&
+                            'text-yellow-500',
+                        original.appointmentStatus === 'doctor queue' &&
+                            'text-yellow-500',
+                        original.appointmentStatus === 'pharmacy queue' &&
+                            'text-yellow-500',
+                        original.appointmentStatus === 'cashier queue' &&
+                            'text-red-500',
+                        original.appointmentStatus === 'done' &&
+                            'text-green-500',
+                        original.appointmentStatus === 'cancel' &&
+                            'text-red-500'
                     )}
                 >
                     {original.appointmentStatus}
@@ -80,21 +92,24 @@ const ManagementAppointmentPage = () => {
             cell: ({ row: { original } }) => {
                 return (
                     <div className='flex flex-row items-center'>
-                        { original.checkInStatus ? (
-                            <Button className='cursor-default hover:bg-transparent'
-                                variant={'ghost'}>
+                        {original.checkInStatus ? (
+                            <Button
+                                className='cursor-default hover:bg-transparent'
+                                variant={'ghost'}
+                            >
                                 <MapPinCheckInside className='text-green-500' />
                             </Button>
-                        ) :
+                        ) : (
                             <Button
                                 variant={'ghost'}
                                 onClick={() =>
                                     openModal(
                                         <CheckInModal
                                             defaultValues={{
-                                                ...original,
+                                                ...original
                                             }}
                                             refetch={refetch}
+                                            data={original}
                                         />,
                                         {
                                             title: 'Check In'
@@ -104,7 +119,7 @@ const ManagementAppointmentPage = () => {
                             >
                                 <DoorOpenIcon className='text-primaryblue' />
                             </Button>
-                        }
+                        )}
                     </div>
                 );
             }
@@ -115,62 +130,72 @@ const ManagementAppointmentPage = () => {
             cell: ({ row: { original } }) => {
                 return (
                     <div className='flex flex-row items-center'>
-                        {!original.medicalRecord ?
-                        <Button
-                            variant={'ghost'}
-                            onClick={() =>
-                                openModal(
-                                    <AddMedicalRecordModal
-                                        defaultValues={{
-                                            appointmentId: original.id,
-                                            patientId: original.patientId,
-                                            height: 0,
-                                            weight: 0,
-                                            systolic: 0,
-                                            diastolic: 0,
-                                            temperature: 0,
-                                            illness: '',
-                                        }}
-                                        refetch={refetch}
-                                    />,
-                                    {
-                                        title: 'Add Medical Record'
-                                    }
-                                )
-                            }
-                        >
-                            <PlusCircle className='text-primaryblue' />
-                        </Button>
-                        :
-                        <Button
-                            variant={'ghost'}
-                            onClick={() =>
-                                openModal(
-                                    <EditMedicalRecordModal
-                                        defaultValues={{
-                                            id: original.medicalRecord.id,
-                                            height: original.medicalRecord.height,
-                                            weight: original.medicalRecord.weight,
-                                            systolic: original.medicalRecord.systolic,
-                                            diastolic: original.medicalRecord.diastolic,
-                                            temperature: original.medicalRecord.temperature,
-                                            illness: original.medicalRecord.illness,
-                                        }}
-                                        refetch={refetch}
-                                    />,
-                                    {
-                                        title: 'Edit Medical Record'
-                                    }
-                                )
-                            }
-                        >
-                            <Pencil className='text-primaryblue' />
-                        </Button>
-                        }
+                        {!original.medicalRecord ? (
+                            <Button
+                                variant={'ghost'}
+                                onClick={() =>
+                                    openModal(
+                                        <AddMedicalRecordModal
+                                            defaultValues={{
+                                                appointmentId: original.id,
+                                                patientId: original.patientId,
+                                                height: 0,
+                                                weight: 0,
+                                                systolic: 0,
+                                                diastolic: 0,
+                                                temperature: 0,
+                                                illness: ''
+                                            }}
+                                            refetch={refetch}
+                                        />,
+                                        {
+                                            title: 'Add Medical Record'
+                                        }
+                                    )
+                                }
+                            >
+                                <PlusCircle className='text-primaryblue' />
+                            </Button>
+                        ) : (
+                            <Button
+                                variant={'ghost'}
+                                onClick={() =>
+                                    openModal(
+                                        <EditMedicalRecordModal
+                                            defaultValues={{
+                                                id: original.medicalRecord.id,
+                                                height: original.medicalRecord
+                                                    .height,
+                                                weight: original.medicalRecord
+                                                    .weight,
+                                                systolic:
+                                                    original.medicalRecord
+                                                        .systolic,
+                                                diastolic:
+                                                    original.medicalRecord
+                                                        .diastolic,
+                                                temperature:
+                                                    original.medicalRecord
+                                                        .temperature,
+                                                illness:
+                                                    original.medicalRecord
+                                                        .illness
+                                            }}
+                                            refetch={refetch}
+                                        />,
+                                        {
+                                            title: 'Edit Medical Record'
+                                        }
+                                    )
+                                }
+                            >
+                                <Pencil className='text-primaryblue' />
+                            </Button>
+                        )}
                     </div>
                 );
             }
-        },
+        }
         // TODO : Edit Appointment
         // {
         //     header: 'Action',
@@ -210,10 +235,20 @@ const ManagementAppointmentPage = () => {
         pageSize: 5
     });
 
-    const [filterValues, setFilterValues] = useState<ManagementAppointmentList>({
-        bookingCode: '',
-        appointmentStatus: ''
-    });
+    const [filterValues, setFilterValues] = useState<ManagementAppointmentList>(
+        {
+            bookingCode: '',
+            appointmentStatus: '',
+            endDate: dayjsUtils()
+                .endOf('month')
+                .add(30, 'days')
+                .format('YYYY-MM-DD'),
+            // startDate: dayjsUtils().format('YYYY-MM-DD'),
+            startDate: dayjsUtils().startOf('month').format('YYYY-MM-DD'),
+            endTime: '',
+            startTime: ''
+        }
+    );
 
     const { openModal, closeModal } = useModal();
 
@@ -224,7 +259,14 @@ const ManagementAppointmentPage = () => {
     };
 
     const onResetFilter = () => {
-        setFilterValues(() => ({ bookingCode: '', appointmentStatus: '' }));
+        setFilterValues(() => ({
+            bookingCode: '',
+            appointmentStatus: '',
+            endDate: dayjsUtils().endOf('month').format('YYYY-MM-DD'),
+            startDate: dayjsUtils().startOf('month').format('YYYY-MM-DD'),
+            endTime: '',
+            startTime: ''
+        }));
         setPagination(() => ({ pageIndex: 0, pageSize: 5 }));
         closeModal();
     };

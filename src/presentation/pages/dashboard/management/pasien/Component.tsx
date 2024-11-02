@@ -12,7 +12,7 @@ import DashboardContent from '@/presentation/layout/dashboard/content';
 import DashboardHeader from '@/presentation/layout/dashboard/header';
 import { useModal } from '@/providers/ModalProvider';
 import type { ColumnDef, PaginationState } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { toast } from 'sonner';
 import FilterModal from './components/FilterModal';
@@ -21,6 +21,7 @@ import { identityType } from '@/shared/constant';
 import { Button } from '@/presentation/ui/button';
 import { Pencil } from 'lucide-react';
 import EditModal from './components/EditModal';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const PasienManagementComponent = () => {
     const columns: ColumnDef<ManagementPatient.Response.Data>[] = [
@@ -166,6 +167,19 @@ const PasienManagementComponent = () => {
     const handleOpenDialogAdd = () => {
         openModal(<AddModal refetch={refetch} />, { title: 'Tambah Pasien' });
     };
+
+    const searchParams = useSearchParams();
+
+    const action = searchParams.get('action');
+
+    const router = useRouter();
+
+    useEffect(() => {
+        if (action && action === 'add') {
+            handleOpenDialogAdd();
+            router.replace('/dashboard/management/pasien');
+        }
+    }, [action]);
 
     return (
         <>

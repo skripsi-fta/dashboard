@@ -1,5 +1,9 @@
-import { ManagementAppointment, managementAppointmentUpdateValidation } from '@/infrastructure/models/management/janjitemu';
-import { ManagementRegulerScheduleListValidation } from '@/infrastructure/models/management/schedule/reguler';
+import type {
+    ManagementAppointment } from '@/infrastructure/models/management/janjitemu';
+import {
+    managementAppointmentUpdateValidation
+} from '@/infrastructure/models/management/janjitemu';
+import type { ManagementRegulerScheduleListValidation } from '@/infrastructure/models/management/schedule/reguler';
 import { ManagementAppointmentAPI } from '@/infrastructure/usecase/management/janjitemu/ManagementAppointmentAPI';
 import { ManagementPasienAPI } from '@/infrastructure/usecase/management/pasien/ManagementPasienAPI';
 import { ManagementScheduleAPI } from '@/infrastructure/usecase/management/schedule/ManagementScheduleAPI';
@@ -26,13 +30,12 @@ interface EditModal {
 }
 
 const EditModal = ({ refetch, defaultValues }: EditModal) => {
-    const { control, handleSubmit } = useForm<ManagementAppointment.Request.Update>(
-        {
+    const { control, handleSubmit } =
+        useForm<ManagementAppointment.Request.Update>({
             defaultValues,
             mode: 'onChange',
             resolver: zodResolver(managementAppointmentUpdateValidation)
-        }
-    );
+        });
 
     const { closeModal } = useModal();
 
@@ -53,24 +56,30 @@ const EditModal = ({ refetch, defaultValues }: EditModal) => {
 
     const scheduleAPI = new ManagementScheduleAPI();
 
-    const [filterValues, setFilterValues] = useState<ManagementRegulerScheduleListValidation>({
-        date: defaultValues.scheduleDate,
-        doctorId: '',
-        endDate: defaultValues.scheduleDate,
-        endTime: '',
-        roomId: '',
-        startDate: defaultValues.scheduleDate,
-        startTime: '',
-        status: ''
-    });
+    const [filterValues, setFilterValues] =
+        useState<ManagementRegulerScheduleListValidation>({
+            date: defaultValues.scheduleDate,
+            doctorId: '',
+            endDate: defaultValues.scheduleDate,
+            endTime: '',
+            roomId: '',
+            startDate: defaultValues.scheduleDate,
+            startTime: '',
+            status: ''
+        });
 
-    const { data: scheduleData, isLoading: scheduleLoading, refetch: refetchSchedule } = useQuery({
+    const {
+        data: scheduleData,
+        isLoading: scheduleLoading,
+        refetch: refetchSchedule
+    } = useQuery({
         queryKey: ['schedule-dropdown-data', filterValues],
-        queryFn: () => scheduleAPI.getDropdown({
-            ...filterValues,
-            pageSize: 0,
-            pageNumber: 0
-        }),
+        queryFn: () =>
+            scheduleAPI.getDropdown({
+                ...filterValues,
+                pageSize: 0,
+                pageNumber: 0
+            })
     });
 
     return (
@@ -80,7 +89,6 @@ const EditModal = ({ refetch, defaultValues }: EditModal) => {
             >
                 <ModalFormContent>
                     <ModalFormFields>
-
                         <Controller
                             control={control}
                             name='scheduleDate'
@@ -89,13 +97,20 @@ const EditModal = ({ refetch, defaultValues }: EditModal) => {
                                     {...field}
                                     control={control}
                                     label='Tanggal Janji Temu'
-
                                     onDateChange={(date) => {
-                                        setFilterValues(prev => ({
+                                        setFilterValues((prev) => ({
                                             ...prev,
-                                            date: dayjsUtils(date).format('YYYY-MM-DD'),
-                                            startDate: dayjsUtils(date).format('YYYY-MM-DD'),
-                                            endDate: dayjsUtils(date).format('YYYY-MM-DD')
+                                            date: dayjsUtils(date).format(
+                                                'YYYY-MM-DD'
+                                            ),
+                                            startDate:
+                                                dayjsUtils(date).format(
+                                                    'YYYY-MM-DD'
+                                                ),
+                                            endDate:
+                                                dayjsUtils(date).format(
+                                                    'YYYY-MM-DD'
+                                                )
                                         }));
                                         refetchSchedule();
                                     }}

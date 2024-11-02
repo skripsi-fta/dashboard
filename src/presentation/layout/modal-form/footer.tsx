@@ -3,7 +3,7 @@ import { useModal } from '@/providers/ModalProvider';
 
 interface FormFooterType {
     onCancel?: () => void;
-    type: 'filter' | 'add' | 'edit';
+    type: 'filter' | 'add' | 'edit' | string;
     loading?: boolean;
 }
 
