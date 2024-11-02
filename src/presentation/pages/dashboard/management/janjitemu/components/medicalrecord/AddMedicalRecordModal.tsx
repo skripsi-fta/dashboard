@@ -1,4 +1,7 @@
-import { ManagementMedicalRecord, managementMedicalRecordCreateValidation } from '@/infrastructure/models/management/medicalrecord';
+import {
+    type ManagementMedicalRecord,
+    managementMedicalRecordCreateValidation
+} from '@/infrastructure/models/management/medicalrecord';
 import { ManagementMedicalRecordAPI } from '@/infrastructure/usecase/management/medicalrecord/ManagementMedicalRecordAPI';
 import TextFieldInput from '@/presentation/components/TextfieldInput';
 import {
@@ -19,7 +22,10 @@ interface AddMedicalRecordModalProps {
     defaultValues: ManagementMedicalRecord.Request.Create;
 }
 
-const AddMedicalRecordModal = ({ refetch, defaultValues }: AddMedicalRecordModalProps) => {
+const AddMedicalRecordModal = ({
+    refetch,
+    defaultValues
+}: AddMedicalRecordModalProps) => {
     const { control, handleSubmit } =
         useForm<ManagementMedicalRecord.Request.Create>({
             defaultValues,
@@ -40,7 +46,9 @@ const AddMedicalRecordModal = ({ refetch, defaultValues }: AddMedicalRecordModal
             refetch();
         },
         onError: (res: AxiosError<{ message: string }>) => {
-            toast.error(res.response?.data?.message ?? 'Membuat medical record error');
+            toast.error(
+                res.response?.data?.message ?? 'Membuat medical record error'
+            );
         }
     });
 
@@ -52,7 +60,9 @@ const AddMedicalRecordModal = ({ refetch, defaultValues }: AddMedicalRecordModal
                 <ModalFormContent>
                     <ModalFormFields>
                         <div className='flex flex-col gap-2'>
-                            <p className='font-semibold text-[#666666]'>Tinggi Badan</p>
+                            <p className='font-semibold text-[#666666]'>
+                                Tinggi Badan
+                            </p>
                             <Controller
                                 control={control}
                                 name='height'
@@ -67,7 +77,9 @@ const AddMedicalRecordModal = ({ refetch, defaultValues }: AddMedicalRecordModal
                             />
                         </div>
                         <div className='flex flex-col gap-2'>
-                            <p className='font-semibold text-[#666666]'>Berat Badan</p>
+                            <p className='font-semibold text-[#666666]'>
+                                Berat Badan
+                            </p>
                             <Controller
                                 control={control}
                                 name='weight'
@@ -82,7 +94,9 @@ const AddMedicalRecordModal = ({ refetch, defaultValues }: AddMedicalRecordModal
                             />
                         </div>
                         <div className='flex flex-col gap-2'>
-                            <p className='font-semibold text-[#666666]'>Tekanan Sistolik</p>
+                            <p className='font-semibold text-[#666666]'>
+                                Tekanan Sistolik
+                            </p>
                             <Controller
                                 control={control}
                                 name='systolic'
@@ -97,7 +111,9 @@ const AddMedicalRecordModal = ({ refetch, defaultValues }: AddMedicalRecordModal
                             />
                         </div>
                         <div className='flex flex-col gap-2'>
-                            <p className='font-semibold text-[#666666]'>Tekanan Diastolik</p>
+                            <p className='font-semibold text-[#666666]'>
+                                Tekanan Diastolik
+                            </p>
                             <Controller
                                 control={control}
                                 name='diastolic'
@@ -112,7 +128,9 @@ const AddMedicalRecordModal = ({ refetch, defaultValues }: AddMedicalRecordModal
                             />
                         </div>
                         <div className='flex flex-col gap-2'>
-                            <p className='font-semibold text-[#666666]'>Suhu Badan</p>
+                            <p className='font-semibold text-[#666666]'>
+                                Suhu Badan
+                            </p>
                             <Controller
                                 control={control}
                                 name='temperature'
@@ -127,7 +145,9 @@ const AddMedicalRecordModal = ({ refetch, defaultValues }: AddMedicalRecordModal
                             />
                         </div>
                         <div className='flex flex-col gap-2'>
-                            <p className='font-semibold text-[#666666]'>Keluhan</p>
+                            <p className='font-semibold text-[#666666]'>
+                                Keluhan
+                            </p>
                             <Controller
                                 control={control}
                                 name='illness'

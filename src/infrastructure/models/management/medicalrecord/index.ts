@@ -7,7 +7,7 @@ export const managementMedicalRecordListValidation = z.object({
     systolic: z.number({ required_error: 'required' }),
     diastolic: z.number({ required_error: 'required' }),
     temperature: z.number({ required_error: 'required' }),
-    illness: z.string({ required_error: 'required' }),
+    illness: z.string({ required_error: 'required' })
 });
 
 export const managementMedicalRecordListQuery =
@@ -40,38 +40,35 @@ export const managementMedicalRecordCreateValidation = z.object({
     illness: z.coerce
         .string({ required_error: 'required' })
         .min(1, { message: 'Keluhan harus diisi' }),
-    patientId: z
-        .number({ required_error: 'required' }),
-    appointmentId: z
-        .number({ required_error: 'required' })
+    patientId: z.number({ required_error: 'required' }),
+    appointmentId: z.number({ required_error: 'required' })
 });
 
 export type ManagementMedicalRecordCreate = z.infer<
     typeof managementMedicalRecordCreateValidation
 >;
 
-export const managementMedicalRecordUpdateValidation = z
-    .object({
-        id: z.number({ required_error: 'required' }),
-        height: z.coerce
-            .number({ required_error: 'required' })
-            .min(1, { message: 'Tinggi harus diisi' }),
-        weight: z.coerce
-            .number({ required_error: 'required' })
-            .min(1, { message: 'Berat harus diisi' }),
-        systolic: z.coerce
-            .number({ required_error: 'required' })
-            .min(1, { message: 'Sistolik harus diisi' }),
-        diastolic: z.coerce
-            .number({ required_error: 'required' })
-            .min(1, { message: 'Disatolik harus diisi' }),
-        temperature: z.coerce
-            .number({ required_error: 'required' })
-            .min(1, { message: 'Suhu badan harus diisi' }),
-        illness: z
-            .string({ required_error: 'required' })
-            .min(1, { message: 'Keluhan harus diisi' }),
-    })
+export const managementMedicalRecordUpdateValidation = z.object({
+    id: z.number({ required_error: 'required' }),
+    height: z.coerce
+        .number({ required_error: 'required' })
+        .min(1, { message: 'Tinggi harus diisi' }),
+    weight: z.coerce
+        .number({ required_error: 'required' })
+        .min(1, { message: 'Berat harus diisi' }),
+    systolic: z.coerce
+        .number({ required_error: 'required' })
+        .min(1, { message: 'Sistolik harus diisi' }),
+    diastolic: z.coerce
+        .number({ required_error: 'required' })
+        .min(1, { message: 'Disatolik harus diisi' }),
+    temperature: z.coerce
+        .number({ required_error: 'required' })
+        .min(1, { message: 'Suhu badan harus diisi' }),
+    illness: z
+        .string({ required_error: 'required' })
+        .min(1, { message: 'Keluhan harus diisi' })
+});
 
 export type ManagementMedicalRecordUpdate = z.infer<
     typeof managementMedicalRecordUpdateValidation
@@ -85,14 +82,14 @@ export namespace ManagementMedicalRecord {
 
     export namespace Response {
         export interface Data {
-            id: number,
-            height: number,
-            weight: number,
-            systolic: number,
-            diastolic: number,
-            temperature: number,
-            illness: string,
-            patientId: number,
+            id: number;
+            height: number;
+            weight: number;
+            systolic: number;
+            diastolic: number;
+            temperature: number;
+            illness: string;
+            patientId: number;
         }
 
         export interface List {
