@@ -133,6 +133,9 @@ const ManagementAppointmentPage = () => {
                         {!original.medicalRecord ? (
                             <Button
                                 variant={'ghost'}
+                                disabled={
+                                    original.appointmentStatus !== 'checkin'
+                                }
                                 onClick={() =>
                                     openModal(
                                         <AddMedicalRecordModal
