@@ -71,7 +71,8 @@ const ScheduleAppointmentPage = () => {
         queryFn: () =>
             api.getList({
                 pageSize: pagination.pageSize,
-                pageNumber: pagination.pageIndex + 1
+                pageNumber: pagination.pageIndex + 1,
+                scheduleId: Number(detailAppointment?.scheduleId)
             }),
         onError: () => {
             toast.error('Get list appointment error');

@@ -23,6 +23,7 @@ export namespace DoctorAppointment {
         export interface List {
             pageNumber: number;
             pageSize: number;
+            scheduleId: number;
         }
 
         export interface CheckIn extends CheckInAppointmentDoctorValidation {}
