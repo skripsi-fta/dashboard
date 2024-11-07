@@ -14,4 +14,15 @@ export class DoctorScheduleAPI {
 
         return data.data;
     }
+
+    async finishSchedule(
+        body: DoctorSchedule.Request.Finish
+    ): Promise<DoctorSchedule.Response.Finish> {
+        const data = await http.put<DoctorSchedule.Response.Finish>(
+            `${this.url}/finish`,
+            body
+        );
+
+        return data.data;
+    }
 }

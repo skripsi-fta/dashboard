@@ -50,10 +50,18 @@ export type RequestScheduleChangeDoctorValidation = z.infer<
 export namespace DoctorSchedule {
     export namespace Request {
         export interface Change extends RequestScheduleChangeDoctorValidation {}
+
+        export interface Finish {
+            scheduleId: number;
+        }
     }
 
     export namespace Response {
         export interface Change {
+            message: string;
+        }
+
+        export interface Finish {
             message: string;
         }
     }

@@ -31,7 +31,7 @@ export const ModalFormFooter = ({
                 loading={loading}
                 type='submit'
             >
-                {type === 'filter' ? 'Terapkan' : `${type} Data`}
+                {type === 'filter' ? 'Terapkan' : `${type}`}
             </CustomButtonComponent>
         </div>
     );
