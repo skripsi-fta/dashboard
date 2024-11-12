@@ -64,9 +64,7 @@ const PharmacyQueuePage = () => {
         isError: errorDetailQueue,
         refetch: refetch2
     } = useQuery({
-        queryKey: [
-            'detail-pharmacy-queue',
-        ],
+        queryKey: ['detail-pharmacy-queue',],
         queryFn: () => api.getCurrentPharmacyQueue(),
         onError: () => {
             toast.error('Get detail count pharmacy queue error');
@@ -75,7 +73,7 @@ const PharmacyQueuePage = () => {
 
     const columns: ColumnDef<PharmacyQueue.Response.Data>[] = [
         {
-            accessorKey: 'pharmacyQueue.queueNumber',
+            accessorKey: 'queueNumber',
             size: 80,
             header: 'No. Antrian',
             cell: ({ row: { original } }) => {
@@ -87,12 +85,11 @@ const PharmacyQueuePage = () => {
             }
         },
         {
-            accessorKey: 'patient.name',
+            accessorKey: 'patientName',
             size: 200,
             header: 'Nama Pasien'
         },
         {
-            accessorKey: 'action',
             size: 100,
             header: 'Aksi',
             cell: ({ row: { original } }) => {
@@ -120,18 +117,18 @@ const PharmacyQueuePage = () => {
                 </div>
             </>
         ) : (
-            <div className="flex flex-row gap-8">
-                <div className="flex w-[250px] flex-col items-center bg-white p-5 rounded-lg">
+            <div className="flex w-full flex-col-reverse lg:flex-row gap-8">
+                <div className="flex w-full lg:w-[250px] flex-col items-center bg-white p-5 rounded-lg">
                     <p className="font-semibold">Total Antrian Farmasi</p>
                     <p className="text-2xl font-semibold text-primaryblue">{detailQueue?.data.total}</p>
                 </div>
 
-                <div className="flex w-[250px] flex-col items-center bg-white p-5 rounded-lg">
+                <div className="flex w-full lg:w-[250px] flex-col items-center bg-white p-5 rounded-lg">
                     <p className="font-semibold">Antrian Menunggu</p>
                     <p className="text-2xl font-semibold text-primaryblue">{detailQueue?.data.totalWaiting}</p>
                 </div>
 
-                <div className="flex w-[250px] flex-col items-center bg-white p-5 rounded-lg">
+                <div className="flex w-full lg:w-[250px] flex-col items-center bg-white p-5 rounded-lg">
                     <p className="font-semibold">Antrian Selesai</p>
                     <p className="text-2xl font-semibold text-primaryblue">{detailQueue?.data.totalFinished}</p>
                 </div>
