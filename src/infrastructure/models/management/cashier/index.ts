@@ -11,6 +11,7 @@ export namespace ManagementCashier {
 
         export interface Data {
             id: number;
+            bookingCode: string;
             consultationFee: number;
             pharmacyFee: number;
             cashierQueue: {
@@ -20,6 +21,18 @@ export namespace ManagementCashier {
             patient: {
                 id: number;
                 name: string;
+            };
+            schedule: {
+                date: string;
+                room: {
+                    name: string;
+                };
+                doctor: {
+                    name: string;
+                    specialization: {
+                        name: string;
+                    };
+                };
             };
         }
 
@@ -40,9 +53,18 @@ export namespace ManagementCashier {
             totalfinished: string;
         }
 
+        export interface Payment {
+            statusCode: number;
+            message: string;
+        }
+
     }
 
     export namespace Request {
         export interface List extends ManagementCashierQueryValidation{}
+
+        export interface Payment {
+            bookingId: number;
+        }
     }
 }

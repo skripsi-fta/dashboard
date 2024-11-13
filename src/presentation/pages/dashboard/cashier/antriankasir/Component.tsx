@@ -2,12 +2,15 @@
 
 import type { ManagementCashier } from '@/infrastructure/models/management/cashier';
 import { ManagementCashierAPI } from '@/infrastructure/usecase/management/cashier/ManagementCashierAPI';
+import CustomButtonComponent from '@/presentation/components/CustomButton';
 import { DataTable } from '@/presentation/components/DataTable';
 import DashboardContent from '@/presentation/layout/dashboard/content';
+import { useModal } from '@/providers/ModalProvider';
 import type { ColumnDef, PaginationState } from '@tanstack/react-table';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { toast } from 'sonner';
+import PaymentPatientModal from './components/PaymentPatientModal';
 
 const QueueCashierPage = () => {
 
@@ -31,13 +34,37 @@ const QueueCashierPage = () => {
             accessorKey: 'pharmacyFee',
             size: 75,
             header: 'Biaya Apotek'
-        }, {
+        },
+        {
             accessorKey: 'row',
             accessorFn: (row) => String(Number(row.consultationFee) + Number(row.pharmacyFee)),
             size: 75,
             header: 'Total Biaya'
+        },
+        {
+            accessorKey: 'action',
+            size: 150,
+            header: 'Aksi',
+            cell: ({ row: { original } }) => {
+                return (
+                    <CustomButtonComponent
+                        className='w-[125px] rounded-[10px] bg-primaryblue font-bold text-white hover:bg-primaryblue/70'
+                        onClick={() => {
+                            openPaymentModal(original);
+                        }}
+                    >
+                        Payment
+                    </CustomButtonComponent>
+                );
+            }
         }
     ];
+
+    const { openModal } = useModal();
+
+    const openPaymentModal = (data: ManagementCashier.Response.Data) => {
+        openModal(<PaymentPatientModal data={data} refetch={refetch} refetch2={refetchDetailData}/>, { title: 'Payment Checkout' });
+    };
 
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,

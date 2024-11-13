@@ -1,5 +1,4 @@
-"use client";
-"use client";
+'use client';
 
 import type {
     ManagementAppointment,
@@ -28,7 +27,6 @@ import EditModal from './components/EditModal';
 import dayjsUtils from '@/lib/dayjs';
 
 const ManagementAppointmentPage = () => {
-  const api = new ManagementAppointmentAPI();
   const api = new ManagementAppointmentAPI();
 
     const columns: ColumnDef<ManagementAppointment.Response.Data>[] = [

@@ -22,4 +22,14 @@ export class ManagementCashierAPI {
 
     return data.data;
   }
+
+  async payment(body: ManagementCashier.Request.Payment): Promise<ManagementCashier.Response.Payment> {
+    const data = await http.put<ManagementCashier.Response.Payment>(
+      `${this.url}/update`,
+      body
+    );
+
+    return data.data;
+
+  }
 }
