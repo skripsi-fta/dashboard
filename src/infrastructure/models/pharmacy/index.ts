@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ManagementAppointment } from '../management/janjitemu';
+import type { ManagementAppointment } from '../management/janjitemu';
 
 export const pharmacyQueueUpdateValidation = z.object({
     pharmacyFee: z.coerce
@@ -8,9 +8,7 @@ export const pharmacyQueueUpdateValidation = z.object({
     appointmentId: z.number({ required_error: 'required' })
 });
 
-export type PharmacyQueueUpdate = z.infer<
-    typeof pharmacyQueueUpdateValidation
->;
+export type PharmacyQueueUpdate = z.infer<typeof pharmacyQueueUpdateValidation>;
 
 export namespace PharmacyQueue {
     export namespace Request {
@@ -60,7 +58,7 @@ export namespace PharmacyQueue {
                 total: number;
                 totalFinished: number;
                 totalWaiting: number;
-            }
+            };
         }
 
         export interface List {
