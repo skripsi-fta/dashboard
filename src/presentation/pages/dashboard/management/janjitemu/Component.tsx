@@ -27,7 +27,7 @@ import EditModal from './components/EditModal';
 import dayjsUtils from '@/lib/dayjs';
 
 const ManagementAppointmentPage = () => {
-    const api = new ManagementAppointmentAPI();
+  const api = new ManagementAppointmentAPI();
 
     const columns: ColumnDef<ManagementAppointment.Response.Data>[] = [
         {
@@ -233,10 +233,10 @@ const ManagementAppointmentPage = () => {
         // }
     ];
 
-    const [pagination, setPagination] = useState<PaginationState>({
-        pageIndex: 0,
-        pageSize: 5
-    });
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 5,
+  });
 
     const [filterValues, setFilterValues] = useState<ManagementAppointmentList>(
         {
@@ -253,13 +253,13 @@ const ManagementAppointmentPage = () => {
         }
     );
 
-    const { openModal, closeModal } = useModal();
+  const { openModal, closeModal } = useModal();
 
-    const onSubmitFilter = (e: ManagementAppointmentList) => {
-        setFilterValues(() => e);
-        setPagination(() => ({ pageIndex: 0, pageSize: 5 }));
-        closeModal();
-    };
+  const onSubmitFilter = (e: ManagementAppointmentList) => {
+    setFilterValues(() => e);
+    setPagination(() => ({ pageIndex: 0, pageSize: 5 }));
+    closeModal();
+  };
 
     const onResetFilter = () => {
         setFilterValues(() => ({
@@ -274,81 +274,81 @@ const ManagementAppointmentPage = () => {
         closeModal();
     };
 
-    const handleOpenDialogFilter = () => {
-        openModal(
-            <FilterModal
-                onSubmit={onSubmitFilter}
-                defaultValues={filterValues}
-                onCancel={onResetFilter}
-            />,
-            {
-                title: 'Filter Janji Temu'
-            }
-        );
-    };
-
-    const { data, isLoading, refetch } = useQuery({
-        queryFn: () =>
-            api.getList({
-                ...filterValues,
-                pageSize: pagination.pageSize,
-                pageNumber: pagination.pageIndex + 1
-            }),
-        queryKey: [
-            'appointment-list-management',
-            filterValues,
-            pagination.pageIndex,
-            pagination.pageSize
-        ],
-        onError: () => {
-            toast.error('Get appointment error');
-        }
-    });
-
-    const handleOpenDialogAdd = () => {
-        openModal(<AddModal refetch={refetch} />, {
-            title: 'Tambah Janji Temu'
-        });
-    };
-
-    return (
-        <>
-            <DashboardContent>
-                <DashboardHeader title='Daftar Janji Temu' />
-                <DashboardActions
-                    filterButtonProps={{
-                        label: 'Filter Janji Temu',
-                        loading: isLoading,
-                        onClick: handleOpenDialogFilter
-                    }}
-                    addButtonProps={{
-                        label: 'Tambah Janji Temu',
-                        onClick: handleOpenDialogAdd
-                    }}
-                />
-            </DashboardContent>
-
-            <DashboardContent>
-                <DataTable
-                    columns={columns}
-                    data={data?.data ?? []}
-                    totalData={data?.totalRows ?? 0}
-                    tableProps={{
-                        className: 'my-2 overflow-auto text-[15px] text-black'
-                    }}
-                    tableHeaderProps={{ className: 'text-black' }}
-                    tableRowHeaderProps={{
-                        className: 'border-none text-black '
-                    }}
-                    tableRowProps={{ className: 'border-b-0' }}
-                    initialState={{ columnVisibility: { diff: true } }}
-                    paginationProps={pagination}
-                    setPagination={setPagination}
-                    isLoading={isLoading}
-                />
-            </DashboardContent>
-        </>
+  const handleOpenDialogFilter = () => {
+    openModal(
+      <FilterModal
+        onSubmit={onSubmitFilter}
+        defaultValues={filterValues}
+        onCancel={onResetFilter}
+      />,
+      {
+        title: "Filter Janji Temu",
+      }
     );
+  };
+
+  const { data, isLoading, refetch } = useQuery({
+    queryFn: () =>
+      api.getList({
+        ...filterValues,
+        pageSize: pagination.pageSize,
+        pageNumber: pagination.pageIndex + 1,
+      }),
+    queryKey: [
+      "appointment-list-management",
+      filterValues,
+      pagination.pageIndex,
+      pagination.pageSize,
+    ],
+    onError: () => {
+      toast.error("Get appointment error");
+    },
+  });
+
+  const handleOpenDialogAdd = () => {
+    openModal(<AddModal refetch={refetch} />, {
+      title: "Tambah Janji Temu",
+    });
+  };
+
+  return (
+    <>
+      <DashboardContent>
+        <DashboardHeader title="Daftar Janji Temu" />
+        <DashboardActions
+          filterButtonProps={{
+            label: "Filter Janji Temu",
+            loading: isLoading,
+            onClick: handleOpenDialogFilter,
+          }}
+          addButtonProps={{
+            label: "Tambah Janji Temu",
+            onClick: handleOpenDialogAdd,
+          }}
+        />
+      </DashboardContent>
+
+      <DashboardContent>
+        <DataTable
+          columns={columns}
+          data={data?.data ?? []}
+          totalData={data?.totalRows ?? 0}
+          tableProps={{
+            className: "my-2 overflow-auto text-[15px] text-black",
+          }}
+          tableHeaderProps={{ className: "text-black" }}
+          tableRowHeaderProps={{
+            className: "border-none text-black ",
+          }}
+          tableRowProps={{ className: "border-b-0" }}
+          initialState={{ columnVisibility: { diff: true } }}
+          paginationProps={pagination}
+          setPagination={setPagination}
+          isLoading={isLoading}
+        />
+      </DashboardContent>
+    </>
+  );
 };
 
 export default ManagementAppointmentPage;
