@@ -135,6 +135,8 @@ export namespace ManagementAppointment {
             scheduleId: number;
             date: string;
             globalQueue: number;
+            checkInTime: string;
+            finishTime: string;
         }
 
         export interface List {

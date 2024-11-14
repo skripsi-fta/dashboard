@@ -23,7 +23,6 @@ import { toast } from 'sonner';
 import AddMedicalRecordModal from './components/medicalrecord/AddMedicalRecordModal';
 import EditMedicalRecordModal from './components/medicalrecord/EditMedicalRecordModal';
 import { cn } from '@/lib/utils';
-import EditModal from './components/EditModal';
 import dayjsUtils from '@/lib/dayjs';
 
 const ManagementAppointmentPage = () => {
@@ -85,6 +84,18 @@ const ManagementAppointmentPage = () => {
                     {original.appointmentStatus}
                 </p>
             )
+        },
+        {
+            accessorKey: 'checkInTime',
+            size: 150,
+            header: 'Waktu Check In',
+            cell: ({ row: { original } }) => original.checkInTime ?? '-'
+        },
+        {
+            accessorKey: 'finishTime',
+            size: 150,
+            header: 'Waktu Selesai',
+            cell: ({ row: { original } }) => original.finishTime ?? '-'
         },
         {
             header: 'Check In',
