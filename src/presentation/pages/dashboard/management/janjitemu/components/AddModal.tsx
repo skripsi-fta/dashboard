@@ -73,7 +73,7 @@ const AddModal = ({ refetch }: AddModalProps) => {
             roomId: '',
             startDate: '',
             startTime: '',
-            status: ''
+            status: 'ready'
         });
 
     const {

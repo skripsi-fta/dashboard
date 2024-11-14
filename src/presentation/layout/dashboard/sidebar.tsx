@@ -55,11 +55,6 @@ const sidebarContent: Record<
     ],
     CASHIER: [
         {
-            name: 'Pembayaran Pasien',
-            href: '/dashboard/cashier/pembayaran',
-            icons: (props) => <Icons.kasirPembayaran {...props} />
-        },
-        {
             name: 'Antrian Kasir',
             href: '/dashboard/cashier/antrian',
             icons: (props) => <Icons.kasirAntrian {...props} />
@@ -75,6 +70,16 @@ const sidebarContent: Record<
             name: 'Antrian',
             href: '/dashboard/management/antrian',
             icons: (props) => <Icons.kasirAntrian {...props} />
+        },
+        {
+            name: 'Antrian Kasir',
+            href: '/dashboard/cashier/antrian',
+            icons: (props) => <Icons.kasirAntrian {...props} />
+        },
+        {
+            name: 'Antrian Farmasi',
+            href: '/dashboard/pharmacy/antrian',
+            icons: (props) => <Icons.farmasiAntrian {...props} />
         },
         {
             name: 'Jadwal',

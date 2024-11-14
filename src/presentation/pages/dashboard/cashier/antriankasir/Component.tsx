@@ -1,7 +1,7 @@
 'use client';
 
 import type { ManagementCashier } from '@/infrastructure/models/management/cashier';
-import { ManagementCashierAPI } from '@/infrastructure/usecase/management/cashier/ManagementCashierAPI';
+import { ManagementCashierAPI } from '@/infrastructure/usecase/cashier/ManagementCashierAPI';
 import CustomButtonComponent from '@/presentation/components/CustomButton';
 import { DataTable } from '@/presentation/components/DataTable';
 import DashboardContent from '@/presentation/layout/dashboard/content';
@@ -11,35 +11,44 @@ import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { toast } from 'sonner';
 import PaymentPatientModal from './components/PaymentPatientModal';
+import { formatRupiah } from '@/lib/utils';
+import Spinner from '@/presentation/components/Spinner';
 
 const QueueCashierPage = () => {
-
     const columns: ColumnDef<ManagementCashier.Response.Data>[] = [
         {
             accessorKey: 'cashierQueue.queueNumber',
-            size: 35,
-            header: 'No Antrian'
+            size: 80,
+            header: 'No. Antrian'
         },
         {
             accessorKey: 'patient.name',
-            size: 100,
-            header: 'Nama Pasein'
+            size: 150,
+            header: 'Nama Pasien'
         },
         {
-            accessorKey: 'consultationFee',
-            size: 75,
-            header: 'Biaya Konsultasi'
+            accessorKey: 'schedule.doctor.consulePrice',
+            size: 150,
+            header: 'Biaya Konsultasi',
+            cell: ({ row: { original } }) =>
+                formatRupiah(original.schedule.doctor.consulePrice)
         },
         {
             accessorKey: 'pharmacyFee',
-            size: 75,
-            header: 'Biaya Apotek'
+            size: 150,
+            header: 'Biaya Apotek',
+            cell: ({ row: { original } }) => formatRupiah(original.pharmacyFee)
         },
         {
-            accessorKey: 'row',
-            accessorFn: (row) => String(Number(row.consultationFee) + Number(row.pharmacyFee)),
-            size: 75,
-            header: 'Total Biaya'
+            size: 150,
+            header: 'Total Biaya',
+            cell: ({ row: { original } }) =>
+                formatRupiah(
+                    Number(
+                        Number(original.pharmacyFee) +
+                            original.schedule.doctor.consulePrice
+                    )
+                )
         },
         {
             accessorKey: 'action',
@@ -63,7 +72,14 @@ const QueueCashierPage = () => {
     const { openModal } = useModal();
 
     const openPaymentModal = (data: ManagementCashier.Response.Data) => {
-        openModal(<PaymentPatientModal data={data} refetch={refetch} refetch2={refetchDetailData}/>, { title: 'Payment Checkout' });
+        openModal(
+            <PaymentPatientModal
+                data={data}
+                refetch={refetch}
+                refetch2={refetchDetailData}
+            />,
+            { title: 'Pembayaran Pasien' }
+        );
     };
 
     const [pagination, setPagination] = useState<PaginationState>({
@@ -76,10 +92,9 @@ const QueueCashierPage = () => {
     const { data, isLoading, refetch } = useQuery({
         queryFn: () =>
             api.getList({
-                    pageSize: pagination.pageSize,
-                    pageNumber: pagination.pageIndex + 1
-                }
-            ),
+                pageSize: pagination.pageSize,
+                pageNumber: pagination.pageIndex + 1
+            }),
         queryKey: [
             'cashier-queue-list-management',
             pagination.pageIndex,
@@ -90,7 +105,12 @@ const QueueCashierPage = () => {
         }
     });
 
-    const { data: detailData, isLoading: loadingDetailData, refetch: refetchDetailData } = useQuery({
+    const {
+        data: detailData,
+        isLoading: loadingDetailData,
+        isError: errorDetailData,
+        refetch: refetchDetailData
+    } = useQuery({
         queryFn: () => api.getDetailQueue(),
         queryKey: ['cashier-queue-detail'],
         onError: () => {
@@ -101,25 +121,46 @@ const QueueCashierPage = () => {
     return (
         <>
             <div className='flex flex-row justify-between'>
-                <h1 className='text-xl text-gray-500'>Rangkuman Terkini</h1>
+                <h1 className='text-xl'>Rangkuman Terkini</h1>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-                <div className='gap-8 rounded-lg bg-white p-6 shadow-md md:px-8'>
-                    <h2 className='text-xl font-semibold'>Total Antrian</h2>
-                    <p className='text-center text-xl font-semibold text-primaryblue'>{detailData?.data.total}</p>
+
+            {loadingDetailData || errorDetailData ? (
+                <>
+                    <div className='flex size-full items-center justify-center'>
+                        <Spinner size={40} color='#3B41E3' />
+                    </div>
+                </>
+            ) : (
+                <div className='flex w-full flex-col-reverse gap-8 lg:flex-row'>
+                    <div className='flex w-full flex-col items-center gap-2 rounded-lg bg-white p-5 lg:w-[250px]'>
+                        <p className='text-lg font-semibold'>
+                            Total Antrian Kasir
+                        </p>
+                        <p className='text-2xl font-semibold text-primaryblue'>
+                            {detailData?.data.total}
+                        </p>
+                    </div>
+
+                    <div className='flex w-full flex-col items-center gap-2 rounded-lg bg-white p-5 lg:w-[250px]'>
+                        <p className='text-lg font-semibold'>
+                            Antrian Menunggu
+                        </p>
+                        <p className='text-2xl font-semibold text-primaryblue'>
+                            {detailData?.data.totalwaiting}
+                        </p>
+                    </div>
+
+                    <div className='flex w-full flex-col items-center gap-2 rounded-lg bg-white p-5 lg:w-[250px]'>
+                        <p className='text-lg font-semibold'>Antrian Selesai</p>
+                        <p className='text-2xl font-semibold text-primaryblue'>
+                            {detailData?.data.totalfinished}
+                        </p>
+                    </div>
                 </div>
-                <div className='gap-8 rounded-lg bg-white p-6 shadow-md md:px-8'>
-                    <h2 className='text-xl font-semibold'>Antrian Menunggu</h2>
-                    <p className='text-center text-xl font-semibold text-primaryblue'>{detailData?.data.totalwaiting}</p>
-                </div>
-                <div className='gap-8 rounded-lg bg-white p-6 shadow-md md:px-8'>
-                    <h2 className='text-xl font-semibold'>Antrian Selesai</h2>
-                    <p className='text-center text-xl font-semibold  text-primaryblue'>{detailData?.data.totalfinished}</p>
-                </div>
-            </div>
-            <div className='flex'>
-                <h1 className='text-xl text-gray-500'>Detail Antrian</h1>
-            </div>
+            )}
+
+            <h1 className='text-xl'>Detail Antrian</h1>
+
             <DashboardContent>
                 <DataTable
                     columns={columns}
@@ -137,7 +178,7 @@ const QueueCashierPage = () => {
                     paginationProps={pagination}
                     setPagination={setPagination}
                     isLoading={isLoading}
-                    />
+                />
             </DashboardContent>
         </>
     );

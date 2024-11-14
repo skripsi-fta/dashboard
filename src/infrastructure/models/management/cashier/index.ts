@@ -1,14 +1,16 @@
 import { paginationValidation } from '@/lib/validator';
 import { z } from 'zod';
 
+export const managementCashierQueryValidation = z
+    .object({})
+    .merge(paginationValidation);
 
-export const managementCashierQueryValidation = z.object({}).merge(paginationValidation);
-
-export type ManagementCashierQueryValidation = z.infer<typeof managementCashierQueryValidation>;
+export type ManagementCashierQueryValidation = z.infer<
+    typeof managementCashierQueryValidation
+>;
 
 export namespace ManagementCashier {
     export namespace Response {
-
         export interface Data {
             id: number;
             bookingCode: string;
@@ -32,6 +34,7 @@ export namespace ManagementCashier {
                     specialization: {
                         name: string;
                     };
+                    consulePrice: number;
                 };
             };
         }
@@ -57,11 +60,10 @@ export namespace ManagementCashier {
             statusCode: number;
             message: string;
         }
-
     }
 
     export namespace Request {
-        export interface List extends ManagementCashierQueryValidation{}
+        export interface List extends ManagementCashierQueryValidation {}
 
         export interface Payment {
             bookingId: number;
