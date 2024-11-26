@@ -1,4 +1,5 @@
 import { paginationValidation } from '@/lib/validator';
+import dayjs from 'dayjs';
 import { z } from 'zod';
 
 export const managementRegulerScheduleListValidation = z
@@ -12,6 +13,21 @@ export const managementRegulerScheduleListValidation = z
         roomId: z.string({ required_error: 'required' }),
         status: z.string({ required_error: 'required' })
     })
+    .refine(
+        ({ startDate, endDate }) => {
+            if (!startDate || !endDate) {
+                return true;
+            }
+
+            return (
+                dayjs(startDate, 'YYYY-MM-DD') <= dayjs(endDate, 'YYYY-MM-DD')
+            );
+        },
+        {
+            message: 'Tanggal awal tidak boleh lebih dari Tanggal akhir',
+            path: ['endDate']
+        }
+    )
     .refine(
         ({ startTime, endTime }) => {
             if (!startTime || !endTime) {
@@ -44,6 +60,21 @@ export const managementRegulerScheduleQueryValidation = z
         status: z.string({ required_error: 'required' })
     })
     .merge(paginationValidation)
+    .refine(
+        ({ startDate, endDate }) => {
+            if (!startDate || !endDate) {
+                return true;
+            }
+
+            return (
+                dayjs(startDate, 'YYYY-MM-DD') <= dayjs(endDate, 'YYYY-MM-DD')
+            );
+        },
+        {
+            message: 'Tanggal awal tidak boleh lebih dari Tanggal akhir',
+            path: ['endDate']
+        }
+    )
     .refine(
         ({ startTime, endTime }) => {
             if (!startTime || !endTime) {

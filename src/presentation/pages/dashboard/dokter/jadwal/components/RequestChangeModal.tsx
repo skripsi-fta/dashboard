@@ -115,7 +115,7 @@ const RequestChangeModal = ({ refetch, data }: RequestChangeModalProps) => {
                             <p className='font-semibold text-[#666666]'>
                                 Waktu
                             </p>
-                            <div className='flex w-full flex-row items-center justify-center gap-4'>
+                            <div className='flex w-full flex-row justify-center gap-4'>
                                 <Controller
                                     control={control}
                                     name='startTime'
@@ -133,7 +133,6 @@ const RequestChangeModal = ({ refetch, data }: RequestChangeModalProps) => {
                                         />
                                     )}
                                 />
-                                <p>-</p>
                                 <Controller
                                     control={control}
                                     name='endTime'

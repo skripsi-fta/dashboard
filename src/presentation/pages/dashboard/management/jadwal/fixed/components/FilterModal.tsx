@@ -108,7 +108,7 @@ const FilterModal = ({
                             <p className='font-semibold text-[#666666]'>
                                 Waktu
                             </p>
-                            <div className='flex w-full flex-row items-center justify-center gap-4'>
+                            <div className='flex w-full flex-row justify-center gap-4'>
                                 <Controller
                                     control={control}
                                     name='startTime'
@@ -126,7 +126,6 @@ const FilterModal = ({
                                         />
                                     )}
                                 />
-                                <p>-</p>
                                 <Controller
                                     control={control}
                                     name='endTime'

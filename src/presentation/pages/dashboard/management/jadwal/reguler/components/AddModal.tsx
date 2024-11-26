@@ -127,7 +127,7 @@ const AddModal = ({ refetch }: AddModalProps) => {
 
                     <div className='flex flex-col gap-2'>
                         <p className='font-semibold text-[#666666]'>Waktu</p>
-                        <div className='flex w-full flex-row items-center justify-center gap-4'>
+                        <div className='flex w-full flex-row justify-center gap-4'>
                             <Controller
                                 control={control}
                                 name='startTime'
@@ -145,7 +145,6 @@ const AddModal = ({ refetch }: AddModalProps) => {
                                     />
                                 )}
                             />
-                            <p>-</p>
                             <Controller
                                 control={control}
                                 name='endTime'
