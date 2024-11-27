@@ -23,6 +23,10 @@ export const staticMapRole: Record<string, { icons: ReactNode; name: string }> =
         MANAGEMENT: {
             icons: Icons.management({ className: 'size-[35px]' }),
             name: 'Manajemen'
+        },
+        MONITORING: {
+            icons: Icons.monitor({ className: 'size-[35px]' }),
+            name: 'Monitoring'
         }
     };
 
@@ -110,6 +114,18 @@ const sidebarContent: Record<
             name: 'Akun Klinik',
             href: '/dashboard/management/user',
             icons: (props) => <Icons.managementPeople {...props} />
+        }
+    ],
+    MONITORING: [
+        {
+            name: 'Antrian',
+            href: '/dashboard/monitoring/antrian',
+            icons: (props) => <Icons.kasirAntrian {...props} />
+        },
+        {
+            name: 'Check In',
+            href: '/dashboard/monitoring/checkin',
+            icons: (props) => <Icons.qr {...props} />
         }
     ]
 };

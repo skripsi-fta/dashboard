@@ -1,15 +1,24 @@
+import { cn } from '@/lib/utils';
 import type { HTMLAttributes, ReactNode } from 'react';
 
 interface DashboardContentType {
     children: ReactNode;
+    className?: string;
     props?: HTMLAttributes<HTMLDivElement>;
 }
 
-const DashboardContent = ({ children, props }: DashboardContentType) => {
+const DashboardContent = ({
+    children,
+    className,
+    props
+}: DashboardContentType) => {
     return (
         <div
             {...props}
-            className='flex flex-col gap-8 rounded-lg bg-white p-6 shadow-md md:px-8'
+            className={cn(
+                'flex flex-col gap-8 rounded-lg bg-white p-6 shadow-md md:px-8',
+                className
+            )}
         >
             {children}
         </div>

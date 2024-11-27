@@ -47,7 +47,7 @@ export const managementStaffCreateValidation = z.object({
             /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
             'Email tidak valid'
         ),
-    role: z.enum(['PHARMACIST', 'CASHIER', 'MANAGEMENT'], {
+    role: z.enum(['PHARMACIST', 'CASHIER', 'MANAGEMENT', 'MONITORING'], {
         errorMap: () => ({ message: 'Role tidak valid' })
     })
 });
