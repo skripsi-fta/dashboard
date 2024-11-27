@@ -151,6 +151,10 @@ const AddModal = ({ refetch }: AddModalProps) => {
                                             {
                                                 label: 'Manajemen',
                                                 value: 'MANAGEMENT'
+                                            },
+                                            {
+                                                label: 'Monitoring',
+                                                value: 'MONITORING'
                                             }
                                         ]}
                                         error={error}

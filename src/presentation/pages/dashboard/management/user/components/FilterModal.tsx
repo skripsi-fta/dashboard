@@ -92,6 +92,10 @@ const FilterModal = ({
                                             {
                                                 label: 'Manajemen',
                                                 value: 'MANAGEMENT'
+                                            },
+                                            {
+                                                label: 'Monitoring',
+                                                value: 'MONITORING'
                                             }
                                         ]}
                                         error={error}

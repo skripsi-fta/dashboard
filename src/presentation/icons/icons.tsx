@@ -5,7 +5,9 @@ import {
     Twitter,
     Linkedin,
     Menu,
-    Instagram
+    Instagram,
+    Monitor,
+    QrCode
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 
@@ -16,6 +18,8 @@ export const Icons = {
     linkedIn: Linkedin,
     menu: Menu,
     instagram: Instagram,
+    monitor: (props: LucideProps) => <Monitor {...props} />,
+    qr: (props: LucideProps) => <QrCode {...props} />,
     people: (props: LucideProps) =>
         (
             <svg
