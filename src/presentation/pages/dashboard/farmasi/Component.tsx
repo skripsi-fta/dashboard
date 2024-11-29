@@ -26,7 +26,7 @@ const PharmacyQueuePage = () => {
         null
     );
 
-    const { control, handleSubmit } = useForm<PharmacyQueueUpdate>({
+    const { control, handleSubmit, setValue } = useForm<PharmacyQueueUpdate>({
         defaultValues: { pharmacyFee: 0, appointmentId: 0 },
         resolver: zodResolver(pharmacyQueueUpdateValidation)
     });
@@ -104,6 +104,9 @@ const PharmacyQueuePage = () => {
                     <CustomButtonComponent
                         className='w-[125px] rounded-[10px] bg-primaryblue font-bold text-white hover:bg-primaryblue/70'
                         onClick={() => {
+                            if (detail?.pharmacyQueue.queueNumber !== original.pharmacyQueue.queueNumber) {
+                                setValue('pharmacyFee', 0);
+                            }
                             setDetail(() => original);
                         }}
                     >

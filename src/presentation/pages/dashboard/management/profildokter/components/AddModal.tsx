@@ -13,9 +13,11 @@ import {
     ModalFormFields,
     ModalFormFooter
 } from '@/presentation/layout/modal-form';
+import { Input } from '@/presentation/ui/input';
 import { useModal } from '@/providers/ModalProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { AxiosError } from 'axios';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation, useQuery } from 'react-query';
 import { toast } from 'sonner';
@@ -35,7 +37,8 @@ const AddModal = ({ refetch }: AddModalProps) => {
                 profile: '',
                 username: '',
                 role: 'DOCTOR',
-                specializationId: ''
+                specializationId: '',
+                image: undefined
             },
             mode: 'onChange',
             resolver: zodResolver(managementDoctorProfileCreateValidation)
@@ -68,6 +71,15 @@ const AddModal = ({ refetch }: AddModalProps) => {
         }
     });
 
+    const [file, setFile] = useState<string>();
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>, onChange: Function) {
+        const files = e.target.files;
+        if (files) {
+            setFile(URL.createObjectURL(files[0]));
+            onChange(files[0]);
+        }
+    }
+
     return (
         <>
             <ModalFormContainer
@@ -75,6 +87,33 @@ const AddModal = ({ refetch }: AddModalProps) => {
             >
                 <ModalFormContent>
                     <ModalFormFields>
+                        <div className='flex flex-col gap-2'>
+                            <p className='font-semibold text-[#666666]'>Foto</p>
+                            <Controller
+                                control={control}
+                                name='image'
+                                render={({ field: { value, onChange, ...fieldProps }, fieldState: { error } }) => (
+                                    <>
+                                        <div className='flex items-center gap-3'>
+                                            {file && (
+                                                <img src={file} className='w-[150px] h-[150px]' />
+                                            )}
+                                            <Input
+                                                type='file'
+                                                {...fieldProps}
+                                                accept='image/jpeg'
+                                                onChange={(e) => handleChange(e, onChange)}
+                                            />
+                                        </div>
+                                        {!!error?.message && (
+                                            <p className='mt-1 text-xs font-bold text-red-500'>
+                                                {error.message}
+                                            </p>
+                                        )}
+                                    </>
+                                )}
+                            />
+                        </div>
                         <div className='flex flex-col gap-2'>
                             <p className='font-semibold text-[#666666]'>Nama</p>
                             <Controller
