@@ -19,11 +19,15 @@ export class ManagementSpecializationAPI {
     async create(
         body: ManagementSpesialisasiDokter.Request.Create
     ): Promise<ManagementSpesialisasiDokter.Response.Create> {
-        const data =
-            await http.post<ManagementSpesialisasiDokter.Response.Create>(
-                '/management/specialization',
-                body
-            );
+        const formData = new FormData();
+        formData.append('name', body.name);
+        formData.append('description', body.description);
+        formData.append('image', body.image);
+
+        const data = await http.post<ManagementSpesialisasiDokter.Response.Create>(
+            '/management/specialization',
+            formData
+        );
 
         return data.data;
     }
@@ -43,11 +47,16 @@ export class ManagementSpecializationAPI {
     async update(
         body: ManagementSpesialisasiDokter.Request.Update
     ): Promise<ManagementSpesialisasiDokter.Response.Update> {
-        const data =
-            await http.put<ManagementSpesialisasiDokter.Response.Update>(
-                '/management/specialization',
-                body
-            );
+        const formData = new FormData();
+        formData.append('id', body.id.toString());
+        formData.append('name', body.name);
+        formData.append('description', body.description);
+        formData.append('image', body.image);
+
+        const data = await http.put<ManagementSpesialisasiDokter.Response.Update>(
+            '/management/specialization',
+            formData
+        );
 
         return data.data;
     }

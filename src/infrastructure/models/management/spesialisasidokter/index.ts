@@ -29,20 +29,32 @@ export const managementSpesialisasiDokterCreateValidation = z.object({
     description: z
         .string({ required_error: 'required' })
         .min(1, { message: 'Deskripsi tidak boleh kosong' })
-        .max(64, { message: 'Deskripsi tidak boleh lebih dari 64 karakter' })
+        .max(64, { message: 'Deskripsi tidak boleh lebih dari 64 karakter' }),
+    image: z.any()
+        .refine((file: File) => file && file?.size !== 0, { message: 'Foto tidak boleh kosong' })
+        .refine((file: File) => file && ['image/jpeg'].includes(file.type), { message: 'Invalid image file type' })
 });
 
 export type ManagementSpesialisasiDokterCreate = z.infer<
     typeof managementSpesialisasiDokterCreateValidation
 >;
 
-export const managementSpesialisasiDokterUpdateValidation = z
-    .object({
-        id: z
-            .number({ required_error: 'required' })
-            .min(1, { message: 'ID tidak boleh kosong' })
-    })
-    .merge(managementSpesialisasiDokterCreateValidation);
+export const managementSpesialisasiDokterUpdateValidation = z.object({
+    id: z
+        .number({ required_error: 'required' })
+        .min(1, { message: 'ID tidak boleh kosong' }),
+    name: z
+        .string({ required_error: 'required' })
+        .min(1, { message: 'Nama tidak boleh kosong' })
+        .max(64, { message: 'Nama tidak boleh lebih dari 64 karakter' }),
+    description: z
+        .string({ required_error: 'required' })
+        .min(1, { message: 'Deskripsi tidak boleh kosong' })
+        .max(64, { message: 'Deskripsi tidak boleh lebih dari 64 karakter' }),
+    image: z.any()
+        .refine((file: File) => !file || file && ['image/jpeg'].includes(file.type), { message: 'Invalid image file type' }),
+    photoPath: z.string()
+});
 
 export type ManagementSpesialisasiDokterUpdate = z.infer<
     typeof managementSpesialisasiDokterUpdateValidation
@@ -68,6 +80,7 @@ export namespace ManagementSpesialisasiDokter {
             description: string;
             doctorCount: number;
             isActive: boolean;
+            photoPath: string;
         }
 
         export interface List {

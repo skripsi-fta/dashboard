@@ -56,15 +56,17 @@ export class ManagementDoctorProfileAPI {
 
         const staffId = data.data.data.id;
 
+        const formData = new FormData();
+        formData.append('name', body.name);
+        formData.append('profile', body.profile);
+        formData.append('consulePrice', body.consulePrice.toString());
+        formData.append('specializationId', body.specializationId.toString());
+        formData.append('image', body.image);
+
         const createProfileDoctor =
             await http.post<ManagementDoctorProfile.Response.Create>(
                 '/management/doctor',
-                {
-                    name: body.name,
-                    profile: body.profile,
-                    consulePrice: body.consulePrice.toString(),
-                    specializationId: body.specializationId.toString()
-                }
+                formData
             );
 
         const doctorId = createProfileDoctor.data.data.id;
@@ -81,13 +83,17 @@ export class ManagementDoctorProfileAPI {
     async updateDoctor(
         body: ManagementDoctorProfile.Request.Update
     ): Promise<ManagementDoctorProfile.Response.Update> {
+        const formData = new FormData();
+        formData.append('id', body.id.toString());
+        formData.append('name', body.name);
+        formData.append('profile', body.profile);
+        formData.append('consulePrice', body.consulePrice.toString());
+        formData.append('specializationId', body.specializationId);
+        formData.append('image', body.image);
+
         const data = await http.put<ManagementDoctorProfile.Response.Update>(
             '/management/doctor',
-            {
-                ...body,
-                consulePrice: body.consulePrice.toString(),
-                specializationId: Number(body.specializationId)
-            }
+            formData
         );
 
         return data.data;

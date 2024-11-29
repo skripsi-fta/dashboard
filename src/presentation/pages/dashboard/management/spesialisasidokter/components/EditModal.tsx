@@ -6,9 +6,11 @@ import {
 import { ManagementSpecializationAPI } from '@/infrastructure/usecase/management/spesialisasidokter/ManagementSpecializationAPI';
 import TextFieldInput from '@/presentation/components/TextfieldInput';
 import { ModalFormContainer, ModalFormContent, ModalFormFields, ModalFormFooter } from '@/presentation/layout/modal-form';
+import { Input } from '@/presentation/ui/input';
 import { useModal } from '@/providers/ModalProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { AxiosError } from 'axios';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { toast } from 'sonner';
@@ -46,6 +48,15 @@ const EditModal = ({ defaultValues, refetch }: EditModal) => {
         }
     });
 
+    const [file, setFile] = useState<string>();
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>, onChange: Function) {
+        const files = e.target.files;
+        if (files) {
+            setFile(URL.createObjectURL(files[0]));
+            onChange(files[0]);
+        }
+    }
+
     return (
         <>
             <ModalFormContainer
@@ -53,6 +64,34 @@ const EditModal = ({ defaultValues, refetch }: EditModal) => {
             >
                 <ModalFormContent>
                     <ModalFormFields>
+                        <div className='flex flex-col gap-2'>
+                            <p className='font-semibold text-[#666666]'>Foto</p>
+                            <Controller
+                                control={control}
+                                name='image'
+                                render={({ field: { value, onChange, ...fieldProps }, fieldState: { error } }) => (
+                                    <>
+                                        <div className='flex items-center gap-3'>
+                                            {(file || defaultValues.photoPath) && (
+                                                <img src={file ? file : `http://localhost:8080/v1/storage?path=${defaultValues.photoPath}`} className='w-[150px] h-[150px]' />
+                                            )}
+                                            <Input
+                                                type='file'
+                                                {...fieldProps}
+                                                accept='image/jpeg'
+                                                onChange={(e) => handleChange(e, onChange)}
+                                            />
+                                        </div>
+                                        {!!error?.message && (
+                                            <p className='mt-1 text-xs font-bold text-red-500'>
+                                                {error.message}
+                                            </p>
+                                        )}
+                                    </>
+                                )}
+                            />
+                        </div>
+
                         <div className='flex flex-col gap-2'>
                             <p className='font-semibold text-[#666666]'>Nama</p>
                             <Controller

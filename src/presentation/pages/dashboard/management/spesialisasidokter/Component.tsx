@@ -45,6 +45,23 @@ const SpesialisasiDokterPage = () => {
             header: 'ID'
         },
         {
+            accessorKey: 'photoPath',
+            minSize: 200,
+            header: 'Photo',
+            cell: ({ row: { original } }) => {
+                return (
+                    <>
+                        <div className='flex items-center gap-2'>
+                            <img
+                                src={`http://localhost:8080/v1/storage?path=${original.photoPath}`}
+                                className='w-[150px] h-[150px]'
+                            />
+                        </div>
+                    </>
+                );
+            }
+        },
+        {
             accessorKey: 'name',
             minSize: 200,
             header: 'Nama'
