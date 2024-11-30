@@ -98,7 +98,6 @@ export const managementDoctorProfileEditValidation = z.object({
         .min(1, { message: 'Spesialisasi ID tidak boleh kosong' }),
     image: z.any().refine(
         (file: File) => {
-            console.log(file.type);
             return (
                 !file ||
                 (file &&

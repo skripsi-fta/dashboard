@@ -175,7 +175,6 @@ const AddModal = ({ refetch }: AddModalProps) => {
                             name='date'
                             label='Tanggal Janji Temu'
                             onDateChange={(date) => {
-                                console.log('Selected');
                                 setFilterValues((prev) => ({
                                     ...prev,
                                     date: dayjsUtils(date).format('YYYY-MM-DD'),
@@ -184,7 +183,6 @@ const AddModal = ({ refetch }: AddModalProps) => {
                                     endDate:
                                         dayjsUtils(date).format('YYYY-MM-DD')
                                 }));
-                                console.log('Done');
                                 refetchSchedule();
                             }}
                         />

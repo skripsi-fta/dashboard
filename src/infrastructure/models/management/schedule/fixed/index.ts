@@ -52,8 +52,6 @@ export const managementFixedScheduleCreateValidation = z
             const startTotalMinutes = startHours * 60 + startMinutes;
             const endTotalMinutes = endHours * 60 + endMinutes;
 
-            console.log(startTotalMinutes, endTotalMinutes);
-
             return startTotalMinutes < endTotalMinutes;
         },
         {

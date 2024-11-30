@@ -64,11 +64,9 @@ const LoginPage = () => {
         mutationFn: (data: LoginType.Request) => useCase.login(data),
         onSuccess: (data) => {
             toast.success('Login Success');
-            console.log(data);
             authenticate(data);
         },
         onError: (res: AxiosError<{ message: string }>) => {
-            console.log(res);
             toast.error(res.response?.data.message ?? 'Login Error');
         }
     });

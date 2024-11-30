@@ -87,7 +87,6 @@ const ManagementProfilDokterPage = () => {
             header: 'Action',
             size: 150,
             cell: ({ row: { original } }) => {
-                console.log(original);
                 return (
                     <div className='flex flex-row items-center'>
                         <Button

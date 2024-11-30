@@ -53,13 +53,10 @@ const EditModal = ({ refetch, defaultValues }: EditModalProps) => {
         onSuccess: (data) => {
             closeModal();
 
-            console.log(data);
-
             if (
                 data.data.skippedSchedule &&
                 data.data.skippedSchedule.length !== 0
             ) {
-                console.log(data.data);
                 openModal(
                     <NoticeModal
                         title='Sukses Mengubah Jadwal'
