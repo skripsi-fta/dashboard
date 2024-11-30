@@ -72,7 +72,11 @@ const AddModal = ({ refetch }: AddModalProps) => {
     });
 
     const [file, setFile] = useState<string>();
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>, onChange: Function) {
+
+    function handleChange(
+        e: React.ChangeEvent<HTMLInputElement>,
+        onChange: Function
+    ) {
         const files = e.target.files;
         if (files) {
             setFile(URL.createObjectURL(files[0]));
@@ -92,17 +96,25 @@ const AddModal = ({ refetch }: AddModalProps) => {
                             <Controller
                                 control={control}
                                 name='image'
-                                render={({ field: { value, onChange, ...fieldProps }, fieldState: { error } }) => (
+                                render={({
+                                    field: { value, onChange, ...fieldProps },
+                                    fieldState: { error }
+                                }) => (
                                     <>
                                         <div className='flex items-center gap-3'>
                                             {file && (
-                                                <img src={file} className='w-[150px] h-[150px]' />
+                                                <img
+                                                    src={file}
+                                                    className='w-[150px] h-[150px]'
+                                                />
                                             )}
                                             <Input
                                                 type='file'
                                                 {...fieldProps}
-                                                accept='image/jpeg'
-                                                onChange={(e) => handleChange(e, onChange)}
+                                                accept='image/*'
+                                                onChange={(e) =>
+                                                    handleChange(e, onChange)
+                                                }
                                             />
                                         </div>
                                         {!!error?.message && (

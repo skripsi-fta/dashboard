@@ -37,8 +37,8 @@ const ManagementProfilDokterPage = () => {
                     <>
                         <div className='flex items-center gap-2'>
                             <img
-                                src={`http://localhost:8080/v1/storage?path=${original.photoPath}`}
-                                className='w-[150px] h-[150px]'
+                                src={`${process.env.NEXT_PUBLIC_API_URL}/storage?path=${original.photoPath}`}
+                                className='h-full w-auto'
                             />
                         </div>
                     </>

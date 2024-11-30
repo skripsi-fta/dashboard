@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 
 const http = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL
+    baseURL: `${process.env.NEXT_PUBLIC_API_URL}/dashboard`
 });
 
 const refreshAccessToken = async () => {

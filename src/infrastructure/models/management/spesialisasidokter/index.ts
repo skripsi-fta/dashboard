@@ -30,9 +30,17 @@ export const managementSpesialisasiDokterCreateValidation = z.object({
         .string({ required_error: 'required' })
         .min(1, { message: 'Deskripsi tidak boleh kosong' })
         .max(64, { message: 'Deskripsi tidak boleh lebih dari 64 karakter' }),
-    image: z.any()
-        .refine((file: File) => file && file?.size !== 0, { message: 'Foto tidak boleh kosong' })
-        .refine((file: File) => file && ['image/jpeg'].includes(file.type), { message: 'Invalid image file type' })
+    image: z
+        .any()
+        .refine((file: File) => file && file?.size !== 0, {
+            message: 'Foto tidak boleh kosong'
+        })
+        .refine(
+            (file: File) =>
+                file &&
+                ['image/png', 'image/jpeg', 'image/jpg'].includes(file.type),
+            { message: 'Invalid image file type' }
+        )
 });
 
 export type ManagementSpesialisasiDokterCreate = z.infer<
@@ -51,8 +59,17 @@ export const managementSpesialisasiDokterUpdateValidation = z.object({
         .string({ required_error: 'required' })
         .min(1, { message: 'Deskripsi tidak boleh kosong' })
         .max(64, { message: 'Deskripsi tidak boleh lebih dari 64 karakter' }),
-    image: z.any()
-        .refine((file: File) => !file || file && ['image/jpeg'].includes(file.type), { message: 'Invalid image file type' }),
+    image: z
+        .any()
+        .refine(
+            (file: File) =>
+                !file ||
+                (file &&
+                    ['image/png', 'image/jpeg', 'image/jpg'].includes(
+                        file.type
+                    )),
+            { message: 'Invalid image file type' }
+        ),
     photoPath: z.string()
 });
 

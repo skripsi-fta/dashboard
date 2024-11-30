@@ -82,7 +82,7 @@ const AddModal = ({ refetch }: AddModalProps) => {
                                             <Input
                                                 type='file'
                                                 {...fieldProps}
-                                                accept='image/jpeg'
+                                                accept='image/*'
                                                 onChange={(e) => handleChange(e, onChange)}
                                             />
                                         </div>

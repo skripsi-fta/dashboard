@@ -62,7 +62,11 @@ const EditModal = ({ refetch, defaultValues }: EditModalProps) => {
     });
 
     const [file, setFile] = useState<string>();
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>, onChange: Function) {
+
+    function handleChange(
+        e: React.ChangeEvent<HTMLInputElement>,
+        onChange: Function
+    ) {
         const files = e.target.files;
         if (files) {
             setFile(URL.createObjectURL(files[0]));
@@ -82,18 +86,27 @@ const EditModal = ({ refetch, defaultValues }: EditModalProps) => {
                             <Controller
                                 control={control}
                                 name='image'
-                                render={({ field: { onChange }, fieldState: { error } }) => (
+                                render={({
+                                    field: { onChange },
+                                    fieldState: { error }
+                                }) => (
                                     <>
                                         <div className='flex items-center gap-3'>
-                                            {(file || defaultValues.photoPath) && (
+                                            {(file ??
+                                                defaultValues.photoPath) && (
                                                 <img
-                                                    src={file ? file : `http://localhost:8080/v1/storage?path=${defaultValues.photoPath}`}
-                                                    className='w-[150px] h-[150px]'
+                                                    alt='foto-dokter'
+                                                    src={
+                                                        file
+                                                            ? file
+                                                            : `${process.env.NEXT_PUBLIC_API_URL}/storage?path=${defaultValues.photoPath}`
+                                                    }
+                                                    className='w-[150px] h-auto'
                                                 />
                                             )}
                                             <Input
                                                 type='file'
-                                                accept='image/jpeg'
+                                                accept='image/*'
                                                 onChange={(e) =>
                                                     handleChange(e, onChange)
                                                 }

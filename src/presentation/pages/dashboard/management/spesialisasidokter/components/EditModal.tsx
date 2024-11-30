@@ -5,7 +5,12 @@ import {
 } from '@/infrastructure/models/management/spesialisasidokter';
 import { ManagementSpecializationAPI } from '@/infrastructure/usecase/management/spesialisasidokter/ManagementSpecializationAPI';
 import TextFieldInput from '@/presentation/components/TextfieldInput';
-import { ModalFormContainer, ModalFormContent, ModalFormFields, ModalFormFooter } from '@/presentation/layout/modal-form';
+import {
+    ModalFormContainer,
+    ModalFormContent,
+    ModalFormFields,
+    ModalFormFooter
+} from '@/presentation/layout/modal-form';
 import { Input } from '@/presentation/ui/input';
 import { useModal } from '@/providers/ModalProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -49,7 +54,10 @@ const EditModal = ({ defaultValues, refetch }: EditModal) => {
     });
 
     const [file, setFile] = useState<string>();
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>, onChange: Function) {
+    function handleChange(
+        e: React.ChangeEvent<HTMLInputElement>,
+        onChange: Function
+    ) {
         const files = e.target.files;
         if (files) {
             setFile(URL.createObjectURL(files[0]));
@@ -69,17 +77,31 @@ const EditModal = ({ defaultValues, refetch }: EditModal) => {
                             <Controller
                                 control={control}
                                 name='image'
-                                render={({ field: { value, onChange, ...fieldProps }, fieldState: { error } }) => (
+                                render={({
+                                    field: { value, onChange, ...fieldProps },
+                                    fieldState: { error }
+                                }) => (
                                     <>
                                         <div className='flex items-center gap-3'>
-                                            {(file || defaultValues.photoPath) && (
-                                                <img src={file ? file : `http://localhost:8080/v1/storage?path=${defaultValues.photoPath}`} className='w-[150px] h-[150px]' />
+                                            {(file ??
+                                                defaultValues.photoPath) && (
+                                                <img
+                                                    src={
+                                                        file
+                                                            ? file
+                                                            : `${process.env.NEXT_PUBLIC_API_URL}/storage?path=${defaultValues.photoPath}`
+                                                    }
+                                                    alt='logo-poli'
+                                                    className='w-[150px] h-auto'
+                                                />
                                             )}
                                             <Input
                                                 type='file'
                                                 {...fieldProps}
-                                                accept='image/jpeg'
-                                                onChange={(e) => handleChange(e, onChange)}
+                                                accept='image/*'
+                                                onChange={(e) =>
+                                                    handleChange(e, onChange)
+                                                }
                                             />
                                         </div>
                                         {!!error?.message && (
