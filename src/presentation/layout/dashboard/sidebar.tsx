@@ -119,7 +119,7 @@ const sidebarContent: Record<
     MONITORING: [
         {
             name: 'Antrian',
-            href: '/dashboard/monitoring/antrian',
+            href: '/dashboard/management/antrian',
             icons: (props) => <Icons.kasirAntrian {...props} />
         },
         {
