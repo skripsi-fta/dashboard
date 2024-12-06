@@ -19,7 +19,7 @@ const refreshAccessToken = async () => {
 
         const profileData: Profile.Response = JSON.parse(stringData);
 
-        const response = await axios.get('/auth/refresh', {
+        const response = await axios.get('/dashboard/auth/refresh', {
             baseURL: process.env.NEXT_PUBLIC_API_URL,
             headers: {
                 Authorization: `Bearer ${profileData.refreshToken}`
