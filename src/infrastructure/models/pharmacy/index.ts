@@ -2,9 +2,7 @@ import { z } from 'zod';
 import type { ManagementAppointment } from '../management/janjitemu';
 
 export const pharmacyQueueUpdateValidation = z.object({
-    pharmacyFee: z.coerce
-        .number({ required_error: 'required' })
-        .min(1, { message: 'Biaya obat tidak boleh kosong' }),
+    pharmacyFee: z.coerce.number({ required_error: 'required' }),
     appointmentId: z.number({ required_error: 'required' })
 });
 
