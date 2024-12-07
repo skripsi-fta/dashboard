@@ -64,40 +64,49 @@ const LiveQueuePage = () => {
 
     return (
         <>
-            <div className='w-auto flex justify-end'>
+            <div className='flex w-auto justify-end'>
                 <CustomButtonComponent onClick={goFullScreen}>
                     Tampilkan secara full screen
                 </CustomButtonComponent>
             </div>
-            <div ref={divRef} className='flex w-full flex-1 flex-col gap-8 lg:flex-row p-3'>
+            <div
+                ref={divRef}
+                className='flex w-full flex-1 flex-col gap-8 p-3 lg:flex-row'
+            >
                 <div className='flex flex-col gap-10'>
-                    <div className='flex w-full flex-col h-[50%] justify-between items-center rounded-lg bg-white p-5 lg:w-[500px]'>
+                    <div className='flex h-[50%] w-full flex-col items-center justify-between rounded-lg bg-white p-5 lg:w-[500px]'>
                         <p className='text-2xl font-semibold'>
                             ANTRIAN FARMASI
                         </p>
-                        {!livePharmacyQueue?.data && <p className='text-9xl flex items-center h-full font-semibold text-[#171CA1]'>--</p>}
+                        {!livePharmacyQueue?.data && (
+                            <p className='flex h-full items-center text-9xl font-semibold text-[#171CA1]'>
+                                --
+                            </p>
+                        )}
                         {livePharmacyQueue?.data && (
                             <>
                                 <p className='text-9xl font-semibold text-[#171CA1]'>
                                     {livePharmacyQueue.data.queueNumber}
                                 </p>
-                                <p className='text-3xl font-medium text-center'>
+                                <p className='text-center text-3xl font-medium'>
                                     {livePharmacyQueue.data.patientName}
                                 </p>
                             </>
                         )}
                     </div>
-                    <div className='flex w-full flex-col h-[50%] justify-between items-center rounded-lg bg-white p-5 lg:w-[500px]'>
-                        <p className='text-2xl font-semibold'>
-                            ANTRIAN KASIR
-                        </p>
-                        {!liveCashierQueue?.data && <p className='text-9xl flex items-center h-full font-semibold text-[#171CA1]'>--</p>}
+                    <div className='flex h-[50%] w-full flex-col items-center justify-between rounded-lg bg-white p-5 lg:w-[500px]'>
+                        <p className='text-2xl font-semibold'>ANTRIAN KASIR</p>
+                        {!liveCashierQueue?.data && (
+                            <p className='flex h-full items-center text-9xl font-semibold text-[#171CA1]'>
+                                --
+                            </p>
+                        )}
                         {liveCashierQueue?.data && (
                             <>
                                 <p className='text-9xl font-semibold text-[#171CA1]'>
                                     {liveCashierQueue.data.queueNumber}
                                 </p>
-                                <p className='text-3xl font-medium text-center'>
+                                <p className='text-center text-3xl font-medium'>
                                     {liveCashierQueue.data.patientName}
                                 </p>
                             </>
@@ -105,25 +114,29 @@ const LiveQueuePage = () => {
                     </div>
                 </div>
 
-                <div className='flex flex-col rounded-lg bg-white p-5 items-center w-full flex-1 max-h-screen'>
-                    <p className='text-2xl font-semibold'>
-                        ANTRIAN DOKTER
-                    </p>
-                    <div className='flex w-full p-3 mt-3'>
-                        <p className='text-xl text-[#666666] font-semibold w-[33%] flex justify-center'>POLI</p>
-                        <p className='text-xl text-[#666666] font-semibold w-[33%] flex justify-center'>RUANGAN</p>
-                        <p className='text-xl text-[#666666] font-semibold w-[33%] flex justify-center'>ANTRIAN</p>
+                <div className='flex max-h-screen w-full flex-1 flex-col items-center rounded-lg bg-white p-5'>
+                    <p className='text-2xl font-semibold'>ANTRIAN DOKTER</p>
+                    <div className='mt-3 flex w-full p-3'>
+                        <p className='flex w-[33%] justify-center text-xl font-semibold text-[#666666]'>
+                            POLI
+                        </p>
+                        <p className='flex w-[33%] justify-center text-xl font-semibold text-[#666666]'>
+                            RUANGAN
+                        </p>
+                        <p className='flex w-[33%] justify-center text-xl font-semibold text-[#666666]'>
+                            ANTRIAN
+                        </p>
                     </div>
-                    <div className='border-b border-[#A1A1A1] w-full mb-3'></div>
-                    <div className='overflow-y-auto table-custom-scrollbar w-full'>
+                    <div className='mb-3 w-full border-b border-[#A1A1A1]'></div>
+                    <div className='table-custom-scrollbar w-full overflow-y-auto'>
                         {liveDoctorQueue?.data.length && (
                             <>
                                 {liveDoctorQueue.data.map((d, i) => (
                                     <div
                                         key={i}
-                                        className={`flex w-full flex-row h-auto items-center p-3 pl-5 pr-5 rounded-xl ${i % 2 == 0 ? 'bg-[#9497F0] bg-opacity-30' : ''}`}
+                                        className={`flex h-auto w-full flex-row items-center rounded-xl p-3 px-5 ${i % 2 === 0 ? 'bg-[#9497F0] bg-opacity-30' : ''}`}
                                     >
-                                        <div className='flex flex-col w-[33%] gap-2'>
+                                        <div className='flex w-[33%] flex-col gap-2'>
                                             <p className='text-2xl font-semibold'>
                                                 {d.poli}
                                             </p>
@@ -132,14 +145,17 @@ const LiveQueuePage = () => {
                                             </p>
                                         </div>
 
-                                        <div className='flex gap-2 w-[33%] justify-center'>
-                                            <MapPin className='text-primaryblue' size={30} />
-                                            <p className='font-semibold text-2xl text-primaryblue'>
+                                        <div className='flex w-[33%] justify-center gap-2'>
+                                            <MapPin
+                                                className='text-primaryblue'
+                                                size={30}
+                                            />
+                                            <p className='text-2xl font-semibold text-primaryblue'>
                                                 {d.roomName}
                                             </p>
                                         </div>
 
-                                        <p className='text-4xl font-semibold w-[33%] flex justify-end'>
+                                        <p className='flex w-[33%] justify-end text-4xl font-semibold'>
                                             {d.queueNumber} / {d.totalQueue}
                                         </p>
                                     </div>

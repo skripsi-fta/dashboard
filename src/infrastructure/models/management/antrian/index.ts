@@ -10,7 +10,7 @@ export namespace ManagementLiveQueue {
             data: {
                 queueNumber: number;
                 patientName: string;
-            }
+            };
         }
 
         export interface DoctorQueue {
