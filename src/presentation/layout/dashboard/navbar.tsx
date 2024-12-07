@@ -4,7 +4,6 @@ import { staticMapRole } from './sidebar';
 import { LogOut, User } from 'lucide-react';
 import { Button } from '@/presentation/ui/button';
 
-
 const Navbar = () => {
     const { userData, logout } = useDashboard();
 
@@ -23,7 +22,11 @@ const Navbar = () => {
                         <User className='size-9' />
                     </div>
                     <div className='flex flex-col justify-center gap-2'>
-                        <p className='font-semibold'>{userData?.name}</p>
+                        <p className='font-semibold'>
+                            {userData.role === 'DOCTOR'
+                                ? userData.doctor.name
+                                : userData?.name}
+                        </p>
                         <p>{staticMapRole[userData.role]?.name ?? ''}</p>
                     </div>
                     <Button variant={'ghost'} onClick={logout}>
