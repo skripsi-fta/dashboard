@@ -257,8 +257,7 @@ const ManagementAppointmentPage = () => {
                 .endOf('month')
                 .add(30, 'days')
                 .format('YYYY-MM-DD'),
-            // startDate: dayjsUtils().format('YYYY-MM-DD'),
-            startDate: dayjsUtils().startOf('month').format('YYYY-MM-DD'),
+            startDate: dayjsUtils().format('YYYY-MM-DD'),
             endTime: '',
             startTime: ''
         }

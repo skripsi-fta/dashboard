@@ -1,10 +1,14 @@
 'use client';
 import { ManagementLiveQueueAPI } from '@/infrastructure/usecase/management/antrian/ManagementLiveQueue';
 import CustomButtonComponent from '@/presentation/components/CustomButton';
+import Spinner from '@/presentation/components/Spinner';
 import { MapPin } from 'lucide-react';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useQuery } from 'react-query';
+import { io, type Socket } from 'socket.io-client';
 import { toast } from 'sonner';
+
+let socket: Socket;
 
 const LiveQueuePage = () => {
     const divRef = useRef<HTMLDivElement | null>(null);
@@ -27,7 +31,7 @@ const LiveQueuePage = () => {
         data: livePharmacyQueue,
         isLoading: loadingLivePharmacyQueue,
         isError: errorLivePharmacyQueue,
-        refetch: refetch
+        refetch: refetchPharmacyQueue
     } = useQuery({
         queryKey: ['live-pharmacy-queue'],
         queryFn: () => api.getLivePharmacyQueue(),
@@ -40,7 +44,7 @@ const LiveQueuePage = () => {
         data: liveCashierQueue,
         isLoading: loadingLiveCashierQueue,
         isError: errorLiveCashierQueue,
-        refetch: refetch2
+        refetch: refetchCashierQueue
     } = useQuery({
         queryKey: ['live-cashier-queue'],
         queryFn: () => api.getLiveCashierQueue(),
@@ -53,7 +57,7 @@ const LiveQueuePage = () => {
         data: liveDoctorQueue,
         isLoading: loadingLiveDoctorQueue,
         isError: errorLiveDoctorQueue,
-        refetch: refetch3
+        refetch: refetchDoctorQueue
     } = useQuery({
         queryKey: ['live-doctor-queue'],
         queryFn: () => api.getLiveDoctorQueue(),
@@ -61,6 +65,51 @@ const LiveQueuePage = () => {
             toast.error('Get live doctor queue error');
         }
     });
+
+    const {
+        data: liveGlobalQueue,
+        isLoading: loadingLiveGlobalQueue,
+        isError: errorLiveGlobalQueue,
+        refetch: refetchGlobalQueue
+    } = useQuery({
+        queryKey: ['live-global-queue'],
+        queryFn: () => api.getLiveGlobalQueue(),
+        onError: () => {
+            toast.error('Get live medical record error');
+        }
+    });
+
+    useEffect(() => {
+        socket = io(process.env.NEXT_PUBLIC_API_URL?.split('/v1')[0], {
+            transports: ['websocket']
+        });
+
+        socket.on('connect', () => {
+            console.log('connected');
+        });
+
+        socket.on('queue', (message: string) => {
+            if (message === 'global') {
+                refetchGlobalQueue();
+            }
+
+            if (message === 'doctor') {
+                refetchDoctorQueue();
+            }
+
+            if (message === 'pharmacy') {
+                refetchPharmacyQueue();
+            }
+
+            if (message === 'cashier') {
+                refetchCashierQueue();
+            }
+        });
+
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
 
     return (
         <>
@@ -74,43 +123,85 @@ const LiveQueuePage = () => {
                 className='flex w-full flex-1 flex-col gap-8 p-3 lg:flex-row'
             >
                 <div className='flex flex-col gap-10'>
-                    <div className='flex h-[50%] w-full flex-col items-center justify-between rounded-lg bg-white p-5 lg:w-[500px]'>
+                    <div className='flex w-full flex-1 flex-col items-center justify-between rounded-lg bg-white p-5 lg:w-[500px]'>
                         <p className='text-2xl font-semibold'>
                             ANTRIAN FARMASI
                         </p>
-                        {!livePharmacyQueue?.data && (
-                            <p className='flex h-full items-center text-9xl font-semibold text-[#171CA1]'>
-                                --
-                            </p>
-                        )}
-                        {livePharmacyQueue?.data && (
+                        {loadingLivePharmacyQueue ? (
+                            <Spinner color='black' />
+                        ) : (
                             <>
-                                <p className='text-9xl font-semibold text-[#171CA1]'>
-                                    {livePharmacyQueue.data.queueNumber}
-                                </p>
-                                <p className='text-center text-3xl font-medium'>
-                                    {livePharmacyQueue.data.patientName}
-                                </p>
+                                {!livePharmacyQueue?.data && (
+                                    <p className='flex h-full items-center text-9xl font-semibold text-[#171CA1]'>
+                                        --
+                                    </p>
+                                )}
+                                {livePharmacyQueue?.data && (
+                                    <>
+                                        <p className='text-9xl font-semibold text-[#171CA1]'>
+                                            {livePharmacyQueue.data.queueNumber}
+                                        </p>
+                                        <p className='text-center text-3xl font-medium'>
+                                            {livePharmacyQueue.data.patientName}
+                                        </p>
+                                    </>
+                                )}
                             </>
                         )}
+                        <div />
                     </div>
-                    <div className='flex h-[50%] w-full flex-col items-center justify-between rounded-lg bg-white p-5 lg:w-[500px]'>
+                    <div className='flex w-full flex-1 flex-col items-center justify-between rounded-lg bg-white p-5 lg:w-[500px]'>
                         <p className='text-2xl font-semibold'>ANTRIAN KASIR</p>
-                        {!liveCashierQueue?.data && (
-                            <p className='flex h-full items-center text-9xl font-semibold text-[#171CA1]'>
-                                --
-                            </p>
-                        )}
-                        {liveCashierQueue?.data && (
+                        {loadingLiveCashierQueue ? (
+                            <Spinner color='black' />
+                        ) : (
                             <>
-                                <p className='text-9xl font-semibold text-[#171CA1]'>
-                                    {liveCashierQueue.data.queueNumber}
-                                </p>
-                                <p className='text-center text-3xl font-medium'>
-                                    {liveCashierQueue.data.patientName}
-                                </p>
+                                {!liveCashierQueue?.data && (
+                                    <p className='flex h-full items-center text-9xl font-semibold text-[#171CA1]'>
+                                        --
+                                    </p>
+                                )}
+                                {liveCashierQueue?.data && (
+                                    <>
+                                        <p className='text-9xl font-semibold text-[#171CA1]'>
+                                            {liveCashierQueue.data.queueNumber}
+                                        </p>
+                                        <p className='text-center text-3xl font-medium'>
+                                            {liveCashierQueue.data.patientName}
+                                        </p>
+                                    </>
+                                )}
                             </>
                         )}
+                        <div />
+                    </div>
+
+                    <div className='flex w-full flex-1 flex-col items-center justify-between rounded-lg bg-white p-5 lg:w-[500px]'>
+                        <p className='text-2xl font-semibold'>
+                            ANTRIAN REKAM MEDIS
+                        </p>
+                        {loadingLiveGlobalQueue ? (
+                            <Spinner color='black' />
+                        ) : (
+                            <>
+                                {!liveGlobalQueue?.data && (
+                                    <p className='flex h-full items-center text-9xl font-semibold text-[#171CA1]'>
+                                        --
+                                    </p>
+                                )}
+                                {liveGlobalQueue?.data && (
+                                    <>
+                                        <p className='text-9xl font-semibold text-[#171CA1]'>
+                                            {liveGlobalQueue.data.queueNumber}
+                                        </p>
+                                        <p className='text-center text-3xl font-medium'>
+                                            {liveGlobalQueue.data.patientName}
+                                        </p>
+                                    </>
+                                )}
+                            </>
+                        )}
+                        <div />
                     </div>
                 </div>
 
@@ -129,18 +220,18 @@ const LiveQueuePage = () => {
                     </div>
                     <div className='mb-3 w-full border-b border-[#A1A1A1]'></div>
                     <div className='table-custom-scrollbar w-full overflow-y-auto'>
-                        {liveDoctorQueue?.data.length && (
+                        {liveDoctorQueue?.data.length ? (
                             <>
                                 {liveDoctorQueue.data.map((d, i) => (
                                     <div
                                         key={i}
                                         className={`flex h-auto w-full flex-row items-center rounded-xl p-3 px-5 ${i % 2 === 0 ? 'bg-[#9497F0] bg-opacity-30' : ''}`}
                                     >
-                                        <div className='flex w-[33%] flex-col gap-2'>
-                                            <p className='text-2xl font-semibold'>
+                                        <div className='flex w-[33%] flex-col justify-center gap-2'>
+                                            <p className='text-center text-2xl font-semibold'>
                                                 {d.poli}
                                             </p>
-                                            <p className='text-xl'>
+                                            <p className='text-center text-xl'>
                                                 dr. {d.doctorName}
                                             </p>
                                         </div>
@@ -155,13 +246,13 @@ const LiveQueuePage = () => {
                                             </p>
                                         </div>
 
-                                        <p className='flex w-[33%] justify-end text-4xl font-semibold'>
+                                        <p className='flex w-[33%] justify-center text-4xl font-semibold'>
                                             {d.queueNumber} / {d.totalQueue}
                                         </p>
                                     </div>
                                 ))}
                             </>
-                        )}
+                        ) : null}
                     </div>
                 </div>
             </div>

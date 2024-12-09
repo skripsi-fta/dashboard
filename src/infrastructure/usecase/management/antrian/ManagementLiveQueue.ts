@@ -27,4 +27,11 @@ export class ManagementLiveQueueAPI {
         return data.data;
     }
 
+    async getLiveGlobalQueue(): Promise<ManagementLiveQueue.Response.LiveQueue | null> {
+        const data = await http.get<ManagementLiveQueue.Response.LiveQueue>(
+            '/livequeue/global',
+        );
+
+        return data.data;
+    }
 }
