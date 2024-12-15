@@ -239,7 +239,7 @@ const ScheduleRegulerManagementComponent = () => {
                 .format('YYYY-MM-DD'),
             endTime: '',
             roomId: '',
-            startDate: dayjsUtils().startOf('month').format('YYYY-MM-DD'),
+            startDate: dayjsUtils().format('YYYY-MM-DD'),
             startTime: '',
             status: ''
         });
