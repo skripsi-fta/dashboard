@@ -56,7 +56,7 @@ const CheckPatientModal = ({
         mutationFn: (data: DoctorAppointment.Request.CheckIn) =>
             api.checkIn(data),
         onSuccess: () => {
-            toast.success('Sukses check in appointment');
+            toast.success('Sukses memeriksa pasien');
             refetch();
             refetch2();
             closeModal();
