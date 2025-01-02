@@ -114,6 +114,11 @@ const sidebarContent: Record<
             name: 'Akun Klinik',
             href: '/dashboard/management/user',
             icons: (props) => <Icons.managementPeople {...props} />
+        },
+        {
+            name: 'Report',
+            href: '/dashboard/management/report',
+            icons: (props) => <Icons.report {...props} />
         }
     ],
     MONITORING: [

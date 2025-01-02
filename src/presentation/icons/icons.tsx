@@ -7,7 +7,8 @@ import {
     Menu,
     Instagram,
     Monitor,
-    QrCode
+    QrCode,
+    File
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 
@@ -18,6 +19,7 @@ export const Icons = {
     linkedIn: Linkedin,
     menu: Menu,
     instagram: Instagram,
+    report: (props: LucideProps) => <File {...props} />,
     monitor: (props: LucideProps) => <Monitor {...props} />,
     qr: (props: LucideProps) => <QrCode {...props} />,
     people: (props: LucideProps) =>
