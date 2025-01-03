@@ -25,6 +25,9 @@ import {
     Bar,
     BarChart,
     CartesianGrid,
+    LabelList,
+    Line,
+    LineChart,
     Pie,
     PieChart,
     XAxis,
@@ -381,6 +384,154 @@ const DoctorReportComponent = () => {
                                                     className='-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center'
                                                 />
                                             </PieChart>
+                                        </ChartContainer>
+                                    </div>
+                                </div>
+
+                                <div className='flex flex-row items-center gap-4'>
+                                    <div className='flex h-full flex-1 flex-col gap-3 rounded-[16px] bg-white p-6'>
+                                        <p className='text-xl font-semibold text-[#343C6A] md:text-2xl'>
+                                            Total Kunjungan Spesialis
+                                        </p>
+                                        <ChartContainer
+                                            config={{
+                                                totalPasien: {
+                                                    label: 'Total Pasien',
+                                                    color: '#3B41E3'
+                                                }
+                                            }}
+                                        >
+                                            <BarChart
+                                                accessibilityLayer
+                                                data={dataSummary.specializationData.map(
+                                                    (d) => ({
+                                                        ...d,
+                                                        totalPasien: Number(
+                                                            d.totalPasien
+                                                        )
+                                                    })
+                                                )}
+                                                layout='vertical'
+                                                margin={{
+                                                    right: 24
+                                                }}
+                                            >
+                                                <CartesianGrid
+                                                    horizontal={false}
+                                                />
+
+                                                <YAxis
+                                                    dataKey='name'
+                                                    type='category'
+                                                    tickLine={false}
+                                                    axisLine={false}
+                                                    hide
+                                                />
+
+                                                <XAxis
+                                                    dataKey='totalPasien'
+                                                    type='number'
+                                                    hide
+                                                />
+
+                                                <ChartTooltip
+                                                    cursor={false}
+                                                    content={
+                                                        <ChartTooltipContent indicator='line' />
+                                                    }
+                                                />
+
+                                                <Bar
+                                                    dataKey='totalPasien'
+                                                    layout='vertical'
+                                                    fill='#3B41E3'
+                                                    radius={4}
+                                                >
+                                                    <LabelList
+                                                        dataKey='name'
+                                                        position='insideLeft'
+                                                        offset={8}
+                                                        className='fill-[white] text-base font-bold'
+                                                        fontSize={12}
+                                                    />
+                                                    <LabelList
+                                                        dataKey='totalPasien'
+                                                        position='right'
+                                                        offset={8}
+                                                        className='fill-foreground text-base'
+                                                        fontSize={12}
+                                                    />
+                                                </Bar>
+                                            </BarChart>
+                                        </ChartContainer>
+                                    </div>
+                                    <div className='flex h-full flex-1 flex-col gap-3 rounded-[16px] bg-white p-6'>
+                                        <p className='text-xl font-semibold text-[#343C6A] md:text-2xl'>
+                                            Total Kunjungan Dokter
+                                        </p>
+
+                                        <ChartContainer
+                                            config={{
+                                                totalPasien: {
+                                                    label: 'Total Pasien',
+                                                    color: '#3B41E3'
+                                                }
+                                            }}
+                                        >
+                                            <LineChart
+                                                accessibilityLayer
+                                                data={dataSummary.doctorData.map(
+                                                    (d) => ({
+                                                        ...d,
+                                                        totalPasien: Number(
+                                                            d.totalPasien
+                                                        )
+                                                    })
+                                                )}
+                                            >
+                                                <CartesianGrid
+                                                    vertical={false}
+                                                />
+
+                                                <XAxis
+                                                    dataKey='name'
+                                                    tickLine={false}
+                                                    axisLine={false}
+                                                    interval={0}
+                                                    tickFormatter={(value) =>
+                                                        value.length > 6
+                                                            ? `${value.substring(0, 6)}...`
+                                                            : value
+                                                    }
+                                                />
+
+                                                <ChartTooltip
+                                                    cursor={false}
+                                                    content={
+                                                        <ChartTooltipContent indicator='line' />
+                                                    }
+                                                />
+
+                                                <Line
+                                                    dataKey='totalPasien'
+                                                    type='natural'
+                                                    stroke='#3B41E3'
+                                                    strokeWidth={2}
+                                                    dot={{
+                                                        fill: '#3B41E3'
+                                                    }}
+                                                    activeDot={{
+                                                        r: 6
+                                                    }}
+                                                >
+                                                    <LabelList
+                                                        position='top'
+                                                        offset={12}
+                                                        className='fill-foreground'
+                                                        fontSize={12}
+                                                    />
+                                                </Line>
+                                            </LineChart>
                                         </ChartContainer>
                                     </div>
                                 </div>
