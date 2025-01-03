@@ -37,4 +37,22 @@ export class ManagementReportAPI {
 
         return data.data.data;
     }
+
+    async getDoctorSummary(
+        params: ManagementReport.Request.PharmacyCashierSummary
+    ): Promise<ManagementReport.Response.DoctorSummary> {
+        const data = await http.get('/management/report/doctor', { params });
+
+        return data.data.data;
+    }
+
+    async getDoctorData(
+        params: ManagementReport.Request.PharmacyCashierData
+    ): Promise<ManagementReport.Response.PharmacyCashierData> {
+        const data = await http.get('/management/report/doctor/data', {
+            params
+        });
+
+        return data.data.data;
+    }
 }

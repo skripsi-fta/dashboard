@@ -251,7 +251,7 @@ const CashierReportComponent = () => {
                                         </p>
                                         <ChartContainer
                                             config={{
-                                                minute: {
+                                                count: {
                                                     label: 'Waktu Menunggu',
                                                     color: '#3B41E3'
                                                 }
@@ -287,7 +287,7 @@ const CashierReportComponent = () => {
                                                 />
 
                                                 <Bar
-                                                    dataKey='minute'
+                                                    dataKey='count'
                                                     fill='#3B41E3'
                                                     radius={2}
                                                 />

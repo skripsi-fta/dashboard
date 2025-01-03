@@ -202,7 +202,7 @@ const PharmacyReportComponent = () => {
                             <>
                                 <div className='flex flex-col gap-3'>
                                     <p className='text-2xl font-semibold text-[#343C6A]'>
-                                        Performa Antrian Kasir
+                                        Performa Antrian Farmasi
                                     </p>
                                     <div className='flex w-full flex-col justify-between gap-4 rounded-[16px] bg-white p-6 md:flex-row'>
                                         <div className='flex flex-1 flex-col gap-2'>
@@ -251,7 +251,7 @@ const PharmacyReportComponent = () => {
                                         </p>
                                         <ChartContainer
                                             config={{
-                                                minute: {
+                                                count: {
                                                     label: 'Waktu Menunggu',
                                                     color: '#3B41E3'
                                                 }
@@ -287,7 +287,7 @@ const PharmacyReportComponent = () => {
                                                 />
 
                                                 <Bar
-                                                    dataKey='minute'
+                                                    dataKey='count'
                                                     fill='#3B41E3'
                                                     radius={2}
                                                 />

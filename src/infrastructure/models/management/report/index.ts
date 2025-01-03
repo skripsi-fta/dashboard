@@ -107,5 +107,37 @@ export namespace ManagementReport {
             totalRows: number;
             data: Data[];
         }
+
+        export interface DoctorSummary {
+            message: string;
+            summaryData: {
+                avgWaitTime: string;
+                avgTotalSecond: number;
+                avgTotalMinute: number;
+                maxWaitTime: string;
+                maxTotalSecond: number;
+                maxTotalMinute: number;
+                minWaitTime: string;
+                minTotalSecond: number;
+                minTotalMinute: number;
+                totalDoctor: number;
+                totalSpecialization: number;
+                totalAppointment: number;
+            } | null;
+            belowAverage: number;
+            aboveAverage: number;
+            dataBar: {
+                minute: string;
+                count: number;
+            }[];
+            doctorData: {
+                totalPasien: number;
+                name: string;
+            }[];
+            specializationData: {
+                totalPasien: number;
+                name: string;
+            }[];
+        }
     }
 }
