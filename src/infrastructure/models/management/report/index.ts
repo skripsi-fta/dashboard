@@ -94,6 +94,7 @@ export namespace ManagementReport {
             appointmentId: number;
             date: string;
             patientId: string;
+            patientName: string;
             doctorName: string;
             specializationName: string;
             roomName: string;

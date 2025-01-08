@@ -129,9 +129,9 @@ const CashierReportComponent = () => {
             header: 'ID'
         },
         {
-            accessorKey: 'patientId',
+            accessorKey: 'patientName',
             size: 150,
-            header: 'ID Pasien'
+            header: 'Nama Pasien'
         },
         {
             accessorKey: 'doctorName',
