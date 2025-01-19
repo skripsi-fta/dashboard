@@ -2,14 +2,10 @@ import { z } from 'zod';
 import type { Profile } from './profile';
 
 export const baseUserEmailValidation = z.object({
-    email: z
+    username: z
         .string()
-        .min(1, 'Email Cant Be Empty')
-        .regex(
-            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-            'Email is not valid'
-        )
-        .max(255, 'Email Maximum 255 Characters')
+        .min(1, 'Username / Email Cant Be Empty')
+        .max(255, 'Username / Email Maximum 255 Characters')
 });
 
 export const userLoginValidation = z

@@ -15,12 +15,13 @@ import { useRouter } from 'next/navigation';
 import { useMutation } from 'react-query';
 import { toast } from 'sonner';
 import TextFieldInput from '@/presentation/components/TextfieldInput';
+import type { AxiosError } from 'axios';
 
 const LoginPage = () => {
     const [mounted, setMounted] = useState<boolean>(false);
 
     const { control, handleSubmit } = useForm<UserLoginForm>({
-        defaultValues: { email: '', password: '' },
+        defaultValues: { username: '', password: '' },
         resolver: zodResolver(userLoginValidation)
     });
 
@@ -45,10 +46,14 @@ const LoginPage = () => {
         setMounted(() => true);
     }, []);
 
-    const authenticate = (data: LoginType.Request) => {
+    const authenticate = ({
+        refreshToken,
+        token,
+        user
+    }: LoginType.Response) => {
         localStorage.setItem(
             'user-data',
-            JSON.stringify({ ...data, password: undefined })
+            JSON.stringify({ ...user, refreshToken, token })
         );
 
         router.push('/dashboard');
@@ -61,8 +66,8 @@ const LoginPage = () => {
             toast.success('Login Success');
             authenticate(data);
         },
-        onError: (err: Error) => {
-            toast.error(err.message);
+        onError: (res: AxiosError<{ message: string }>) => {
+            toast.error(res.response?.data.message ?? 'Login Error');
         }
     });
 
@@ -113,18 +118,20 @@ const LoginPage = () => {
                         <form onSubmit={handleSubmit((data) => login(data))}>
                             <div className='flex flex-col gap-8'>
                                 <div className='flex flex-col gap-4'>
-                                    <p className='text-xl font-bold'>Email</p>
+                                    <p className='text-xl font-bold'>
+                                        Username / Email
+                                    </p>
                                     <Controller
                                         control={control}
-                                        name='email'
+                                        name='username'
                                         render={({
                                             field,
                                             fieldState: { error }
                                         }) => (
                                             <TextFieldInput
                                                 {...field}
-                                                className='h-[60px] rounded-[16px] border-transparent text-base shadow-[0px_2px_16px_rgba(20,20,20,0.1)] placeholder:text-[#66666] focus:border-[rgba(20,20,20,0.1)]'
-                                                placeholder='Enter your email'
+                                                variant='login'
+                                                placeholder='Enter your username or email'
                                                 error={error}
                                             />
                                         )}
@@ -144,7 +151,7 @@ const LoginPage = () => {
                                         }) => (
                                             <TextFieldInput
                                                 {...field}
-                                                className='h-[60px] rounded-[16px] border-transparent text-base shadow-[0px_2px_16px_rgba(20,20,20,0.1)] placeholder:text-[#66666] focus:border-[rgba(20,20,20,0.1)]'
+                                                variant='login'
                                                 placeholder='Enter your password'
                                                 error={error}
                                                 type='password'
@@ -154,7 +161,7 @@ const LoginPage = () => {
                                 </div>
 
                                 <Button
-                                    className='h-[55px] rounded-[16px] bg-[#3B41E3] text-xl font-bold text-white hover:bg-[#3B41E3]/70'
+                                    className='h-[55px] rounded-[16px] bg-primaryblue text-xl font-bold text-white hover:bg-[#3B41E3]/70'
                                     type='submit'
                                 >
                                     Login
